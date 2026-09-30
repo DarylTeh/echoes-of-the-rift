@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6db330497238534ebda5f92d8d0125c, type: 3}
+  m_Name: Wayfarer
+  m_EditorClassIdentifier: Assembly-CSharp::ClassData
+  Id: wayfarer
+  DisplayName: Wayfarer
+  BaseHealth: 100
+  BaseDamage: 15
+  Passive: {fileID: 11400000, guid: 3afefe707e708bb4e9d04dbd642c2d49, type: 2}
+  StartingSpells:
+  - {fileID: 11400000, guid: 5a14c767fc94b284286dad264ca607d4, type: 2}
+  - {fileID: 11400000, guid: 75f15ebca2a06c44c9eb4d99f6027ccc, type: 2}
+  - {fileID: 11400000, guid: d89ba26d0ceeeae4cb928da023631b47, type: 2}
+  - {fileID: 11400000, guid: c126477d905b6764e995d7cbf0b97374, type: 2}
+  - {fileID: 11400000, guid: f9304fac775519848881344765e6edb0, type: 2}
+  - {fileID: 11400000, guid: 8614cfa0e2326184aa06770e1be8c2d7, type: 2}

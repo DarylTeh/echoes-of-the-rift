@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import {once} from 'node:events';
+import {createStore} from './persistence.mjs';
+import {startServer} from './persistence.mjs';
+
+const catalog=[{id:'gear-0',kind:0,slot:0,tier:1},{id:'book-1',kind:1,slot:0,tier:1,skill:'test-skill'}];
+const store=createStore(':memory:',catalog),id='a'.repeat(32),secret='b'.repeat(64);
+store.login(id,secret);
+store.events.upsert({id:'festival-inbox',version:1,type:'news_inbox',title:'Inbox Test',startAt:'2026-09-28T00:00:00.000Z',endAt:'2026-10-08T00:00:00.000Z',config:{messageId:'test'},rewards:[{currency:'coins',amount:25},{itemId:'book-1',tier:1,count:2}]});
+const first=store.claimEvent('festival-inbox',id,'day:2026-09-29');assert.equal(first.claimed,true);assert.equal(first.delivery.length,2);
+assert.equal(store.inbox(id).entries.length,2);assert.ok(store.inbox(id).entries.every(entry=>entry.status==='pending'));
+const replay=store.claimEvent('festival-inbox',id,'day:2026-09-29');assert.equal(replay.claimed,false);assert.equal(store.inbox(id).entries.length,2);
+const coinEntry=store.inbox(id).entries.find(entry=>entry.reward.currency==='coins');const itemEntry=store.inbox(id).entries.find(entry=>entry.reward.itemId==='book-1');
+const claimedCoin=store.claimInbox(id,coinEntry.id);assert.equal(claimedCoin.claimed,true);assert.equal(store.get(id).Coins,55);
+const coinReplay=store.claimInbox(id,coinEntry.id);assert.equal(coinReplay.claimed,false);assert.equal(store.get(id).Coins,55);
+store.claimInbox(id,itemEntry.id);assert.equal(store.get(id).Items.find(item=>item.ItemId==='book-1'&&item.Tier===1).Count,2);
+assert.throws(()=>store.events.upsert({id:'bad-inbox',version:1,type:'news_inbox',title:'Bad',startAt:'2026-09-28T00:00:00.000Z',endAt:'2026-10-08T00:00:00.000Z',config:{messageId:'bad'},rewards:[{currency:'coins',amount:-1}]}),/bounded coins\/gems/);assert.equal(store.inbox(id).entries.length,2);
+assert.throws(()=>store.claimInbox(id,'missing-entry'),/Inbox entry not found/);
+store.db.close();
+const key='k'.repeat(32),service=startServer({port:0,key,path:':memory:',catalog});await once(service.server,'listening');
+try{
+ service.store.login(id,secret);service.store.events.upsert({id:'route-inbox',version:1,type:'news_inbox',title:'Route Test',startAt:'2026-09-28T00:00:00.000Z',endAt:'2026-10-08T00:00:00.000Z',config:{messageId:'route'},rewards:[{currency:'gems',amount:7}]});
+ const base=`http://127.0.0.1:${service.server.address().port}`,headers={'authorization':`Bearer ${key}`,'content-type':'application/json'};
+ assert.equal((await fetch(base+'/inbox',{method:'POST',headers,body:JSON.stringify({id})})).status,200);
+ const claimed=await (await fetch(base+'/event-claim',{method:'POST',headers,body:JSON.stringify({id,eventId:'route-inbox',claimKey:'once'})})).json();assert.equal(claimed.claimed,true);assert.equal(claimed.delivery.length,1);
+ const eventStatus=await (await fetch(base+'/event-status',{method:'POST',headers,body:JSON.stringify({id,eventId:'route-inbox',eventVersion:1})})).json();assert.equal(eventStatus.eligible,true);assert.equal(eventStatus.eventVersion,1);assert.equal(eventStatus.claimsCompleted,1);
+ const listed=await (await fetch(base+'/inbox',{method:'POST',headers,body:JSON.stringify({id})})).json();assert.equal(listed.entries.length,1);
+ const collected=await (await fetch(base+'/inbox-claim',{method:'POST',headers,body:JSON.stringify({id,inboxId:listed.entries[0].id})})).json();assert.equal(collected.claimed,true);assert.equal(collected.profile.Gems,7);
+ assert.equal((await fetch(base+'/inbox',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id})})).status,403);
+}finally{await new Promise(resolve=>service.server.close(resolve));service.store.db.close();}
+console.log('PASS inbox: atomic event delivery, currency/item rewards, idempotent event claims and idempotent reward collection.');

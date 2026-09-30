@@ -1,0 +1,1124 @@
+{
+    "items": [
+        {
+            "id": "amulet-1",
+            "name": "Ashen amulet",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 1
+        },
+        {
+            "id": "amulet-2",
+            "name": "Verdant amulet",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 2
+        },
+        {
+            "id": "amulet-3",
+            "name": "Stormglass amulet",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 3
+        },
+        {
+            "id": "amulet-4",
+            "name": "Eclipse amulet",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 4
+        },
+        {
+            "id": "amulet-5",
+            "name": "Dawnstar amulet",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 5
+        },
+        {
+            "id": "book-assassin-comet",
+            "name": "Assassin Comet tome",
+            "skill": "assassin-comet",
+            "kind": 1,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "book-assassin-echo",
+            "name": "Assassin Echo tome",
+            "skill": "assassin-echo",
+            "kind": 1,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "book-assassin-oath",
+            "name": "Assassin Oath tome",
+            "skill": "assassin-oath",
+            "kind": 1,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "book-assassin-sanctuary",
+            "name": "Assassin Sanctuary tome",
+            "skill": "assassin-sanctuary",
+            "kind": 1,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "book-assassin-spark",
+            "name": "Assassin Spark tome",
+            "skill": "assassin-spark",
+            "kind": 1,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "book-assassin-tempest",
+            "name": "Assassin Tempest tome",
+            "skill": "assassin-tempest",
+            "kind": 1,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "book-astral-lance",
+            "name": "Astral Lance tome",
+            "skill": "astral-lance",
+            "kind": 1,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "book-bard-comet",
+            "name": "Bard Comet tome",
+            "skill": "bard-comet",
+            "kind": 1,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "book-bard-echo",
+            "name": "Bard Echo tome",
+            "skill": "bard-echo",
+            "kind": 1,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "book-bard-oath",
+            "name": "Bard Oath tome",
+            "skill": "bard-oath",
+            "kind": 1,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "book-bard-sanctuary",
+            "name": "Bard Sanctuary tome",
+            "skill": "bard-sanctuary",
+            "kind": 1,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "book-bard-spark",
+            "name": "Bard Spark tome",
+            "skill": "bard-spark",
+            "kind": 1,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "book-bard-tempest",
+            "name": "Bard Tempest tome",
+            "skill": "bard-tempest",
+            "kind": 1,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "book-crimson-cyclone",
+            "name": "Crimson Cyclone tome",
+            "skill": "crimson-cyclone",
+            "kind": 1,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "book-fighter-comet",
+            "name": "Fighter Comet tome",
+            "skill": "fighter-comet",
+            "kind": 1,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "book-fighter-echo",
+            "name": "Fighter Echo tome",
+            "skill": "fighter-echo",
+            "kind": 1,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "book-fighter-oath",
+            "name": "Fighter Oath tome",
+            "skill": "fighter-oath",
+            "kind": 1,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "book-fighter-sanctuary",
+            "name": "Fighter Sanctuary tome",
+            "skill": "fighter-sanctuary",
+            "kind": 1,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "book-fighter-spark",
+            "name": "Fighter Spark tome",
+            "skill": "fighter-spark",
+            "kind": 1,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "book-fighter-tempest",
+            "name": "Fighter Tempest tome",
+            "skill": "fighter-tempest",
+            "kind": 1,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "book-healer-comet",
+            "name": "Healer Comet tome",
+            "skill": "healer-comet",
+            "kind": 1,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "book-healer-echo",
+            "name": "Healer Echo tome",
+            "skill": "healer-echo",
+            "kind": 1,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "book-healer-oath",
+            "name": "Healer Oath tome",
+            "skill": "healer-oath",
+            "kind": 1,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "book-healer-sanctuary",
+            "name": "Healer Sanctuary tome",
+            "skill": "healer-sanctuary",
+            "kind": 1,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "book-healer-spark",
+            "name": "Healer Spark tome",
+            "skill": "healer-spark",
+            "kind": 1,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "book-healer-tempest",
+            "name": "Healer Tempest tome",
+            "skill": "healer-tempest",
+            "kind": 1,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "book-mage-comet",
+            "name": "Mage Comet tome",
+            "skill": "mage-comet",
+            "kind": 1,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "book-mage-echo",
+            "name": "Mage Echo tome",
+            "skill": "mage-echo",
+            "kind": 1,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "book-mage-oath",
+            "name": "Mage Oath tome",
+            "skill": "mage-oath",
+            "kind": 1,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "book-mage-sanctuary",
+            "name": "Mage Sanctuary tome",
+            "skill": "mage-sanctuary",
+            "kind": 1,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "book-mage-spark",
+            "name": "Mage Spark tome",
+            "skill": "mage-spark",
+            "kind": 1,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "book-mage-tempest",
+            "name": "Mage Tempest tome",
+            "skill": "mage-tempest",
+            "kind": 1,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "book-solar-hammers",
+            "name": "Solar Hammers tome",
+            "skill": "solar-hammers",
+            "kind": 1,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "book-tempest-volley",
+            "name": "Tempest Volley tome",
+            "skill": "tempest-volley",
+            "kind": 1,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "boomerang-1",
+            "name": "Verdant Return 1",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "boomerang-2",
+            "name": "Verdant Return 2",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "boomerang-3",
+            "name": "Verdant Return 3",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "boomerang-4",
+            "name": "Verdant Return 4",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "boomerang-5",
+            "name": "Verdant Return 5",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "boots-1",
+            "name": "Ashen boots",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 1
+        },
+        {
+            "id": "boots-2",
+            "name": "Verdant boots",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 2
+        },
+        {
+            "id": "boots-3",
+            "name": "Stormglass boots",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 3
+        },
+        {
+            "id": "boots-4",
+            "name": "Eclipse boots",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 4
+        },
+        {
+            "id": "boots-5",
+            "name": "Dawnstar boots",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 5
+        },
+        {
+            "id": "bow-1",
+            "name": "Ashen bow",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "bow-2",
+            "name": "Verdant bow",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "bow-3",
+            "name": "Stormglass bow",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "bow-4",
+            "name": "Eclipse bow",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "bow-5",
+            "name": "Dawnstar bow",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "chestpiece-1",
+            "name": "Ashen chestpiece",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 1
+        },
+        {
+            "id": "chestpiece-2",
+            "name": "Verdant chestpiece",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 2
+        },
+        {
+            "id": "chestpiece-3",
+            "name": "Stormglass chestpiece",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 3
+        },
+        {
+            "id": "chestpiece-4",
+            "name": "Eclipse chestpiece",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 4
+        },
+        {
+            "id": "chestpiece-5",
+            "name": "Dawnstar chestpiece",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 5
+        },
+        {
+            "id": "crossbow-1",
+            "name": "Ashen crossbow",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "crossbow-2",
+            "name": "Verdant crossbow",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "crossbow-3",
+            "name": "Stormglass crossbow",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "crossbow-4",
+            "name": "Eclipse crossbow",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "crossbow-5",
+            "name": "Dawnstar crossbow",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "dagger-1",
+            "name": "Ashen dagger",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "dagger-2",
+            "name": "Verdant dagger",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "dagger-3",
+            "name": "Stormglass dagger",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "dagger-4",
+            "name": "Eclipse dagger",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "dagger-5",
+            "name": "Dawnstar dagger",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "greatsword-1",
+            "name": "Ashen greatsword",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "greatsword-2",
+            "name": "Verdant greatsword",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "greatsword-3",
+            "name": "Stormglass greatsword",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "greatsword-4",
+            "name": "Eclipse greatsword",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "greatsword-5",
+            "name": "Dawnstar greatsword",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "hammer-1",
+            "name": "Ashen hammer",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "hammer-2",
+            "name": "Verdant hammer",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "hammer-3",
+            "name": "Stormglass hammer",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "hammer-4",
+            "name": "Eclipse hammer",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "hammer-5",
+            "name": "Dawnstar hammer",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "helmet-1",
+            "name": "Ashen helmet",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 1
+        },
+        {
+            "id": "helmet-2",
+            "name": "Verdant helmet",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 2
+        },
+        {
+            "id": "helmet-3",
+            "name": "Stormglass helmet",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 3
+        },
+        {
+            "id": "helmet-4",
+            "name": "Eclipse helmet",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 4
+        },
+        {
+            "id": "helmet-5",
+            "name": "Dawnstar helmet",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 5
+        },
+        {
+            "id": "leggings-1",
+            "name": "Ashen leggings",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 1
+        },
+        {
+            "id": "leggings-2",
+            "name": "Verdant leggings",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 2
+        },
+        {
+            "id": "leggings-3",
+            "name": "Stormglass leggings",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 3
+        },
+        {
+            "id": "leggings-4",
+            "name": "Eclipse leggings",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 4
+        },
+        {
+            "id": "leggings-5",
+            "name": "Dawnstar leggings",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 5
+        },
+        {
+            "id": "pauldrons-1",
+            "name": "Ashen pauldrons",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 1
+        },
+        {
+            "id": "pauldrons-2",
+            "name": "Verdant pauldrons",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 2
+        },
+        {
+            "id": "pauldrons-3",
+            "name": "Stormglass pauldrons",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 3
+        },
+        {
+            "id": "pauldrons-4",
+            "name": "Eclipse pauldrons",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 4
+        },
+        {
+            "id": "pauldrons-5",
+            "name": "Dawnstar pauldrons",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 5
+        },
+        {
+            "id": "pistol-1",
+            "name": "Emberlock 1",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "pistol-2",
+            "name": "Emberlock 2",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "pistol-3",
+            "name": "Emberlock 3",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "pistol-4",
+            "name": "Emberlock 4",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "pistol-5",
+            "name": "Emberlock 5",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "ring-1",
+            "name": "Ashen ring",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 1
+        },
+        {
+            "id": "ring-2",
+            "name": "Verdant ring",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 2
+        },
+        {
+            "id": "ring-3",
+            "name": "Stormglass ring",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 3
+        },
+        {
+            "id": "ring-4",
+            "name": "Eclipse ring",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 4
+        },
+        {
+            "id": "ring-5",
+            "name": "Dawnstar ring",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 5
+        },
+        {
+            "id": "scythe-1",
+            "name": "Ashen scythe",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "scythe-2",
+            "name": "Verdant scythe",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "scythe-3",
+            "name": "Stormglass scythe",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "scythe-4",
+            "name": "Eclipse scythe",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "scythe-5",
+            "name": "Dawnstar scythe",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "shield-1",
+            "name": "Ashen shield",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "shield-2",
+            "name": "Verdant shield",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "shield-3",
+            "name": "Stormglass shield",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "shield-4",
+            "name": "Eclipse shield",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "shield-5",
+            "name": "Dawnstar shield",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "spear-1",
+            "name": "Tidepiercer 1",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "spear-2",
+            "name": "Tidepiercer 2",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "spear-3",
+            "name": "Tidepiercer 3",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "spear-4",
+            "name": "Tidepiercer 4",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "spear-5",
+            "name": "Tidepiercer 5",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "staff-1",
+            "name": "Ashen staff",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "staff-2",
+            "name": "Verdant staff",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "staff-3",
+            "name": "Stormglass staff",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "staff-4",
+            "name": "Eclipse staff",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "staff-5",
+            "name": "Dawnstar staff",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "sword-1",
+            "name": "Ashen sword",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "sword-2",
+            "name": "Verdant sword",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "sword-3",
+            "name": "Stormglass sword",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "sword-4",
+            "name": "Eclipse sword",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "sword-5",
+            "name": "Dawnstar sword",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "wand-1",
+            "name": "Ashen wand",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "wand-2",
+            "name": "Verdant wand",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 2
+        },
+        {
+            "id": "wand-3",
+            "name": "Stormglass wand",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 3
+        },
+        {
+            "id": "wand-4",
+            "name": "Eclipse wand",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 4
+        },
+        {
+            "id": "wand-5",
+            "name": "Dawnstar wand",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 5
+        },
+        {
+            "id": "gear-0",
+            "name": "Worn blade",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "gear-1",
+            "name": "Copper wand",
+            "skill": "",
+            "kind": 0,
+            "slot": 0,
+            "tier": 1
+        },
+        {
+            "id": "gear-2",
+            "name": "Trail coat",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 1
+        },
+        {
+            "id": "gear-3",
+            "name": "Moss vest",
+            "skill": "",
+            "kind": 0,
+            "slot": 1,
+            "tier": 1
+        },
+        {
+            "id": "gear-4",
+            "name": "Amber charm",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 1
+        },
+        {
+            "id": "gear-5",
+            "name": "River charm",
+            "skill": "",
+            "kind": 0,
+            "slot": 2,
+            "tier": 1
+        }
+    ]
+}

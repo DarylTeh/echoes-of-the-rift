@@ -1,0 +1,912 @@
+fileFormatVersion: 2
+guid: 83acb99744c4b464b81b5b978e1c8133
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7597453326507585450
+    second: race-7-layers_0
+  - first:
+      213: 7332659184111612629
+    second: race-7-layers_1
+  - first:
+      213: 6966944266095236931
+    second: race-7-layers_2
+  - first:
+      213: -2353765801985414082
+    second: race-7-layers_3
+  - first:
+      213: 2018604338260464288
+    second: race-7-layers_4
+  - first:
+      213: -1822236039663136228
+    second: race-7-layers_5
+  - first:
+      213: -8949130675841324186
+    second: race-7-layers_6
+  - first:
+      213: -5665671891205671136
+    second: race-7-layers_7
+  - first:
+      213: 6692764786019904742
+    second: race-7-layers_8
+  - first:
+      213: 2245033156964946637
+    second: race-7-layers_9
+  - first:
+      213: 3908135115760452053
+    second: race-7-layers_10
+  - first:
+      213: -7629635455348708673
+    second: race-7-layers_11
+  - first:
+      213: -267057866957531893
+    second: race-7-layers_12
+  - first:
+      213: -1150717161445697577
+    second: race-7-layers_13
+  - first:
+      213: 4408135109818420877
+    second: race-7-layers_14
+  - first:
+      213: 2651302385432031614
+    second: race-7-layers_15
+  - first:
+      213: 5334869080874023472
+    second: race-7-layers_16
+  - first:
+      213: 1740379662445959014
+    second: race-7-layers_17
+  - first:
+      213: -2036257252755253291
+    second: race-7-layers_18
+  - first:
+      213: 8715572214130787099
+    second: race-7-layers_19
+  - first:
+      213: -4363419650815772704
+    second: race-7-layers_20
+  - first:
+      213: -2861111514771928224
+    second: race-7-layers_21
+  - first:
+      213: -6432102632501890794
+    second: race-7-layers_22
+  - first:
+      213: -8688347785080618922
+    second: race-7-layers_23
+  - first:
+      213: -7176703007983252261
+    second: race-7-layers_24
+  - first:
+      213: 4164878082120657949
+    second: race-7-layers_25
+  - first:
+      213: -5027890735294572044
+    second: race-7-layers_26
+  - first:
+      213: -8740172390041095878
+    second: race-7-layers_27
+  - first:
+      213: 6957151444570617022
+    second: race-7-layers_28
+  - first:
+      213: -5609265314542651676
+    second: race-7-layers_29
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationMethod: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: race-7-layers_0
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 78
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aaf28142c839f6960800000000000000
+      internalID: 7597453326507585450
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_1
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 83
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d27af78da6d2c560800000000000000
+      internalID: 7332659184111612629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_2
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 83
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3471d86c5ee8fa060800000000000000
+      internalID: 6966944266095236931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_3
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 85
+        width: 22
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3c6230597eb55fd0800000000000000
+      internalID: -2353765801985414082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_4
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 86
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a2d31c53f5830c10800000000000000
+      internalID: 2018604338260464288
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_5
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 87
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c12d6fef9fd16b6e0800000000000000
+      internalID: -1822236039663136228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_6
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 63
+        width: 29
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66b2de9901d4ec380800000000000000
+      internalID: -8949130675841324186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_7
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 64
+        width: 21
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02735c6de6d7f51b0800000000000000
+      internalID: -5665671891205671136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_8
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 66
+        width: 14
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6eca5f3fc1a71ec50800000000000000
+      internalID: 6692764786019904742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_9
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 66
+        width: 25
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc29ed5f2c5f72f10800000000000000
+      internalID: 2245033156964946637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_10
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 46
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d1c12d7e2c7c3630800000000000000
+      internalID: 3908135115760452053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_11
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 51
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbae6361af61e1690800000000000000
+      internalID: -7629635455348708673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_12
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 51
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b05d581f8483b4cf0800000000000000
+      internalID: -267057866957531893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_13
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 43
+        width: 21
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d75513a6d4d700f0800000000000000
+      internalID: -1150717161445697577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_14
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 54
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d8e87aee687dc2d30800000000000000
+      internalID: 4408135109818420877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_15
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 55
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7172dbe8715bc420800000000000000
+      internalID: 2651302385432031614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_16
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 31
+        width: 29
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03af5b8e923490a40800000000000000
+      internalID: 5334869080874023472
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_17
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 32
+        width: 21
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 667d7620512172810800000000000000
+      internalID: 1740379662445959014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_18
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 34
+        width: 14
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d7d53231d2cdb3e0800000000000000
+      internalID: -2036257252755253291
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_19
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 34
+        width: 25
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b13c78d60cee3f870800000000000000
+      internalID: 8715572214130787099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_20
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 14
+        width: 17
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e7ba2b22f40273c0800000000000000
+      internalID: -4363419650815772704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_21
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 19
+        width: 8
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06b4d337c3a4b48d0800000000000000
+      internalID: -2861111514771928224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_22
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 19
+        width: 7
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 611bed60cb49cb6a0800000000000000
+      internalID: -6432102632501890794
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_23
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 21
+        width: 19
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 650c739e8b9cc6780800000000000000
+      internalID: -8688347785080618922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_24
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 22
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdc4ea653aa376c90800000000000000
+      internalID: -7176703007983252261
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_25
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 23
+        width: 9
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1cac999c8e9cc930800000000000000
+      internalID: 4164878082120657949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_26
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 0
+        width: 29
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f91a41e308593ab0800000000000000
+      internalID: -5027890735294572044
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_27
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 0
+        width: 21
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a317ce7c48ba4b680800000000000000
+      internalID: -8740172390041095878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_28
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 2
+        width: 14
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb43a36d064cc8060800000000000000
+      internalID: 6957151444570617022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: race-7-layers_29
+      rect:
+        serializedVersion: 2
+        x: 196
+        y: 2
+        width: 25
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e6f3c36ae2e722b0800000000000000
+      internalID: -5609265314542651676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      race-7-layers_0: 7597453326507585450
+      race-7-layers_1: 7332659184111612629
+      race-7-layers_10: 3908135115760452053
+      race-7-layers_11: -7629635455348708673
+      race-7-layers_12: -267057866957531893
+      race-7-layers_13: -1150717161445697577
+      race-7-layers_14: 4408135109818420877
+      race-7-layers_15: 2651302385432031614
+      race-7-layers_16: 5334869080874023472
+      race-7-layers_17: 1740379662445959014
+      race-7-layers_18: -2036257252755253291
+      race-7-layers_19: 8715572214130787099
+      race-7-layers_2: 6966944266095236931
+      race-7-layers_20: -4363419650815772704
+      race-7-layers_21: -2861111514771928224
+      race-7-layers_22: -6432102632501890794
+      race-7-layers_23: -8688347785080618922
+      race-7-layers_24: -7176703007983252261
+      race-7-layers_25: 4164878082120657949
+      race-7-layers_26: -5027890735294572044
+      race-7-layers_27: -8740172390041095878
+      race-7-layers_28: 6957151444570617022
+      race-7-layers_29: -5609265314542651676
+      race-7-layers_3: -2353765801985414082
+      race-7-layers_4: 2018604338260464288
+      race-7-layers_5: -1822236039663136228
+      race-7-layers_6: -8949130675841324186
+      race-7-layers_7: -5665671891205671136
+      race-7-layers_8: 6692764786019904742
+      race-7-layers_9: 2245033156964946637
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,8 @@
+# Combat expansion art — revision 23
+
+Built-in image-generation tool; original transparent Expansion.png retained. Runtime point sampling uses the previously approved 5% coarser sampling. Sixteen cells: spear, boomerang, pistol, crossbow; boots, leggings, pauldrons, shield; four spellbooks; volley, lance, cyclone, orbital hammer emblems. This is original generated artwork guided by the user's reference style, not extracted commercial sprites.
+
+Prompt:
+
+Production sprite atlas for Echoes of the Rift, in the same richly detailed jewel-coloured chibi RPG pixel-art equipment style as My Heroes Dungeon Raid and Brave Frontier, with Terraria weapon variety. Transparent background with real alpha. Exactly four columns by four rows equally sized cells, each asset centered and fully inside its cell, generous 12% clear margin. Square 1024x1024 image. No writing, no labels, no frames, no grid lines. Strong dark purple outlines, crisp pixel clusters, vivid coloured metal and fine gold filigree, readable at 64px. Row1: cyan trident spear; emerald-and-gold returning boomerang; crimson ornate flintlock pistol; violet gem repeater crossbow. Row2: blue-gold armoured boots; ornate dark-violet armoured leggings; bronze winged shoulder armour; glowing ruby shield with gold rim. Row3: deep blue ice spellbook with sapphire clasp; red flame spellbook; purple lightning spellbook; emerald nature spellbook. Row4: circular icon with five cyan arrowheads fanning out; circular icon of violet piercing lightning lance; circular icon of red swirling blade whirlwind; circular icon of golden orbital spinning hammers. Preserve compact rich pixel art not smooth painted illustration. Each sprite distinct and no effects spill across cells.
+

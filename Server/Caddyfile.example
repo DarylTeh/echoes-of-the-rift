@@ -1,0 +1,11 @@
+# TEMPLATE ONLY: replace the hostname after provisioning DNS and TLS-ready deployment.
+# Does not encrypt gameplay UDP. Never proxy the private persistence API on 8081.
+accounts.example.invalid {
+    @accounts path /health /register /login /refresh /recover /logout
+    handle @accounts {
+        reverse_proxy 127.0.0.1:8082
+    }
+    handle {
+        respond "Not found" 404
+    }
+}

@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bb60f2034f796e41ae12c1316e721a6, type: 3}
+  m_Name: book-healer-oath
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  iconSprite: {fileID: 21300000, guid: bce914d61b896874da715f018633b49a, type: 3}
+  Family: book
+  rarity: 0
+  itemTier: 1
+  description: Switch to the other spell stance.
+  villageQuote: '"The oath answers a healer who listens." - Vane, lantern keeper'
+  Id: book-healer-oath
+  DisplayName: Healer Oath tome
+  Kind: 1
+  Slot: 0
+  FlatDamage: 0
+  FlatHealth: 0
+  Spell: {fileID: 11400000, guid: e46f53765f2034d4488a0852c4e024ce, type: 2}
+  DuplicatesPerFuse: 2
+  BaseFuseCost: 10

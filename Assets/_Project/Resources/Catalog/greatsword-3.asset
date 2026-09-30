@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bb60f2034f796e41ae12c1316e721a6, type: 3}
+  m_Name: greatsword-3
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  iconSprite: {fileID: 21300000, guid: 53afbf794265c2945a1f98105a526132, type: 3}
+  Family: greatsword
+  rarity: 2
+  itemTier: 3
+  description: A stormglass greatsword granting 5 attack per fusion tier.
+  villageQuote: '"I tempered this greatsword beneath the stormglass sky; may it bring you home." - Huldra, village smith'
+  Id: greatsword-3
+  DisplayName: Stormglass greatsword
+  Kind: 0
+  Slot: 0
+  FlatDamage: 5
+  FlatHealth: 0
+  Spell: {fileID: 0}
+  DuplicatesPerFuse: 2
+  BaseFuseCost: 10

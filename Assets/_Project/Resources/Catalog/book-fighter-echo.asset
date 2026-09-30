@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bb60f2034f796e41ae12c1316e721a6, type: 3}
+  m_Name: book-fighter-echo
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  iconSprite: {fileID: 21300000, guid: c876880650f090b4db2eb285cb8f1189, type: 3}
+  Family: book
+  rarity: 4
+  itemTier: 5
+  description: Gain 25% basic attack damage for 6 seconds.
+  villageQuote: '"The echo answers a fighter who listens." - Vane, lantern keeper'
+  Id: book-fighter-echo
+  DisplayName: Fighter Echo tome
+  Kind: 1
+  Slot: 0
+  FlatDamage: 0
+  FlatHealth: 0
+  Spell: {fileID: 11400000, guid: 7f243d6fe0a9b5d49878a20b565d9fb3, type: 2}
+  DuplicatesPerFuse: 2
+  BaseFuseCost: 10

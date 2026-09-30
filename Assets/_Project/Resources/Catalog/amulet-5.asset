@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bb60f2034f796e41ae12c1316e721a6, type: 3}
+  m_Name: amulet-5
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  iconSprite: {fileID: 21300000, guid: a1922f1da7c91c943bad722738047018, type: 3}
+  Family: amulet
+  rarity: 4
+  itemTier: 5
+  description: A dawnstar amulet granting 9 health per fusion tier.
+  villageQuote: '"I tempered this amulet beneath the dawnstar sky; may it bring you home." - Huldra, village smith'
+  Id: amulet-5
+  DisplayName: Dawnstar amulet
+  Kind: 0
+  Slot: 2
+  FlatDamage: 0
+  FlatHealth: 9
+  Spell: {fileID: 0}
+  DuplicatesPerFuse: 2
+  BaseFuseCost: 10

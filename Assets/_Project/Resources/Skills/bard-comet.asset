@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eeccadb39ecd8143a70b0a79121b365, type: 3}
+  m_Name: bard-comet
+  m_EditorClassIdentifier: Assembly-CSharp::SpellData
+  skillIcon: {fileID: 21300000, guid: 7487fc5b3e45a824abeefffc86b67ac4, type: 3}
+  Archetype: Bard
+  mechanicalDescription: Summon a rune that pulses 10 damage three times.
+  villageQuote: '"The comet answers a bard who listens." - Vane, lantern keeper'
+  Id: bard-comet
+  DisplayName: Bard Comet
+  Effect: 4
+  Cooldown: 6
+  Power: 30
+  Range: 6
+  Color: {r: 0.37999997, g: 0.81319994, b: 0.95, a: 1}

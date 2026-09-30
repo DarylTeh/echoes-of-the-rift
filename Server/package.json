@@ -1,0 +1,1 @@
+{"name":"echoes-rift-server","private":true,"type":"module","scripts":{"admin":"node admin.mjs","test":"node test.mjs && node accounts.test.mjs && node admin.test.mjs && node progression.test.mjs && node events/event.test.mjs && node inbox.test.mjs"},"scarfSettings":{"enabled":false},"dependencies":{"swagger-ui-dist":"5.33.0"}}

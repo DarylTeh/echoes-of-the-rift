@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bb60f2034f796e41ae12c1316e721a6, type: 3}
+  m_Name: book-assassin-tempest
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  iconSprite: {fileID: 21300000, guid: 6484f04fb073a814fb6e06cc1608c018, type: 3}
+  Family: book
+  rarity: 1
+  itemTier: 2
+  description: Dodge and strike nearby foes for 31 damage.
+  villageQuote: '"The tempest answers a assassin who listens." - Vane, lantern keeper'
+  Id: book-assassin-tempest
+  DisplayName: Assassin Tempest tome
+  Kind: 1
+  Slot: 0
+  FlatDamage: 0
+  FlatHealth: 0
+  Spell: {fileID: 11400000, guid: 1c3dbfa3bb7c9cd40b445f60e12185c7, type: 2}
+  DuplicatesPerFuse: 2
+  BaseFuseCost: 10

@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {createEventStore} from './event-store.mjs';
+import {normalizeEventManifest,validateEventManifest} from './event-manifest.mjs';
+import {eventState,nextBoundary} from './event-schedule.mjs';
+import {templates} from './event-templates.mjs';
+
+const start='2026-10-01T00:00:00.000Z',end='2026-10-08T00:00:00.000Z',now=Date.parse('2026-10-03T12:00:00.000Z');
+const manifest=normalizeEventManifest(templates.tokenExchange('autumn-2026',start,end));assert.equal(eventState(manifest,now),'active');assert.equal(nextBoundary(manifest,now),end);assert.equal(eventState(manifest,Date.parse(start)),'active');assert.equal(eventState(manifest,Date.parse(end)),'ended');
+for(const name of ['loginCalendar','tokenExchange','dailyQuests','progressiveAchievements','bossChallenge','raidLadder','eventShop','doubleDrop','communityGoal','collaborationPack','newsInbox','towerDefense'])assert.doesNotThrow(()=>validateEventManifest(normalizeEventManifest(templates[name](`template-${name.toLowerCase()}`,start,end))));
+assert.throws(()=>validateEventManifest({...manifest,id:'Bad ID'}));assert.throws(()=>validateEventManifest({...manifest,endAt:start}));
+assert.throws(()=>validateEventManifest({...manifest,rewards:[{currency:'coins',amount:-1}]}));assert.throws(()=>validateEventManifest({...manifest,rewards:[{itemId:'bad item',tier:1,count:1}]}));
+const db=new DatabaseSync(':memory:'),store=createEventStore(db,()=>now);store.upsert(manifest);assert.equal(store.active().length,1);const first=store.claim(manifest.id,'player-1','day:2026-10-03');assert.equal(first.claimed,true);const replay=store.claim(manifest.id,'player-1','day:2026-10-03');assert.equal(replay.claimed,false);assert.equal(replay.rewardReceipt,first.rewardReceipt);
+const playerStatus=store.status(manifest.id,'player-1',1);assert.equal(playerStatus.state,'active');assert.equal(playerStatus.eligible,true);assert.equal(playerStatus.claimsCompleted,1);const unknownStatus=store.status(manifest.id,'player-2',1);assert.equal(unknownStatus.claimsCompleted,0);
+const staged={...manifest,version:2,startAt:'2026-10-04T00:00:00.000Z',endAt:'2026-10-08T00:00:00.000Z'};store.upsert(staged);assert.equal(store.history().length,2);assert.equal(store.active()[0].version,1);assert.equal(store.status(manifest.id,'player-1',1).state,'active');assert.equal(store.status(manifest.id,'player-1',2).state,'scheduled');assert.throws(()=>store.upsert(manifest),/version must increase/);const endedStore=createEventStore(db,()=>Date.parse(end));assert.throws(()=>endedStore.claim(manifest.id,'player-1','day:2026-10-04'),/not active/);
+db.close();console.log('PASS events: UTC schedule boundaries, manifest validation, reusable templates and idempotent claims.');

@@ -1,0 +1,40 @@
+{
+  "stages": [
+    {
+      "id": "Verdant sanctuary",
+      "width": 29,
+      "height": 19,
+      "enemies": 3,
+      "boss": true,
+      "rewardItem": 0,
+      "rewardCoins": 15
+    },
+    {
+      "id": "Furnace of Ra",
+      "width": 29,
+      "height": 19,
+      "enemies": 4,
+      "boss": true,
+      "rewardItem": 1,
+      "rewardCoins": 15
+    },
+    {
+      "id": "Temple of tides",
+      "width": 29,
+      "height": 19,
+      "enemies": 5,
+      "boss": true,
+      "rewardItem": 2,
+      "rewardCoins": 15
+    },
+    {
+      "id": "Citadel of thunder",
+      "width": 29,
+      "height": 19,
+      "enemies": 1,
+      "boss": true,
+      "rewardItem": 3,
+      "rewardCoins": 35
+    }
+  ]
+}

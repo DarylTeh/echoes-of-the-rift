@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eeccadb39ecd8143a70b0a79121b365, type: 3}
+  m_Name: solar-hammers
+  m_EditorClassIdentifier: Assembly-CSharp::SpellData
+  skillIcon: {fileID: 21300000, guid: 45e9d87607a120c47a9857734fec5507, type: 3}
+  Archetype: Wayfarer
+  mechanicalDescription: 6 rotating sweeps, 16 damage per hit.
+  villageQuote: A technique carried between the old temples.
+  Id: solar-hammers
+  DisplayName: Solar Hammers
+  Effect: 10
+  Cooldown: 10
+  Power: 96
+  Range: 2.4
+  Color: {r: 0.7921569, g: 0.6313726, b: 0.34117648, a: 1}
