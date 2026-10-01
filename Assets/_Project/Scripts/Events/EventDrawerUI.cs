@@ -125,7 +125,7 @@ public sealed class EventDrawerUI : MonoBehaviour
         }
         detailEligibility.text=result.eligible?"Eligibility: AVAILABLE · server verified":"Eligibility: NOT AVAILABLE · "+result.eligibilityReason;
         detailEligibility.color=result.eligible?new Color32(180,230,180,255):new Color32(240,160,160,255);
-        detailProgress.text=$"Server claims recorded: {result.claimsCompleted}\n{ProgressText(item.type)}";
+        detailProgress.text=$"Server claims recorded: {result.claimsCompleted}\n{FormatProgress(result.progress)}\n{ProgressText(item.type)}";
     }
 
     private void CloseDetails()
@@ -151,6 +151,14 @@ public sealed class EventDrawerUI : MonoBehaviour
             case "collaboration_pack":return "Progress: story, missions, login rewards and the exchange shop unlock together.";
             default:return "Progress: tracked by the server event module.";
         }
+    }
+
+    private static string FormatProgress(ServerEventProgress progress)
+    {
+        if(progress==null||string.IsNullOrWhiteSpace(progress.metric))return "Progress: awaiting this event module.";
+        var cap=progress.cap>0?$" / {progress.cap}":"";
+        var next=progress.nextThreshold>0?$" · next {progress.nextThreshold}":"";
+        return $"Progress: {progress.metric} {progress.value}{cap}{next}";
     }
 
     private static string ShortTitle(ServerEventSnapshot item,int max=30)

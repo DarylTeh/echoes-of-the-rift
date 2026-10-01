@@ -1,6 +1,12 @@
 # Execution log
 
-## Current build - revision 43, 30 September 2026
+## Current build - revision 44, 1 October 2026
+
+Implemented the next live-ops slice. Event manifests can declare a progress metric, cap and eligible modes; SQLite stores progress by event/version/player and returns it through version-pinned `/event-status`. Verified campaign reward receipts advance matching active metrics once, while duplicate receipts do not. Milestone events expose the next threshold and reject `milestone:N` claims before the server confirms completion. Token-exchange templates now track a bounded event-token progress metric. The Events drawer renders metric, value, cap and next threshold without creating client-owned counters.
+
+Validation: `npm test` passes all suites, including campaign-to-event progress integration, cap/mode handling and milestone claim gates. Changed C# files pass source brace checks. A fresh Unity compile remains blocked by the local Editor license; the existing accepted Windows export and UI evidence remain the current runtime baseline.
+
+## Previous build - revision 43, 30 September 2026
 
 OCI CLI authentication now succeeds with the locally generated API-signing pair. Created the `echoes-rift-vcn` VCN, internet gateway, public route table, `10.42.1.0/24` public subnet, empty-ingress security list and `echoes-rift-nsg`; NSG ingress is limited to the operator's current `/32` on SSH plus public TCP 80/443, with all other game/admin/persistence ports closed. Both `VM.Standard.A1.Flex` and `VM.Standard.E2.1.Micro` launches returned Oracle's out-of-host-capacity response in Singapore, so no VM or public IP was created. The local server launcher now passes `/health` checks on 8081/8082 and starts the dedicated Unity server on UDP 7770; the packaged Windows client is running against it. No secret/auth token was stored or committed. The Windows x64 versus Linux ARM64 build boundary, encrypted gameplay transport and measured-device gates remain open.
 

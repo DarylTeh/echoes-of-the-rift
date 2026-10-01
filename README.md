@@ -1,10 +1,12 @@
 # Echoes of the Rift
 
-## Current build - revision 43, 30 September 2026
+## Current build - revision 44, 1 October 2026
+
+The live-event slice now records server-owned progress per event version and player. Verified campaign reward receipts advance matching active event metrics exactly once, caps and eligible modes are enforced, and milestone claims remain locked until their thresholds are reached. The Events drawer renders the authoritative value, cap and next threshold beside the existing status and inbox flow.
 
 This pass keeps the low-end runtime allocation reductions and records a verified local playable stack alongside the working OCI CLI authentication and provisioned network foundation. Co-op snapshots reuse buffers and cooldown arrays, network presentation caches components, summoned rune targeting is non-allocating, skill cooldown text is refreshed only when it changes, and safe-area layout recalculates only after a display change. Android/iPhone default to Low and standalone defaults to Medium; fixed neon effects remain enabled with a lower low-quality burst cap. Both Always Free VM shapes are currently out of host capacity in Singapore, and public deployment remains gated by Unity activation, a compatible Linux server build, encrypted gameplay transport and measured device/server tests. See [Server/OCI-DEPLOYMENT.md](Server/OCI-DEPLOYMENT.md).
 
-The Events drawer now asks the server for version-pinned event status when a detail card opens. It shows active/scheduled/ended state, eligibility reason and server-recorded claim receipts for the exact manifest version. Module gameplay progress and claims remain authoritative server operations; the client never fabricates counters. Layout smoke coverage exercises the detail transition. The next live-ops slice is module-owned gameplay progress and claim eligibility.
+The Events drawer now asks the server for version-pinned event status when a detail card opens. It shows active/scheduled/ended state, eligibility reason, server-recorded claim receipts and authoritative module progress for the exact manifest version. The client never fabricates counters. Layout smoke coverage exercises the detail transition. The next live-ops slice is module-specific reward delivery and event-shop spending.
 
 The UI safety and presentation audit is now the guardrail for new screens and modes: sign out lives only in Settings > Accounts behind confirmation, connection loss offers Reconnect only, and the reduced-motion preference is absent so neon presentation remains active. See [the audit](Docs/UI-SAFETY-AND-PRESENTATION-AUDIT.md) and the master plan.
 

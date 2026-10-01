@@ -1,6 +1,8 @@
 # Echoes of the Rift — dedicated server package
 
-## Current build - revision 43, 30 September 2026
+## Current build - revision 44, 1 October 2026
+
+Event progress is now server-owned. Active manifests may define a progress metric, cap and eligible modes; verified campaign reward receipts advance the matching metric once per idempotent receipt. `/event-status` returns the exact event-version progress, cap and next threshold, and milestone claims are rejected until the configured threshold is reached. The Unity Events drawer presents these values as read-only status. The next slice is module-specific reward delivery and event-shop spending.
 
 The client/server event status work remains version-pinned. The runtime audit also reduced per-snapshot allocation pressure and repeated UI work for low-end targets. The local account/persistence services and dedicated Unity server are running for the packaged Windows client. OCI authentication and the VCN/subnet/NSG network foundation are provisioned through [OCI-DEPLOYMENT.md](OCI-DEPLOYMENT.md); both Always Free VM shapes are currently out of host capacity in Singapore, while Unity activation, a compatible Linux server build, encrypted gameplay and device profiling remain required before public deployment.
 

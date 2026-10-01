@@ -1,8 +1,12 @@
 # Echoes of the Rift master plan
 
-Revision 43 - 30 September 2026. Local playable stack verified; OCI VM capacity remains unavailable.
+Revision 44 - 1 October 2026. Event progress is now authoritative and replay-safe.
 
-## Current iteration - revision 43: Local playable stack verified; OCI VM capacity remains unavailable
+## Current iteration - revision 44: authoritative event progress and claim eligibility
+
+Verified campaign reward transactions now advance matching active event modules exactly once. SQLite stores progress per event version and player, caps progress at the manifest rule, filters eligible modes, returns progress and the next threshold from `/event-status`, and gates milestone claims until the server confirms the threshold. The Events drawer renders the server-owned metric/value/cap/next-threshold alongside claim status. This keeps device clocks, client counters and duplicate reward receipts from changing event progress. The next live-ops slice is module-specific reward delivery and event-shop spending, followed by measured device acceptance.
+
+## Previous revision 43: Local playable stack verified; OCI VM capacity remains unavailable
 
 The hot paths now avoid avoidable per-frame allocations: co-op snapshots reuse exact-size buffers and cooldown arrays, replica/bolt removal sets are reused, network presentation caches its rigidbody, summoned runes use `OverlapCircleNonAlloc`, skill HUD labels update only when values change, and safe-area transforms recalculate only after a screen or safe-area change. Low and medium quality defaults are selected for Android/iPhone and standalone development targets; neon effects remain active with a lower quality-aware burst budget. The local account/persistence services pass health checks, the dedicated Unity server listens on UDP 7770, and the packaged Windows client is running against the local stack. OCI authentication and network resources are ready, but both Always Free VM shapes returned out-of-host-capacity in Singapore; Linux server build, measured device/server tests and encrypted public gameplay remain open for cloud deployment.
 

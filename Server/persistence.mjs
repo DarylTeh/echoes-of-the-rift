@@ -49,7 +49,7 @@ export function createStore(path,catalog) {
    if(action==='reward'){
     if(!/^[a-f0-9-]{8,80}$/.test(receipt)||!Number.isInteger(stage)||stage<0||stage>3)throw Error('Invalid room receipt');
     if(!db.prepare('SELECT 1 FROM receipts WHERE player=? AND receipt=?').get(id,receipt)){
-     add(p,'gear-'+stage,1);p.Coins+=stage===3?35:15;p.CampaignStagesCompleted=Math.max(p.CampaignStagesCompleted,stage+1);db.prepare('INSERT INTO receipts VALUES(?,?)').run(id,receipt);
+     add(p,'gear-'+stage,1);p.Coins+=stage===3?35:15;p.CampaignStagesCompleted=Math.max(p.CampaignStagesCompleted,stage+1);db.prepare('INSERT INTO receipts VALUES(?,?)').run(id,receipt);events.recordActiveProgress(id,'campaign',{'verified-event-clears':1,'event-tokens':10});
     }
    }else{
     if(!item||!Number.isInteger(tier)||tier<1||tier>5)throw Error('Unknown item/tier');

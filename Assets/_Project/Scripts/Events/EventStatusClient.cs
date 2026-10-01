@@ -3,11 +3,19 @@ using System.Collections;
 using UnityEngine;
 
 [Serializable]
+public sealed class ServerEventProgress
+{
+    public string metric,updatedAt;
+    public int value,cap,nextThreshold;
+}
+
+[Serializable]
 public sealed class ServerEventStatus
 {
     public string eventId,eligibilityReason,state;
     public int eventVersion,claimsCompleted;
     public bool eligible;
+    public ServerEventProgress progress;
 }
 
 // Event status is authoritative server data. The client only renders it;
