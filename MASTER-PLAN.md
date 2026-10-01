@@ -1,8 +1,12 @@
 # Echoes of the Rift master plan
 
-Revision 47 - 1 October 2026. Complete clone handoff and portable deployment paths.
+Revision 48 - 1 October 2026. Low-end server/database and overhead UI optimization.
 
-## Current iteration - revision 47: complete clone handoff
+## Current iteration - revision 48: measured hot-path optimization
+
+SQLite now has supporting indexes for session/ticket expiry cleanup, player inbox reads, event progress/claim lookups and admin audit history, with a five-second busy timeout on the shared store. Overhead HP bars keep smooth per-frame positions while refreshing sprite-bound scans, health fill and colours at bounded rates. These changes reduce repeated work without changing authoritative combat, reward or account behavior.
+
+## Previous revision 47: complete clone handoff
 
 The repository now contains the complete reproducible game handoff: Unity project files, server source/tests, deployment scripts, portable launchers, Windows release payload and endpoint runbook. Repo-local command files cover dependency installation and starting the server/player. OCI provisioning resolves paths from the new laptop's user profile or environment instead of the original developer's absolute paths. No public OCI IP exists yet because the VM launch was out of capacity; private keys, credentials, databases, logs and dependencies remain machine-local.
 

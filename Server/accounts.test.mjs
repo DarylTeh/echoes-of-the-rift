@@ -3,6 +3,8 @@ import {createStore} from './persistence.mjs';
 import {createAccounts,accountHandler} from './accounts.mjs';
 import http from 'node:http';
 const store=createStore(':memory:',[]);let now=1000000;const accounts=createAccounts(store,()=>now);
+const accountIndexes=new Set(store.db.prepare("SELECT name FROM sqlite_master WHERE type='index'").all().map(row=>row.name));
+for(const index of ['sessions_expires_idx','sessions_player_idx','tickets_expires_idx','tickets_player_idx'])assert.ok(accountIndexes.has(index),`Missing performance index ${index}`);
 const password='a long private passphrase';
 await assert.rejects(accounts.register({username:'too_short',password:'abcd'}),/5-128/);
 const fiveCharacter=await accounts.register({username:'fivechar',password:'abcde'});assert.equal(fiveCharacter.created,true);

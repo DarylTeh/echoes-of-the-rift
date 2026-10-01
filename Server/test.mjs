@@ -2,6 +2,8 @@ import {createStore} from './persistence.mjs';
 import {templates} from './events/event-templates.mjs';
 import assert from 'node:assert/strict';
 const catalog=[{id:'gear-0',kind:0,slot:0,tier:1}];const store=createStore(':memory:',catalog);const id='a'.repeat(32),secret='b'.repeat(64);
+const storeIndexes=new Set(store.db.prepare("SELECT name FROM sqlite_master WHERE type='index'").all().map(row=>row.name));
+for(const index of ['inbox_player_status_created_idx','event_claims_player_idx','event_progress_player_idx'])assert.ok(storeIndexes.has(index),`Missing performance index ${index}`);
 assert.equal(store.login(id,secret).Coins,30);assert.throws(()=>store.login(id,'c'.repeat(64)));
 const eventStart=new Date(Date.now()-1000).toISOString(),eventEnd=new Date(Date.now()+60_000).toISOString();store.events.upsert(templates.tokenExchange('test-token-event',eventStart,eventEnd));
 store.transaction(id,'reward','',0,'12345678',0);store.transaction(id,'reward','',0,'12345678',0);assert.equal(store.get(id).Coins,45);assert.equal(store.get(id).Items[0].Count,2);

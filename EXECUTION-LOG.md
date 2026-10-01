@@ -1,6 +1,12 @@
 # Execution log
 
-## Current build - revision 47, 1 October 2026
+## Current build - revision 48, 1 October 2026
+
+Added SQLite indexes for session/ticket expiry and player cleanup, inbox ordering, event progress/claims and admin audit history. Enabled a shared five-second SQLite busy timeout. Reduced overhead HP-bar work by caching sprite-bound scans and bounded-rate value/color updates while leaving positions smooth every frame.
+
+Validation: the full `npm test` suite passes, including schema-index assertions; the Unity source change passes the source-level brace check. A fresh Unity compile remains subject to the existing local Editor license gate.
+
+## Previous build - revision 47, 1 October 2026
 
 Audited the clone handoff and confirmed Unity source/settings, server source/tests, deployment scripts, tracked Windows payload and portable launchers are inside the repository. Added repo-local install/start/play command files, an endpoint runbook, and machine-independent OCI CLI/config path resolution. Documented that no public IP exists because OCI has not created a VM.
 

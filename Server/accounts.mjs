@@ -8,7 +8,11 @@ export function createAccounts(store,now=()=>Date.now()){
  const db=store.db;
  db.exec(`CREATE TABLE IF NOT EXISTS accounts(username TEXT PRIMARY KEY,player TEXT UNIQUE NOT NULL,salt TEXT NOT NULL,password TEXT NOT NULL,recovery TEXT NOT NULL);
  CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,player TEXT NOT NULL,expires INTEGER NOT NULL);
- CREATE TABLE IF NOT EXISTS tickets(token TEXT PRIMARY KEY,player TEXT NOT NULL,expires INTEGER NOT NULL);`);
+ CREATE TABLE IF NOT EXISTS tickets(token TEXT PRIMARY KEY,player TEXT NOT NULL,expires INTEGER NOT NULL);
+ CREATE INDEX IF NOT EXISTS sessions_expires_idx ON sessions(expires);
+ CREATE INDEX IF NOT EXISTS sessions_player_idx ON sessions(player);
+ CREATE INDEX IF NOT EXISTS tickets_expires_idx ON tickets(expires);
+ CREATE INDEX IF NOT EXISTS tickets_player_idx ON tickets(player);`);
  const issue=id=>{db.prepare("DELETE FROM sessions WHERE expires<=?").run(now());db.prepare("DELETE FROM tickets WHERE expires<=?").run(now());const refreshToken=token(),ticket=token();db.prepare('INSERT INTO sessions VALUES(?,?,?)').run(hash(refreshToken),id,now()+30*86400000);db.prepare('INSERT INTO tickets VALUES(?,?,?)').run(hash(ticket),id,now()+120000);return {id,refreshToken,ticket,profile:store.get(id)};};
  function atomic(fn){db.exec('BEGIN IMMEDIATE');try{const value=fn();db.exec('COMMIT');return value;}catch(e){db.exec('ROLLBACK');throw e;}}
  return {

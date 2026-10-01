@@ -1,6 +1,8 @@
 # Echoes of the Rift
 
-## Current build - revision 47, 1 October 2026
+## Current build - revision 48, 1 October 2026
+
+This pass adds supporting SQLite indexes and bounded overhead-bar refresh work for smoother low-end play and server response under account/event/inbox activity. The full server test suite remains green.
 
 The repository is the complete clone handoff: Unity `Assets`, `Packages`, `ProjectSettings`, source tools, server source and tests, deployment scripts, documentation, portable Windows launchers and the tracked Windows executable distribution are all inside this folder. Use `Install Rift Server.cmd`, then `Start Rift Server.cmd` and `Play Rift Game.cmd` on Windows. Endpoint and deployment state are recorded in [Server/ENDPOINTS.md](Server/ENDPOINTS.md).
 
