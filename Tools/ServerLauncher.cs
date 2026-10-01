@@ -7,12 +7,21 @@ using System.Windows.Forms;
 
 static class ServerLauncher
 {
+    static string ProjectRoot()
+    {
+        string baseDir=AppDomain.CurrentDomain.BaseDirectory.TrimEnd(Path.DirectorySeparatorChar,Path.AltDirectorySeparatorChar);
+        DirectoryInfo parentInfo=Directory.GetParent(baseDir);string parent=parentInfo==null?null:parentInfo.FullName;
+        string[] candidates={baseDir,Path.Combine(baseDir,"CookieRaid"),parent,Path.Combine(parent??string.Empty,"CookieRaid")};
+        foreach(string candidate in candidates)if(!string.IsNullOrWhiteSpace(candidate)&&File.Exists(Path.Combine(candidate,"Tools","Run-Dedicated.ps1")))return candidate;
+        return Path.Combine(baseDir,"CookieRaid");
+    }
+
     [STAThread] static int Main(string[] args)
     {
         bool first;using(var mutex=new Mutex(true,"Local\\EchoesOfTheRiftServer",out first))
         {
             if(!first){MessageBox.Show("The server control window is already open.","Echoes of the Rift Server");return 0;}
-            string root=Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"CookieRaid");if(!Directory.Exists(root))root=@"C:\Users\daryl\OneDrive\文档\ChatGPT\Daryl\CookieRaid";
+            string root=ProjectRoot();
             string control=Path.Combine(root,"Logs","ServerControl",Guid.NewGuid().ToString("N"));Directory.CreateDirectory(control);
             bool test=Array.IndexOf(args,"--test")>=0,stopping=false,allowClose=false,ready=false;
             var form=new Form{Text="Echoes of the Rift Server",ClientSize=new Size(480,180),StartPosition=FormStartPosition.CenterScreen};

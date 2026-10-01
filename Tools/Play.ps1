@@ -4,7 +4,8 @@ $projectRoot=Split-Path -Parent $PSScriptRoot
 $output=Join-Path $projectRoot 'Logs/Launcher'
 New-Item -ItemType Directory -Force $output | Out-Null
 try {
-    $exe=Join-Path $projectRoot 'Builds/Windows/EchoesOfTheRift.exe'
+$exe=Join-Path $projectRoot 'Release/Windows/EchoesOfTheRift.exe'
+if(-not(Test-Path -LiteralPath $exe)){$exe=Join-Path $projectRoot 'Builds/Windows/EchoesOfTheRift.exe'}
     if(-not (Test-Path -LiteralPath $exe)){throw 'Game files were not found.'}
     $arguments='-screen-fullscreen 0 -screen-width 1280 -screen-height 720 -logFile "'+(Join-Path $output 'player.log')+'"'
     if($Test){$arguments+=' -cookieSmoke -accountFlowTest -startupUnavailableTest -cookieOutput "'+$output+'"'}

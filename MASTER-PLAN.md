@@ -1,8 +1,12 @@
 # Echoes of the Rift master plan
 
-Revision 44 - 1 October 2026. Event progress is now authoritative and replay-safe.
+Revision 45 - 1 October 2026. Clone-ready Windows release package and portable launchers.
 
-## Current iteration - revision 44: authoritative event progress and claim eligibility
+## Current iteration - revision 45: clone-ready release packaging
+
+The repository now contains a tracked `Release/Windows` development distribution with the current playable client payload, portable player/server launchers and the admin shortcut. The launchers resolve `Tools/` relative to their own location, so a fresh clone no longer depends on the old machine path. `Server/` source, package lock and operational scripts remain tracked; `node_modules`, progress databases, logs, admin hashes and credentials remain local by design. All test scripts prefer the tracked release build and fall back to `Builds/Windows` for editor-generated outputs. The next feature slice remains module-specific event rewards and event-shop spending.
+
+## Previous revision 44: authoritative event progress and claim eligibility
 
 Verified campaign reward transactions now advance matching active event modules exactly once. SQLite stores progress per event version and player, caps progress at the manifest rule, filters eligible modes, returns progress and the next threshold from `/event-status`, and gates milestone claims until the server confirms the threshold. The Events drawer renders the server-owned metric/value/cap/next-threshold alongside claim status. This keeps device clocks, client counters and duplicate reward receipts from changing event progress. The next live-ops slice is module-specific reward delivery and event-shop spending, followed by measured device acceptance.
 

@@ -5,7 +5,8 @@ $output=Join-Path $projectRoot 'Logs/Launcher'
 New-Item -ItemType Directory -Force $output | Out-Null
 $owned=@()
 try {
-    $exe=Join-Path $projectRoot 'Builds/Windows/EchoesOfTheRift.exe'
+$exe=Join-Path $projectRoot 'Release/Windows/EchoesOfTheRift.exe'
+if(-not(Test-Path -LiteralPath $exe)){$exe=Join-Path $projectRoot 'Builds/Windows/EchoesOfTheRift.exe'}
     if(-not (Test-Path -LiteralPath $exe)){throw 'The game build is missing. Keep the launcher beside the CookieRaid folder.'}
     $node=(Get-Command node -ErrorAction Stop).Source
     $ports=[System.Net.NetworkInformation.IPGlobalProperties]::GetIPGlobalProperties()

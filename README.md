@@ -1,6 +1,8 @@
 # Echoes of the Rift
 
-## Current build - revision 44, 1 October 2026
+## Current build - revision 45, 1 October 2026
+
+The clone now includes the playable Windows handoff under [Release/Windows](Release/Windows) plus portable `Release/Play Echoes of the Rift.exe` and `Release/Echoes of the Rift Server.exe` launchers. Start by running `npm ci --prefix Server --ignore-scripts`, then open the server launcher and player launcher. The local admin shortcut is [Open Rift Admin.cmd](Open%20Rift%20Admin.cmd). Runtime databases, logs, `node_modules`, hashes and credentials remain machine-local.
 
 The live-event slice now records server-owned progress per event version and player. Verified campaign reward receipts advance matching active event metrics exactly once, caps and eligible modes are enforced, and milestone claims remain locked until their thresholds are reached. The Events drawer renders the authoritative value, cap and next threshold beside the existing status and inbox flow.
 

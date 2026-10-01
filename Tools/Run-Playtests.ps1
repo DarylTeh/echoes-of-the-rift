@@ -1,7 +1,8 @@
 param([switch]$Coop)
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path -Parent $PSScriptRoot
-$exe=Join-Path $projectRoot 'Builds/Windows/EchoesOfTheRift.exe'
+$exe=Join-Path $projectRoot 'Release/Windows/EchoesOfTheRift.exe'
+if(-not(Test-Path -LiteralPath $exe)){$exe=Join-Path $projectRoot 'Builds/Windows/EchoesOfTheRift.exe'}
 if(-not(Test-Path -LiteralPath $exe)){throw 'Build the Windows player first.'}
 function Start-TestPlayer([string]$role,[string]$flag) {
     $output=Join-Path $projectRoot ('Logs/'+$role)

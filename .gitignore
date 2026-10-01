@@ -16,3 +16,6 @@ Server/*.key
 Server/node_modules/
 
 Server/admin-auth.json
+
+Release/Legacy/
+Release/Windows/**/*.pdb

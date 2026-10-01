@@ -1,6 +1,8 @@
 # Echoes of the Rift — server ownership and deployment
 
-## Current build - revision 43, 30 September 2026
+## Current build - revision 45, 1 October 2026
+
+The repository now ships a clone-ready Windows development payload in `../Release/Windows` with portable player/server launchers in `../Release/`. This is a convenience handoff, not a public deployment artifact: install Node dependencies locally, keep SQLite and admin credentials out of source control, and use the documented Linux/encrypted-transport gates before exposing services.
 
 Production readiness now follows the player-first backlog in [FUTURE-DESIGN-BACKLOG.md](../Docs/FUTURE-DESIGN-BACKLOG.md): reliability and recovery, telemetry, real-device performance and safe live operations are release gates alongside features.
 

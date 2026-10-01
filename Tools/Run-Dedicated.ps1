@@ -4,7 +4,8 @@ if($Pair){$Test=$true}
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path -Parent $PSScriptRoot
 $serverRoot=Join-Path $projectRoot 'Server'
-$exe=Join-Path $projectRoot 'Builds/Windows/EchoesOfTheRift.exe'
+$exe=Join-Path $projectRoot 'Release/Windows/EchoesOfTheRift.exe'
+if(-not(Test-Path -LiteralPath $exe)){$exe=Join-Path $projectRoot 'Builds/Windows/EchoesOfTheRift.exe'}
 $output=if($Pair){Join-Path $projectRoot 'Logs/DedicatedPair'}else{Join-Path $projectRoot 'Logs/Dedicated'}
 New-Item -ItemType Directory -Force $output | Out-Null
 $oldKey=$env:COOKIE_SERVER_KEY

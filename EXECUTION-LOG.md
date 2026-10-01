@@ -1,6 +1,12 @@
 # Execution log
 
-## Current build - revision 44, 1 October 2026
+## Current build - revision 45, 1 October 2026
+
+Moved the desktop handoff into the repository. Added a tracked `Release/Windows` payload without PDB debug symbols, rebuilt portable player/server launchers that locate the project by `Tools/`, moved the admin shortcut into the project root, and made all Windows test/play scripts prefer the tracked release while retaining an editor-build fallback. The clone now includes the playable client and server source; `Server/node_modules`, SQLite progress data, logs, admin hashes and credentials remain ignored machine state.
+
+Validation: release payload contains 167 files and no PDB files; launcher sources compile with the installed .NET Framework compiler; server `npm test` remains green. The old parent-folder launchers were moved into ignored `Release/Legacy` and the old hard-coded path is no longer used.
+
+## Previous build - revision 44, 1 October 2026
 
 Implemented the next live-ops slice. Event manifests can declare a progress metric, cap and eligible modes; SQLite stores progress by event/version/player and returns it through version-pinned `/event-status`. Verified campaign reward receipts advance matching active metrics once, while duplicate receipts do not. Milestone events expose the next threshold and reject `milestone:N` claims before the server confirms completion. Token-exchange templates now track a bounded event-token progress metric. The Events drawer renders metric, value, cap and next threshold without creating client-owned counters.
 

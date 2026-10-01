@@ -1,6 +1,8 @@
 # Echoes of the Rift — dedicated server package
 
-## Current build - revision 44, 1 October 2026
+## Current build - revision 45, 1 October 2026
+
+The clone-ready handoff is under `../Release/Windows`. Run `npm ci --prefix Server --ignore-scripts` once, then use the portable launchers in `../Release/`. The scripts and launchers prefer this tracked payload and fall back to `Builds/Windows` when developing from a locally generated Unity export. SQLite progress, logs, admin hashes and credentials remain local and ignored.
 
 Event progress is now server-owned. Active manifests may define a progress metric, cap and eligible modes; verified campaign reward receipts advance the matching metric once per idempotent receipt. `/event-status` returns the exact event-version progress, cap and next threshold, and milestone claims are rejected until the configured threshold is reached. The Unity Events drawer presents these values as read-only status. The next slice is module-specific reward delivery and event-shop spending.
 
@@ -114,7 +116,7 @@ This version connects clients to a separately launched Fish-Net game server. The
 
 Requirements: Node.js 24+ and the exported Windows game folder.
 
-Open the desktop **Echoes of the Rift Server.exe**, then **Play Echoes of the Rift.exe**. Alternatively, from the project root run `Tools/Run-Dedicated.ps1`, then launch `Builds/Windows/EchoesOfTheRift.exe`. Keep the server script running. It starts the private SQLite service and a headless game-server process. Stop the script to stop both. The headless game process listens on UDP 7770; the database service listens only on 127.0.0.1:8081.
+From a fresh clone, run `npm ci --prefix Server --ignore-scripts`, then open `Release/Echoes of the Rift Server.exe` and `Release/Play Echoes of the Rift.exe`. Alternatively, from the project root run `Tools/Run-Dedicated.ps1`, then launch `Release/Windows/EchoesOfTheRift.exe` (or the editor-generated `Builds/Windows/EchoesOfTheRift.exe`). Keep the server script running. It starts the private SQLite service and a headless game-server process. Stop the script to stop both. The headless game process listens on UDP 7770; the database service listens only on 127.0.0.1:8081.
 
 The script passes a fresh private service key through the child-process environment. It never places that key in the client build. Normal Windows clients store a DPAPI-protected renewable account token locally; inventory, gold, equipment, skill selection and campaign completion live in `Server/progress.sqlite`.
 
