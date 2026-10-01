@@ -3,7 +3,7 @@ import {promisify} from 'node:util';
 const derive=promisify(scrypt),token=()=>randomBytes(32).toString('hex'),hash=s=>createHash('sha256').update(String(s??'')).digest('hex');
 const key=async(p,s)=>derive(p,s,32,{N:32768,r:8,p:3,maxmem:64*1024*1024});
 const username=s=>{if(typeof s!=='string'||!/^[a-zA-Z0-9_]{3,24}$/.test(s))throw Error('Use 3-24 letters, numbers or underscores.');return s.toLowerCase();};
-const password=s=>{if(typeof s!=='string'||s.length<15||s.length>128)throw Error('Use a password of 15-128 characters.');return s;};
+const password=s=>{if(typeof s!=='string'||s.length<5||s.length>128)throw Error('Use a password of 5-128 characters.');return s;};
 export function createAccounts(store,now=()=>Date.now()){
  const db=store.db;
  db.exec(`CREATE TABLE IF NOT EXISTS accounts(username TEXT PRIMARY KEY,player TEXT UNIQUE NOT NULL,salt TEXT NOT NULL,password TEXT NOT NULL,recovery TEXT NOT NULL);

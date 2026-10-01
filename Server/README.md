@@ -2,7 +2,7 @@
 
 ## Current build - revision 45, 1 October 2026
 
-The clone-ready handoff is under `../Release/Windows`. Run `npm ci --prefix Server --ignore-scripts` once, then use the portable launchers in `../Release/`. The scripts and launchers prefer this tracked payload and fall back to `Builds/Windows` when developing from a locally generated Unity export. SQLite progress, logs, admin hashes and credentials remain local and ignored.
+The clone-ready handoff is under `../Release/Windows`. Run `npm ci --prefix Server --ignore-scripts` once, then use the portable launchers in `../Release/`. The scripts and launchers prefer this tracked payload and fall back to `Builds/Windows` when developing from a locally generated Unity export. SQLite progress, logs, admin hashes and credentials remain local and ignored. Current account validation accepts passwords from 5 through 128 characters.
 
 Event progress is now server-owned. Active manifests may define a progress metric, cap and eligible modes; verified campaign reward receipts advance the matching metric once per idempotent receipt. `/event-status` returns the exact event-version progress, cap and next threshold, and milestone claims are rejected until the configured threshold is reached. The Unity Events drawer presents these values as read-only status. The next slice is module-specific reward delivery and event-shop spending.
 

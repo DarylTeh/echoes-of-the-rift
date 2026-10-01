@@ -1,6 +1,12 @@
 # Execution log
 
-## Current build - revision 45, 1 October 2026
+## Current build - revision 46, 1 October 2026
+
+Lowered the minimum player account password from 15 to 5 characters while keeping the 128-character maximum. Updated server registration/recovery validation, the Unity account form label and the playtest instructions. Added boundary coverage for rejecting four characters and accepting five.
+
+Validation: `node accounts.test.mjs` passes, including the new five-character boundary checks. Existing longer passwords and account flows remain covered.
+
+## Previous build - revision 45, 1 October 2026
 
 Moved the desktop handoff into the repository. Added a tracked `Release/Windows` payload without PDB debug symbols, rebuilt portable player/server launchers that locate the project by `Tools/`, moved the admin shortcut into the project root, and made all Windows test/play scripts prefer the tracked release while retaining an editor-build fallback. The clone now includes the playable client and server source; `Server/node_modules`, SQLite progress data, logs, admin hashes and credentials remain ignored machine state.
 

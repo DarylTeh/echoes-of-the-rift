@@ -1,8 +1,12 @@
 # Echoes of the Rift master plan
 
-Revision 45 - 1 October 2026. Clone-ready Windows release package and portable launchers.
+Revision 46 - 1 October 2026. Clone-ready Windows release package and five-character account passwords.
 
-## Current iteration - revision 45: clone-ready release packaging
+## Current iteration - revision 46: accessible account password minimum
+
+Account registration and recovery now accept passwords from 5 through 128 characters. The Unity account form labels the requirement consistently, and the account suite covers both rejection below five characters and successful five-character registration. Existing longer passwords remain valid.
+
+## Previous revision 45: clone-ready release packaging
 
 The repository now contains a tracked `Release/Windows` development distribution with the current playable client payload, portable player/server launchers and the admin shortcut. The launchers resolve `Tools/` relative to their own location, so a fresh clone no longer depends on the old machine path. `Server/` source, package lock and operational scripts remain tracked; `node_modules`, progress databases, logs, admin hashes and credentials remain local by design. All test scripts prefer the tracked release build and fall back to `Builds/Windows` for editor-generated outputs. The next feature slice remains module-specific event rewards and event-shop spending.
 

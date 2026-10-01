@@ -4,6 +4,8 @@ import {createAccounts,accountHandler} from './accounts.mjs';
 import http from 'node:http';
 const store=createStore(':memory:',[]);let now=1000000;const accounts=createAccounts(store,()=>now);
 const password='a long private passphrase';
+await assert.rejects(accounts.register({username:'too_short',password:'abcd'}),/5-128/);
+const fiveCharacter=await accounts.register({username:'fivechar',password:'abcde'});assert.equal(fiveCharacter.created,true);
 const original=await accounts.register({username:'Wayfarer',password});
 assert.equal(original.profile.Coins,30);assert.equal(accounts.consume(original.id,original.ticket).Coins,30);
 assert.throws(()=>accounts.consume(original.id,original.ticket));

@@ -30,7 +30,7 @@ public sealed class SplashScreenUI : MonoBehaviour
         prompt=enter.GetComponentInChildren<TMP_Text>();
         form=GameUI.Panel(Root,"AccountPanel",new Vector2(292,0),new Vector2(620,640));
         GameUI.Label(form,EnglishAccount.YourAdventure,new Vector2(0,270),new Vector2(520,48),32).color=GameUI.Gold;
-        Username=Field(form,EnglishAccount.Username,205,false);Password=Field(form,EnglishAccount.Password15Characters,115,true);Recovery=Field(form,EnglishAccount.RecoveryCode,25,false);Recovery.gameObject.SetActive(false);
+        Username=Field(form,EnglishAccount.Username,205,false);Password=Field(form,EnglishAccount.Password5Characters,115,true);Recovery=Field(form,EnglishAccount.RecoveryCode,25,false);Recovery.gameObject.SetActive(false);
         message=GameUI.Label(form,EnglishAccount.ChooseAUsernameAndAPasswordNyour,new Vector2(0,-74),new Vector2(520,132),22);
         submit=GameUI.Button(form,EnglishAccount.CreateAccount,new Vector2(0,-175),new Vector2(520,48),()=>Submit());
         GameUI.Button(form,EnglishAccount.RegisterSignIn,new Vector2(-135,-240),new Vector2(250,44),()=>{if(busy||account!=null)return;register=!register;recover=false;Recovery.gameObject.SetActive(false);submit.GetComponentInChildren<TMP_Text>().text=register?"Create account":"Sign in";message.text=register?"Create an account to keep your progress.":"Welcome back. Sign in to your account.";});

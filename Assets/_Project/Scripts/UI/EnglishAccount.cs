@@ -16,6 +16,6 @@ public static class EnglishAccount
     public const string RecoveryCodeCopiedKeepItSomewhereSafe="Recovery code copied. Keep it somewhere safe, then enter your adventure.";
     public const string WelcomeBackYourProgressIsReady="Welcome back. Your progress is ready.";
     public const string Username="Username";
-    public const string Password15Characters="Password (15+ characters)";
+    public const string Password5Characters="Password (5+ characters)";
     public const string RecoveryCode="Recovery code";
 }

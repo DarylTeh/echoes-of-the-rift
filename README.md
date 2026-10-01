@@ -1,6 +1,8 @@
 # Echoes of the Rift
 
-## Current build - revision 45, 1 October 2026
+## Current build - revision 46, 1 October 2026
+
+Player account passwords may now be 5–128 characters. Registration, sign-in and recovery use the same server rule, and the account form shows the five-character minimum.
 
 The clone now includes the playable Windows handoff under [Release/Windows](Release/Windows) plus portable `Release/Play Echoes of the Rift.exe` and `Release/Echoes of the Rift Server.exe` launchers. Start by running `npm ci --prefix Server --ignore-scripts`, then open the server launcher and player launcher. The local admin shortcut is [Open Rift Admin.cmd](Open%20Rift%20Admin.cmd). Runtime databases, logs, `node_modules`, hashes and credentials remain machine-local.
 
