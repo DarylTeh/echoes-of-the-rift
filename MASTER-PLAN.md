@@ -1,8 +1,12 @@
 # Echoes of the Rift master plan
 
-Revision 46 - 1 October 2026. Clone-ready Windows release package and five-character account passwords.
+Revision 47 - 1 October 2026. Complete clone handoff and portable deployment paths.
 
-## Current iteration - revision 46: accessible account password minimum
+## Current iteration - revision 47: complete clone handoff
+
+The repository now contains the complete reproducible game handoff: Unity project files, server source/tests, deployment scripts, portable launchers, Windows release payload and endpoint runbook. Repo-local command files cover dependency installation and starting the server/player. OCI provisioning resolves paths from the new laptop's user profile or environment instead of the original developer's absolute paths. No public OCI IP exists yet because the VM launch was out of capacity; private keys, credentials, databases, logs and dependencies remain machine-local.
+
+## Previous revision 46: accessible account password minimum
 
 Account registration and recovery now accept passwords from 5 through 128 characters. The Unity account form labels the requirement consistently, and the account suite covers both rejection below five characters and successful five-character registration. Existing longer passwords remain valid.
 

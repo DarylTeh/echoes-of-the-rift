@@ -1,6 +1,6 @@
 # Echoes of the Rift release package
 
-This folder is the clone-ready Windows handoff. `Windows/` contains the current playable client distribution without debug symbol files. The two launchers start the project scripts relative to this repository, so the folder can be moved or cloned to another Windows machine.
+This folder is the clone-ready Windows handoff. `Windows/` contains the current playable client distribution without debug symbol files. The two launchers start the project scripts relative to this repository, so the folder can be moved or cloned to another Windows machine. The complete Unity project and server source are one level above this folder; endpoint and cloud status are in `../Server/ENDPOINTS.md`.
 
 ## First launch
 

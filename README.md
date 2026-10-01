@@ -1,6 +1,8 @@
 # Echoes of the Rift
 
-## Current build - revision 46, 1 October 2026
+## Current build - revision 47, 1 October 2026
+
+The repository is the complete clone handoff: Unity `Assets`, `Packages`, `ProjectSettings`, source tools, server source and tests, deployment scripts, documentation, portable Windows launchers and the tracked Windows executable distribution are all inside this folder. Use `Install Rift Server.cmd`, then `Start Rift Server.cmd` and `Play Rift Game.cmd` on Windows. Endpoint and deployment state are recorded in [Server/ENDPOINTS.md](Server/ENDPOINTS.md).
 
 Player account passwords may now be 5–128 characters. Registration, sign-in and recovery use the same server rule, and the account form shows the five-character minimum.
 

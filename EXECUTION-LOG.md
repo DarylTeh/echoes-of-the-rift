@@ -1,6 +1,12 @@
 # Execution log
 
-## Current build - revision 46, 1 October 2026
+## Current build - revision 47, 1 October 2026
+
+Audited the clone handoff and confirmed Unity source/settings, server source/tests, deployment scripts, tracked Windows payload and portable launchers are inside the repository. Added repo-local install/start/play command files, an endpoint runbook, and machine-independent OCI CLI/config path resolution. Documented that no public IP exists because OCI has not created a VM.
+
+Validation: repository status is clean after the prior push; the endpoint defaults remain loopback-only, and no credential, private key, SQLite database or dependency directory was added.
+
+## Previous build - revision 46, 1 October 2026
 
 Lowered the minimum player account password from 15 to 5 characters while keeping the 128-character maximum. Updated server registration/recovery validation, the Unity account form label and the playtest instructions. Added boundary coverage for rejecting four characters and accepting five.
 

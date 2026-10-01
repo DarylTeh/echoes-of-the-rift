@@ -51,11 +51,11 @@ Then open the existing admin path locally. Do not expose Swagger or the SQLite d
 
 ## OCI CLI key setup
 
-The official OCI CLI is installed for the Windows user at `C:\Users\daryl\oci-cli`, and new terminals receive that directory through the user PATH. The local RSA signing pair is:
+Install the OCI CLI on the development machine and make `oci` available on PATH. The provisioning script resolves the CLI from PATH, then falls back to `<user-profile>\oci-cli\Scripts\oci.exe`; it resolves the config from `OCI_CLI_CONFIG_FILE`, then `<user-profile>\.oci\config`. The local RSA signing pair is kept outside the repository:
 
 ```text
-Private: C:\Users\daryl\.oci\oci_api_key.pem
-Public:  C:\Users\daryl\.oci\oci_api_key_public.pem
+Private: <user-profile>\.oci\oci_api_key.pem
+Public:  <user-profile>\.oci\oci_api_key_public.pem
 Fingerprint: 03:9c:82:68:45:dc:ca:16:ad:15:58:fd:97:75:e9:3d
 ```
 
@@ -65,7 +65,7 @@ In the OCI Console, open **Profile → User settings → API Keys → Add API Ke
 oci setup config
 ```
 
-Enter the tenancy OCID, user OCID, home-region identifier and the private-key path when prompted. The CLI configuration belongs in `C:\Users\daryl\.oci\config`; keep it outside the repository. Verify it with a harmless read-only command such as:
+Enter the tenancy OCID, user OCID, home-region identifier and the private-key path when prompted. The CLI configuration belongs in `<user-profile>\.oci\config`; keep it outside the repository. Verify it with a harmless read-only command such as:
 
 ```powershell
 oci iam region list --output table

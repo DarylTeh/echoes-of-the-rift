@@ -1,14 +1,25 @@
 param(
-    [string]$SshPublicKeyPath = 'C:\Users\daryl\.ssh\echoes_oci_ed25519.pub',
+    [string]$SshPublicKeyPath = '',
     [string]$CurrentPublicIp = '',
     [string]$InstanceName = 'echoes-rift-staging',
     [ValidateSet('VM.Standard.A1.Flex','VM.Standard.E2.1.Micro')]
-    [string]$Shape = 'VM.Standard.A1.Flex'
+    [string]$Shape = 'VM.Standard.A1.Flex',
+    [string]$OciPath = '',
+    [string]$ConfigPath = ''
 )
 
 $ErrorActionPreference = 'Stop'
-$Oci = 'C:\Users\daryl\oci-cli\Scripts\oci.exe'
-$ConfigPath = 'C:\Users\daryl\.oci\config'
+$homePath = [Environment]::GetFolderPath('UserProfile')
+if (-not $SshPublicKeyPath) { $SshPublicKeyPath = Join-Path $homePath '.ssh/echoes_oci_ed25519.pub' }
+if (-not $OciPath) {
+    $ociCommand = Get-Command oci.exe -ErrorAction SilentlyContinue
+    if ($ociCommand) { $OciPath = $ociCommand.Source }
+    else { $OciPath = Join-Path $homePath 'oci-cli/Scripts/oci.exe' }
+}
+if (-not $ConfigPath) {
+    $ConfigPath = if ($env:OCI_CLI_CONFIG_FILE) { $env:OCI_CLI_CONFIG_FILE } else { Join-Path $homePath '.oci/config' }
+}
+$Oci = $OciPath
 
 if (-not (Test-Path $Oci)) { throw "OCI CLI was not found at $Oci" }
 if (-not (Test-Path $ConfigPath)) { throw "OCI config was not found at $ConfigPath" }
