@@ -17,6 +17,10 @@ public sealed class SkillWheelHUD : MonoBehaviour
     private readonly System.Collections.Generic.List<GameObject> combatControls=new System.Collections.Generic.List<GameObject>();
     private TMP_Text healthText,manaText,stanceText,objective,goldValue,gemValue,levelValue;
     private int shownGold=-1,shownGems=-1,shownLevel=-1;
+    private int shownHealth=-1,shownMana=-1;
+    private float shownHealthRatio=-1,shownManaRatio=-1;
+    private string shownWeaponFamily;
+    private readonly SpellData[] shownSpells=new SpellData[3];
     private UnityEngine.UI.Image hp,mp;
     private readonly TMP_Text[] labels=new TMP_Text[3];
     private readonly UnityEngine.UI.Image[] icons=new UnityEngine.UI.Image[3];
@@ -110,11 +114,15 @@ public sealed class SkillWheelHUD : MonoBehaviour
         if(root==null||Time.unscaledTime<nextRefresh)return;
         nextRefresh=Time.unscaledTime+.05f;
         RefreshWallet();
-        healthText.text=EnglishUI.Health(Mathf.CeilToInt(Health.Health),Health.MaximumHealth);manaText.text=EnglishUI.Mana(Skills.Mana);
-        hp.rectTransform.sizeDelta=new Vector2(200*Mathf.Clamp01(Health.Health/Mathf.Max(1,Health.MaximumHealth)),6);mp.rectTransform.sizeDelta=new Vector2(200*Mathf.Clamp01(Skills.Mana/100),6);
-        if(weapon!=null){attackIcon.sprite=IllustratedArt.Weapon(weapon.Family);attackIcon.material=IllustratedArt.Owns(attackIcon.sprite)?IllustratedArt.UI:null;}
+        int healthValue=Mathf.CeilToInt(Health.Health),manaValue=Mathf.CeilToInt(Skills.Mana);
+        if(shownHealth!=healthValue){shownHealth=healthValue;healthText.text=EnglishUI.Health(healthValue,Health.MaximumHealth);}
+        if(shownMana!=manaValue){shownMana=manaValue;manaText.text=EnglishUI.Mana(manaValue);}
+        float healthRatio=Mathf.Clamp01(Health.Health/Mathf.Max(1,Health.MaximumHealth)),manaRatio=Mathf.Clamp01(Skills.Mana/100);
+        if(Mathf.Abs(shownHealthRatio-healthRatio)>.001f){shownHealthRatio=healthRatio;hp.rectTransform.sizeDelta=new Vector2(200*healthRatio,6);}
+        if(Mathf.Abs(shownManaRatio-manaRatio)>.001f){shownManaRatio=manaRatio;mp.rectTransform.sizeDelta=new Vector2(200*manaRatio,6);}
+        if(weapon!=null&&shownWeaponFamily!=weapon.Family){shownWeaponFamily=weapon.Family;attackIcon.sprite=IllustratedArt.Weapon(weapon.Family);attackIcon.material=IllustratedArt.Owns(attackIcon.sprite)?IllustratedArt.UI:null;}
         if(lastSecondary!=Skills.SecondaryActive){lastSecondary=Skills.SecondaryActive;stanceText.text=Skills.SecondaryActive?EnglishUI.MoonStance:EnglishUI.EmberStance;}
-        for(int i=0;i<3;i++){int index=i+(Skills.SecondaryActive?3:0);var spell=Skills.GetSpell(index);float remaining=Skills.Remaining(index);icons[i].sprite=IllustratedArt.Skill(spell)??spell?.skillIcon;icons[i].material=IllustratedArt.Owns(icons[i].sprite)?IllustratedArt.UI:null;int tenths=remaining>0?Mathf.CeilToInt(remaining*10):0;if(shownCooldownTenths[i]!=tenths){shownCooldownTenths[i]=tenths;labels[i].text=tenths>0?(tenths/10f).ToString("0.0"):Keys[i];}cooldowns[i].fillAmount=spell==null?0:Mathf.Clamp01(remaining/Mathf.Max(.01f,stats.CooldownDuration(spell.Cooldown)));icons[i].color=Color.white;}
+        for(int i=0;i<3;i++){int index=i+(Skills.SecondaryActive?3:0);var spell=Skills.GetSpell(index);float remaining=Skills.Remaining(index);if(shownSpells[i]!=spell){shownSpells[i]=spell;icons[i].sprite=IllustratedArt.Skill(spell)??spell?.skillIcon;icons[i].material=IllustratedArt.Owns(icons[i].sprite)?IllustratedArt.UI:null;}int tenths=remaining>0?Mathf.CeilToInt(remaining*10):0;if(shownCooldownTenths[i]!=tenths){shownCooldownTenths[i]=tenths;labels[i].text=tenths>0?(tenths/10f).ToString("0.0"):Keys[i];}cooldowns[i].fillAmount=spell==null?0:Mathf.Clamp01(remaining/Mathf.Max(.01f,stats.CooldownDuration(spell.Cooldown)));}
         bool town=game.Hub.IsOpen;int stage=game.Dungeon.StageIndex;foreach(var control in combatControls)control.SetActive(!town);quest.gameObject.SetActive(!town&&questExpanded);if(lastTown!=town||lastStage!=stage){lastTown=town;lastStage=stage;objective.text=EnglishUI.Objective(town,stage+1);}
     }
     private void OnDestroy(){if(root!=null)Destroy(root.gameObject);}

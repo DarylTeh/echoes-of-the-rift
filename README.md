@@ -1,6 +1,8 @@
 # Echoes of the Rift
 
-## Current build - revision 48, 1 October 2026
+## Current build - revision 49, 2 October 2026
+
+The skill HUD and active-event feed now avoid repeating stable work, improving low-end frame time and repeated event requests while preserving gameplay and server authority.
 
 This pass adds supporting SQLite indexes and bounded overhead-bar refresh work for smoother low-end play and server response under account/event/inbox activity. The full server test suite remains green.
 

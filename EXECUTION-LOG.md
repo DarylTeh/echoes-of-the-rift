@@ -1,6 +1,12 @@
 # Execution log
 
-## Current build - revision 48, 1 October 2026
+## Current build - revision 49, 2 October 2026
+
+Cached unchanged skill HUD text, bars, weapon art and skill art so the low-end client only refreshes cooldown visuals at the short cadence. Added a one-second active-event manifest cache with immediate invalidation on publish; schedule boundaries still refresh after the cache window and claims continue to read authoritative event definitions.
+
+Validation: full `npm test` passes, including event schedule and claim tests. Unity source edits remain pending the local Editor license for a new export.
+
+## Previous build - revision 48, 1 October 2026
 
 Added SQLite indexes for session/ticket expiry and player cleanup, inbox ordering, event progress/claims and admin audit history. Enabled a shared five-second SQLite busy timeout. Reduced overhead HP-bar work by caching sprite-bound scans and bounded-rate value/color updates while leaving positions smooth every frame.
 

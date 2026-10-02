@@ -1,8 +1,12 @@
 # Echoes of the Rift master plan
 
-Revision 48 - 1 October 2026. Low-end server/database and overhead UI optimization.
+Revision 49 - 2 October 2026. Low-end HUD and live-event cache optimization.
 
-## Current iteration - revision 48: measured hot-path optimization
+## Current iteration - revision 49: bounded HUD and event work
+
+The skill HUD now updates health/mana text, bars, weapon art and skill art only when their values change; cooldown fills still refresh on the short gameplay cadence. The event service caches the active manifest list for up to one second and invalidates it immediately after publication, reducing repeated JSON/history scans while preserving schedule transitions and authoritative claims.
+
+## Previous revision 48: measured hot-path optimization
 
 SQLite now has supporting indexes for session/ticket expiry cleanup, player inbox reads, event progress/claim lookups and admin audit history, with a five-second busy timeout on the shared store. Overhead HP bars keep smooth per-frame positions while refreshing sprite-bound scans, health fill and colours at bounded rates. These changes reduce repeated work without changing authoritative combat, reward or account behavior.
 
