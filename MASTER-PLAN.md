@@ -1,6 +1,18 @@
 # Echoes of the Rift master plan
 
-Revision 49 - 2 October 2026. Low-end HUD and live-event cache optimization.
+Revision 50 - 2 October 2026. Strict player-facing UI audit and navigation reset.
+
+## Current iteration - revision 50: screen-by-screen UX review
+
+The strict review is recorded in [Docs/UI-STRICT-REVIEW.md](Docs/UI-STRICT-REVIEW.md). It covers startup/authentication, character creation, Rift Haven, collection/shop/item detail, skills, settings/account, events/inbox, combat HUD, pause, results/recovery, reconnect, revive and leaderboard. This revision is a documented review only; runtime UI has not yet been redesigned.
+
+The main finding is weak hierarchy: too many simultaneous destinations and equivalent-weight controls, with reward/error explanations detached from the action that follows them. Highest-priority redesign is the sign-in path and town navigation, then the incomplete three-slot paperdoll/dedicated skill page, combat touch spacing, event/reward surfaces and result panels. Preserve the protected sign-out path, server-authoritative rewards, account safety, fixed neon motion and current combat rules.
+
+My Heroes references confirm stable lobby rails, compact edge HUD groups, an equipment paperdoll beside its grid, separate item inspection, and goal/reward-oriented quest rows. They do not establish every hidden interaction or equivalent screens for our live-event calendar, backend recovery, or placeholder modes. The audit marks those distinctions and requires live-client capture review before claiming visual acceptance.
+
+Next UI implementation sequence: (1) simplify first-run account entry into explicit sign-in/create/recovery steps, (2) establish the top-level screen map and remove duplicate town navigation, (3) fix honest hero/skills hierarchy after choosing the gear/skill migration contracts, (4) reduce combat overlay competition at Android landscape sizes, (5) make event, inbox, item and result states outcome-first, (6) run the screen-by-screen capture and first-time-player acceptance in the review. Do not add further menu buttons before that navigation pass.
+
+## Previous revision 49: bounded HUD and event work
 
 ## Current iteration - revision 49: bounded HUD and event work
 

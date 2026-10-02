@@ -1,5 +1,13 @@
 # Execution log
 
+## Current review - revision 50, 2 October 2026
+
+Performed a strict source-level review of every current player-facing screen and interaction state, from startup/login through town, inventory/shop, skills, events/inbox, combat, pause, revive, results, save recovery, reconnect and leaderboard. Compared each available surface to the existing two-pass My Heroes UI audit, five sampled gameplay videos, wiki notes and user screenshots. Findings and a prioritized redesign/acceptance sequence are in `Docs/UI-STRICT-REVIEW.md`; `MASTER-PLAN.md` now treats navigation hierarchy as the next UI slice.
+
+No runtime UI code was changed and no visual parity claim was made. Main issues: competing town navigation, two-step entry before auth, no dedicated skill assignment screen, only three current gear slots, crowded combat edges, event rows without visible overflow navigation, duplicated close controls and result explanations detached from their actions. The account sign-out safety flow is retained as a correct existing decision.
+
+Validation: source inventory and screen/action tracing only; `git diff --check` passes. The companion Canvas summary is saved in the Codex canvas directory. No fresh Unity export or Android device capture was run; existing layout checks/captures are prior revision evidence, not acceptance of this review's proposals.
+
 ## Current build - revision 49, 2 October 2026
 
 Cached unchanged skill HUD text, bars, weapon art and skill art so the low-end client only refreshes cooldown visuals at the short cadence. Added a one-second active-event manifest cache with immediate invalidation on publish; schedule boundaries still refresh after the cache window and claims continue to read authoritative event definitions.
