@@ -1,5 +1,11 @@
 # Execution log
 
+## Current OCI feasibility check - revision 53, 2 October 2026
+
+Used OCI CLI 3.94.1 to inspect region subscriptions, compute instances, shapes, quotas, network and reserved IPs. Only the Singapore home region is subscribed (one AD); the existing VCN/subnet are available, with no VM or reserved public IP. Non-billable capacity reports returned A1 1/6 GB, E2.1.Micro and E4 Flex 2/12 GB as `OUT_OF_HOST_CAPACITY`; E5 Flex 2/12 GB is `AVAILABLE` with sufficient quota. E5's published compute-only estimate is about US$61.32 per 730-hour month; no paid VM was created. Always Free compute must stay in the home region.
+
+The local Unity 6000.6.2f1 install has Windows Standalone support but no Linux Standalone module, and the repo has no Linux server output. The client remains loopback-only. The Unity CLI install was not run: automatic review rejected elevated execution of an uninspected remote PowerShell installer. No OCI VM, reserved IP, DNS or public service was provisioned.
+
 ## Current server feature - revision 52, 2 October 2026
 
 Added authenticated `POST /event-shop-purchase`. Purchases validate the pinned event version and active schedule, token balance, per-player cap and shared stock; token debit, stock decrement, idempotency receipt and item inbox grant commit atomically in SQLite. Retries return the original purchase, while any failed grant rolls back the spend and stock change. Added tests for success, idempotency after version changes, stale versions, insufficient currency, player caps, shared stock depletion and rollback.

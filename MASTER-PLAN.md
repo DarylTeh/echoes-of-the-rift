@@ -1,6 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 52 - 2 October 2026. Transactional event-shop purchases.
+Revision 53 - 2 October 2026. Live OCI hosting feasibility check.
+
+## Current iteration - revision 53: OCI capacity and deployment gate
+
+Queried the tenancy with OCI CLI 3.94.1. Only the Singapore home region is subscribed, it has one availability domain, and no compute instances or reserved public IPv4 addresses exist. The existing VCN and public subnet are available. Capacity reports show Always Free A1 Flex (1 OCPU/6 GB), E2.1.Micro and paid E4 Flex (2 OCPU/12 GB) out of host capacity; paid E5 Flex (2 OCPU/12 GB) is available and quota is sufficient. E5 is approximately US$61.32 per 730-hour month for compute alone at Oracle's published rates, excluding storage/network/tax; nothing billable was launched. Always Free compute is limited to the home region, and Oracle region subscriptions cannot be undone.
+
+The installed Unity Editor 6000.6.2f1 does not have Linux Standalone support installed, and there is no Linux game-server build in the repo. The checked-in game remains loopback-only, with no Oracle IP or public endpoint. The official Unity CLI installer was blocked by automatic review because it would execute an uninspected remote PowerShell script with elevated privileges. No OCI infrastructure was changed except generating capacity reports.
+
+Hosting decision gate: if the player keeps the free-tier-only requirement, wait for Singapore A1/E2 capacity to return; there is no free, deployable host now. If the player approves E5 billing and a monthly cap, install the Unity Linux module through the normal licensed Unity workflow, build and test Linux x86_64 server, then deploy HTTPS/account plus encrypted gameplay only after transport and client endpoint work are validated. Do not subscribe another region as a free-tier workaround.
+
+## Previous revision 52: server-authoritative event shop
 
 ## Current iteration - revision 52: server-authoritative event shop
 
