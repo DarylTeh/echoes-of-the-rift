@@ -1,5 +1,11 @@
 # Execution log
 
+## Current server API - revision 54, 2 October 2026
+
+Added authenticated `POST /event-shop-status` for the active version-pinned shop manifest. It returns server time/state, currency metric and balance, offer rewards/prices, shared remaining stock, the player's remaining per-offer limit and purchase eligibility/reason. Reads do not create or mutate stock records. The existing purchase endpoint still revalidates all constraints inside its write transaction.
+
+Validation: `node events/event.test.mjs` and `node inbox.test.mjs` pass; the full `npm test` suite is run before commit. No Unity files changed. Shop screen integration remains behind the player's wireframe feedback.
+
 ## Current OCI feasibility check - revision 53, 2 October 2026
 
 Used OCI CLI 3.94.1 to inspect region subscriptions, compute instances, shapes, quotas, network and reserved IPs. Only the Singapore home region is subscribed (one AD); the existing VCN/subnet are available, with no VM or reserved public IP. Non-billable capacity reports returned A1 1/6 GB, E2.1.Micro and E4 Flex 2/12 GB as `OUT_OF_HOST_CAPACITY`; E5 Flex 2/12 GB is `AVAILABLE` with sufficient quota. E5's published compute-only estimate is about US$61.32 per 730-hour month; no paid VM was created. Always Free compute must stay in the home region.

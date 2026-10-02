@@ -111,5 +111,29 @@ export function createEventStore(db,clock=()=>Date.now()){
       db.exec('COMMIT');return {purchased:true,duplicate:false,purchaseId,rewardReceipt,offerId:offer.id,price:offer.price,balance:balance-offer.price,stockRemaining:stock.remaining-1,delivery};
     }catch(error){db.exec('ROLLBACK');throw error;}
   };
-  return {list,history,get,upsert,active,status,recordProgress,recordActiveProgress,claim,purchase,state:(event,now=clock())=>eventState(event,now)};
+  const shopStatus=(eventId,eventVersion,player)=>{
+    if(typeof player!=='string'||player.length<1||player.length>128)throw new Error('Invalid player.');
+    if(!Number.isSafeInteger(eventVersion)||eventVersion<1)throw new Error('Invalid event version.');
+    const event=get(eventId);if(!event)throw new Error('Unknown event.');
+    if(event.version!==eventVersion)throw new Error('Shop event version is no longer current. Refresh the shop.');
+    if(!['event_shop','token_exchange','collaboration_pack'].includes(event.type))throw new Error('This event has no shop.');
+    const spec=definition(event);if(!spec||spec.metric!==event.config.currencyMetric)throw new Error('Shop currency progress is not configured.');
+    const now=clock(),iso=new Date(now).toISOString(),day=iso.slice(0,10),state=eventState(event,now);
+    const stockPeriod=event.config.restock==='utc-day'?day:'event',limitPeriod=event.config.purchaseLimitScope==='utc-day'?day:'event';
+    const progress=db.prepare('SELECT value FROM event_progress WHERE event_id=? AND event_version=? AND player=? AND metric=?').get(event.id,event.version,player,spec.metric),balance=Number(progress?.value??0);
+    const offers=(event.config.shopOffers??[]).map(offer=>{
+      const stockRow=db.prepare('SELECT remaining FROM event_shop_stock WHERE event_id=? AND event_version=? AND offer_id=? AND period=?').get(event.id,event.version,offer.id,stockPeriod);
+      const stockRemaining=stockRow?Number(stockRow.remaining):offer.stock;
+      const count=db.prepare('SELECT COUNT(*) AS count FROM event_shop_purchases WHERE event_id=? AND event_version=? AND player=? AND offer_id=? AND purchase_period=?').get(event.id,event.version,player,offer.id,limitPeriod);
+      const purchasesRemaining=Math.max(0,offer.playerLimit-Number(count?.count??0));
+      let reason='Ready to purchase.';
+      if(state!=='active')reason=`Event is ${state}.`;
+      else if(stockRemaining<1)reason='This offer is sold out.';
+      else if(purchasesRemaining<1)reason='Purchase limit reached.';
+      else if(balance<offer.price)reason='Not enough event currency.';
+      return {id:offer.id,price:offer.price,stock:offer.stock,stockRemaining,playerLimit:offer.playerLimit,purchasesRemaining,reward:offer.reward,canPurchase:reason==='Ready to purchase.',reason};
+    });
+    return {eventId:event.id,eventVersion:event.version,state,serverTime:iso,currencyMetric:spec.metric,balance,restock:stockPeriod==='event'?'event':'utc-day',purchaseLimitScope:limitPeriod==='event'?'event':'utc-day',offers};
+  };
+  return {list,history,get,upsert,active,status,shopStatus,recordProgress,recordActiveProgress,claim,purchase,state:(event,now=clock())=>eventState(event,now)};
 }

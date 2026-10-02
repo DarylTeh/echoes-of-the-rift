@@ -1,8 +1,18 @@
 # Echoes of the Rift master plan
 
-Revision 53 - 2 October 2026. Live OCI hosting feasibility check.
+Revision 54 - 2 October 2026. Read-only event-shop status API.
 
-## Current iteration - revision 53: OCI capacity and deployment gate
+## Current iteration - revision 54: shop offer and eligibility status
+
+Added authenticated `POST /event-shop-status`, version-pinned to the current event manifest. It returns UTC server time and state, player event-token balance, each configured reward/price, shared remaining stock, the player's remaining purchase allowance and a clear purchase eligibility reason. A status read does not create stock records or mutate player data; the purchase route remains authoritative if balance or shared stock changes afterward. Tests cover empty stock initialization, balance/stock updates after purchase, limit eligibility and stale manifest rejection.
+
+Validation: full server test suite passes. No Unity UI changed because the wireframes are still awaiting player feedback. OCI remains unattached: the Singapore Always Free capacity report remains unavailable and the Linux server build prerequisite is unresolved.
+
+Next: fold the approved wireframes into a focused event bazaar UI using `/event-shop-status` and `/event-shop-purchase`, with server response as the only source for price, eligibility and stock. Keep the UI change separate from the local-only OCI deployment gate.
+
+## Previous revision 53: live OCI hosting feasibility check
+
+## Revision 53 details: OCI capacity and deployment gate
 
 Queried the tenancy with OCI CLI 3.94.1. Only the Singapore home region is subscribed, it has one availability domain, and no compute instances or reserved public IPv4 addresses exist. The existing VCN and public subnet are available. Capacity reports show Always Free A1 Flex (1 OCPU/6 GB), E2.1.Micro and paid E4 Flex (2 OCPU/12 GB) out of host capacity; paid E5 Flex (2 OCPU/12 GB) is available and quota is sufficient. E5 is approximately US$61.32 per 730-hour month for compute alone at Oracle's published rates, excluding storage/network/tax; nothing billable was launched. Always Free compute is limited to the home region, and Oracle region subscriptions cannot be undone.
 

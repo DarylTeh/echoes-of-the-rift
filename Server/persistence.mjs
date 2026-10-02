@@ -29,6 +29,7 @@ export function createStore(path,catalog) {
  };
  const claimEvent=(eventId,player,claimKey)=>{get(player);return events.claim(eventId,player,claimKey,undefined,(event,_owner,receipt)=>enqueueRewards(event,player,receipt));};
  const purchaseEventShop=(eventId,eventVersion,player,offerId,requestId)=>{get(player);return events.purchase(eventId,eventVersion,player,offerId,requestId,(event,owner,receipt,offer)=>enqueueRewards(event,owner,receipt,[offer.reward]));};
+ const eventShopStatus=(eventId,eventVersion,player)=>{get(player);return events.shopStatus(eventId,eventVersion,player);};
  const eventStatus=(eventId,player,eventVersion)=>{get(player);return events.status(eventId,player,eventVersion);};
  const inbox=(player)=>{get(player);return {entries:db.prepare('SELECT * FROM inbox WHERE player=? ORDER BY CASE status WHEN \'pending\' THEN 0 ELSE 1 END,created_at DESC').all(player).map(publicReward)};};
  const claimInbox=(player,inboxId)=>{get(player);if(typeof inboxId!=='string'||inboxId.length<1||inboxId.length>128)throw Error('Invalid inbox entry.');db.exec('BEGIN IMMEDIATE');try{
@@ -38,7 +39,7 @@ export function createStore(path,catalog) {
   if(reward.currency){const field=reward.currency==='coins'?'Coins':'Gems';p[field]=Math.min(maxReward,(p[field]??0)+reward.amount);}else{for(let i=0;i<reward.count;i++)add(p,reward.itemId,reward.tier);}
   save(player,p);const claimedAt=new Date().toISOString();db.prepare('UPDATE inbox SET status=\'claimed\',claimed_at=? WHERE id=? AND player=?').run(claimedAt,inboxId,player);db.exec('COMMIT');return {claimed:true,entry:{...publicReward({...row,status:'claimed',claimed_at:claimedAt}),reward},profile:p};
  }catch(error){db.exec('ROLLBACK');throw error;}};
- return {db,get,events,claimEvent,purchaseEventShop,eventStatus,inbox,claimInbox, leaders(){return {entries:db.prepare("SELECT substr(id,1,6) AS tag,profile FROM players ORDER BY json_extract(profile,'$.CampaignStagesCompleted') DESC,json_extract(profile,'$.Coins') DESC LIMIT 10").all()};}, login(id,secret){
+ return {db,get,events,claimEvent,purchaseEventShop,eventShopStatus,eventStatus,inbox,claimInbox, leaders(){return {entries:db.prepare("SELECT substr(id,1,6) AS tag,profile FROM players ORDER BY json_extract(profile,'$.CampaignStagesCompleted') DESC,json_extract(profile,'$.Coins') DESC LIMIT 10").all()};}, login(id,secret){
   if(!/^[a-f0-9]{32}$/.test(id)||!/^[a-f0-9]{64}$/.test(secret))throw Error('Invalid identity');
   const row=db.prepare('SELECT secret FROM players WHERE id=?').get(id);
   if(row&&!timingSafeEqual(Buffer.from(row.secret),Buffer.from(hash(secret))))throw Error('Invalid credentials');
@@ -84,6 +85,7 @@ export function startServer({port=8081,host='127.0.0.1',key=process.env.COOKIE_S
    if(req.url==='/inbox')return reply(200,store.inbox(b.id));
    if(req.url==='/inbox-claim')return reply(200,store.claimInbox(b.id,b.inboxId));
    if(req.url==='/event-status')return reply(200,store.eventStatus(b.eventId,b.id,Number.isInteger(b.eventVersion)&&b.eventVersion>0?b.eventVersion:null));
+   if(req.url==='/event-shop-status')return reply(200,store.eventShopStatus(b.eventId,b.eventVersion,b.id));
    if(req.url==='/event-claim')return reply(200,store.claimEvent(b.eventId,b.id,b.claimKey));
    if(req.url==='/event-shop-purchase')return reply(200,store.purchaseEventShop(b.eventId,b.eventVersion,b.id,b.offerId,b.requestId));
    let profile;if(req.url==='/ticket')profile=accounts.consume(b.id,b.secret);
