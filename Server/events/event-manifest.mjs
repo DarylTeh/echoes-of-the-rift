@@ -5,6 +5,13 @@ export const EVENT_TYPES=Object.freeze([
   'raid_ladder','event_shop','collaboration_pack','double_drop','community_goal','news_inbox','tower_defense'
 ]);
 const idPattern=/^[a-z0-9][a-z0-9_-]{2,63}$/;
+const offerIdPattern=/^[a-z0-9][a-z0-9_-]{0,63}$/;
+
+function validateReward(reward,label='reward'){
+  if(!reward||typeof reward!=='object'||Array.isArray(reward))throw new Error(`${label} must be an object.`);
+  if(reward.currency!==undefined){if(!['coins','gems'].includes(reward.currency)||!Number.isSafeInteger(reward.amount)||reward.amount<1||reward.amount>2_000_000_000)throw new Error(`${label} currency must use a bounded coins/gems amount.`);return;}
+  if(typeof reward.itemId!=='string'||!/^[a-zA-Z0-9_-]{1,128}$/.test(reward.itemId)||!Number.isSafeInteger(reward.tier)||reward.tier<1||reward.tier>5||!Number.isSafeInteger(reward.count)||reward.count<1||reward.count>1_000_000)throw new Error(`${label} item must use a bounded itemId, tier and count.`);
+}
 
 export function validateEventManifest(input){
   if(!input||typeof input!=='object'||Array.isArray(input))throw new Error('Event manifest must be an object.');
@@ -16,10 +23,23 @@ export function validateEventManifest(input){
   if(input.config===undefined||!input.config||typeof input.config!=='object'||Array.isArray(input.config))throw new Error('config must be an object.');
   if(input.rewards!==undefined){
    if(!Array.isArray(input.rewards)||input.rewards.some(x=>!x||typeof x!=='object'||Array.isArray(x)))throw new Error('rewards must be an array of objects.');
-   for(const reward of input.rewards){
-    if(reward.currency!==undefined){if(!['coins','gems'].includes(reward.currency)||!Number.isSafeInteger(reward.amount)||reward.amount<1||reward.amount>2_000_000_000)throw new Error('Currency rewards must use bounded coins/gems amounts.');}
-    else if(typeof reward.itemId!=='string'||!/^[a-zA-Z0-9_-]{1,128}$/.test(reward.itemId)||!Number.isSafeInteger(reward.tier)||reward.tier<1||reward.tier>5||!Number.isSafeInteger(reward.count)||reward.count<1||reward.count>1_000_000)throw new Error('Item rewards must use a bounded itemId, tier and count.');
+   for(const reward of input.rewards)validateReward(reward,'Event reward');
+  }
+  if(input.config.shopOffers!==undefined){
+   const offers=input.config.shopOffers;
+   if(!Array.isArray(offers)||offers.length<1||offers.length>100)throw new Error('shopOffers must contain 1-100 offers.');
+   const ids=new Set();
+   for(const offer of offers){
+    if(!offer||typeof offer!=='object'||Array.isArray(offer)||typeof offer.id!=='string'||!offerIdPattern.test(offer.id)||ids.has(offer.id))throw new Error('Shop offer ids must be unique lowercase identifiers.');ids.add(offer.id);
+    if(!Number.isSafeInteger(offer.price)||offer.price<1||offer.price>2_000_000_000)throw new Error('Shop offer price must be a positive bounded integer.');
+    if(!Number.isSafeInteger(offer.stock)||offer.stock<1||offer.stock>1_000_000)throw new Error('Shop offer stock must be between 1 and 1000000.');
+    if(!Number.isSafeInteger(offer.playerLimit)||offer.playerLimit<1||offer.playerLimit>1000)throw new Error('Shop offer playerLimit must be between 1 and 1000.');
+    validateReward(offer.reward,'Shop offer reward');
    }
+   if(!['event_shop','token_exchange','collaboration_pack'].includes(input.type))throw new Error('Shop offers are only valid on shop-enabled event types.');
+   if(typeof input.config.currencyMetric!=='string'||!offerIdPattern.test(input.config.currencyMetric))throw new Error('Shop offers require a currencyMetric.');
+   if(input.config.restock!==undefined&&!['event','utc-day'].includes(input.config.restock))throw new Error('Shop restock must be event or utc-day.');
+   if(input.config.purchaseLimitScope!==undefined&&!['event','utc-day'].includes(input.config.purchaseLimitScope))throw new Error('Shop purchaseLimitScope must be event or utc-day.');
   }
   return true;
 }

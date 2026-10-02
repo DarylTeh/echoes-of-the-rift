@@ -20,12 +20,24 @@ store.db.close();
 const key='k'.repeat(32),service=startServer({port:0,key,path:':memory:',catalog});await once(service.server,'listening');
 try{
  service.store.login(id,secret);service.store.events.upsert({id:'route-inbox',version:1,type:'news_inbox',title:'Route Test',startAt:'2026-09-28T00:00:00.000Z',endAt:'2026-10-08T00:00:00.000Z',config:{messageId:'route'},rewards:[{currency:'gems',amount:7}]});
+ service.store.events.upsert({id:'route-shop',version:1,type:'event_shop',title:'Route Shop',startAt:'2026-09-28T00:00:00.000Z',endAt:'2026-10-08T00:00:00.000Z',config:{currencyMetric:'event-tokens',progressMetric:'event-tokens',progressCap:500,eligibleModes:['campaign'],restock:'utc-day',purchaseLimitScope:'event',shopOffers:[{id:'book-offer',price:25,stock:2,playerLimit:1,reward:{itemId:'book-1',tier:1,count:1}}]},rewards:[]});
+ service.store.events.recordProgress('route-shop',id,100,'event-tokens','campaign');
+ service.store.events.upsert({id:'invalid-shop',version:1,type:'event_shop',title:'Invalid Reward Test',startAt:'2026-09-28T00:00:00.000Z',endAt:'2026-10-08T00:00:00.000Z',config:{currencyMetric:'event-tokens',progressMetric:'event-tokens',progressCap:500,eligibleModes:['campaign'],shopOffers:[{id:'missing-item',price:10,stock:1,playerLimit:1,reward:{itemId:'not-in-catalog',tier:1,count:1}}]},rewards:[]});
+ service.store.events.recordProgress('invalid-shop',id,50,'event-tokens','campaign');
+ assert.throws(()=>service.store.purchaseEventShop('invalid-shop',1,id,'missing-item','rollback-test-1'),/Invalid item reward/);
+ assert.equal(service.store.eventStatus('invalid-shop',id,1).progress.value,50);
+ assert.equal(service.store.db.prepare('SELECT remaining FROM event_shop_stock WHERE event_id=?').get('invalid-shop'),undefined);
  const base=`http://127.0.0.1:${service.server.address().port}`,headers={'authorization':`Bearer ${key}`,'content-type':'application/json'};
  assert.equal((await fetch(base+'/inbox',{method:'POST',headers,body:JSON.stringify({id})})).status,200);
  const claimed=await (await fetch(base+'/event-claim',{method:'POST',headers,body:JSON.stringify({id,eventId:'route-inbox',claimKey:'once'})})).json();assert.equal(claimed.claimed,true);assert.equal(claimed.delivery.length,1);
+ const purchaseBody={id,eventId:'route-shop',eventVersion:1,offerId:'book-offer',requestId:'route-buy-0001'};
+ const purchaseResponse=await fetch(base+'/event-shop-purchase',{method:'POST',headers,body:JSON.stringify(purchaseBody)});assert.equal(purchaseResponse.status,200);
+ const purchase=await purchaseResponse.json();assert.equal(purchase.purchased,true);assert.equal(purchase.balance,75);assert.equal(purchase.stockRemaining,1);assert.equal(purchase.delivery.length,1);
+ const purchaseReplay=await (await fetch(base+'/event-shop-purchase',{method:'POST',headers,body:JSON.stringify(purchaseBody)})).json();assert.equal(purchaseReplay.duplicate,true);assert.equal(purchaseReplay.purchased,false);
  const eventStatus=await (await fetch(base+'/event-status',{method:'POST',headers,body:JSON.stringify({id,eventId:'route-inbox',eventVersion:1})})).json();assert.equal(eventStatus.eligible,true);assert.equal(eventStatus.eventVersion,1);assert.equal(eventStatus.claimsCompleted,1);
- const listed=await (await fetch(base+'/inbox',{method:'POST',headers,body:JSON.stringify({id})})).json();assert.equal(listed.entries.length,1);
- const collected=await (await fetch(base+'/inbox-claim',{method:'POST',headers,body:JSON.stringify({id,inboxId:listed.entries[0].id})})).json();assert.equal(collected.claimed,true);assert.equal(collected.profile.Gems,7);
+ const listed=await (await fetch(base+'/inbox',{method:'POST',headers,body:JSON.stringify({id})})).json();assert.equal(listed.entries.length,2);
+ const gemEntry=listed.entries.find(entry=>entry.reward.currency==='gems');assert.ok(gemEntry);
+ const collected=await (await fetch(base+'/inbox-claim',{method:'POST',headers,body:JSON.stringify({id,inboxId:gemEntry.id})})).json();assert.equal(collected.claimed,true);assert.equal(collected.profile.Gems,7);
  assert.equal((await fetch(base+'/inbox',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id})})).status,403);
 }finally{await new Promise(resolve=>service.server.close(resolve));service.store.db.close();}
-console.log('PASS inbox: atomic event delivery, currency/item rewards, idempotent event claims and idempotent reward collection.');
+console.log('PASS inbox/shop: atomic event delivery, transactional shop spending, replay-safe purchases and reward collection.');

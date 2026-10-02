@@ -1,6 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 51 - 2 October 2026. Editable screen wireframes for player review.
+Revision 52 - 2 October 2026. Transactional event-shop purchases.
+
+## Current iteration - revision 52: server-authoritative event shop
+
+Implemented authenticated `POST /event-shop-purchase` with event-version validation, active schedule/type checks, offer validation, available event-token checks, per-player limits, shared stock, and an idempotent request key. The token debit, shared-stock decrement, purchase receipt and reward-inbox enqueue commit in one SQLite transaction, so retries cannot double-spend or duplicate rewards and failures roll back together. Added coverage for success, retries, stale versions, player limits, low balances, sold-out stock and rollback.
+
+Validation: all server suites pass with `npm test`. This is a server feature only; no Unity UI/build changes were made. The shop UI remains behind the player's wireframe review. Oracle deployment is still not connected: the client endpoint is loopback (`127.0.0.1`), and the latest deployment notes record no VM or public IP after Singapore capacity failures. A live OCI inventory could not be confirmed in this turn.
+
+Next: add a read-only event-shop status/offer endpoint so clients can display server-authoritative prices, remaining stock and purchase eligibility, then wire it into the event UI after the player approves the wireframes. Continue OCI deployment only after a compatible Linux server build and available VM capacity are confirmed.
+
+## Previous revision 51: design feedback pack
 
 ## Current iteration - revision 51: design feedback pack
 

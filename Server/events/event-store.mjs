@@ -1,8 +1,9 @@
 import {normalizeEventManifest} from './event-manifest.mjs';
 import {activeEvents,eventState} from './event-schedule.mjs';
+import {createHash} from 'node:crypto';
 
 export function createEventStore(db,clock=()=>Date.now()){
-  db.exec('CREATE TABLE IF NOT EXISTS events(id TEXT PRIMARY KEY, version INTEGER NOT NULL, manifest TEXT NOT NULL, updated_at TEXT NOT NULL); CREATE TABLE IF NOT EXISTS event_versions(id TEXT NOT NULL, version INTEGER NOT NULL, manifest TEXT NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY(id,version)); CREATE TABLE IF NOT EXISTS event_claims(event_id TEXT NOT NULL, event_version INTEGER NOT NULL, player TEXT NOT NULL, claim_key TEXT NOT NULL, reward_receipt TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY(event_id,event_version,player,claim_key)); CREATE TABLE IF NOT EXISTS event_progress(event_id TEXT NOT NULL, event_version INTEGER NOT NULL, player TEXT NOT NULL, metric TEXT NOT NULL, value INTEGER NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY(event_id,event_version,player,metric)); CREATE INDEX IF NOT EXISTS event_claims_player_idx ON event_claims(player,event_id,event_version); CREATE INDEX IF NOT EXISTS event_progress_player_idx ON event_progress(player,event_id,event_version);');
+  db.exec('CREATE TABLE IF NOT EXISTS events(id TEXT PRIMARY KEY, version INTEGER NOT NULL, manifest TEXT NOT NULL, updated_at TEXT NOT NULL); CREATE TABLE IF NOT EXISTS event_versions(id TEXT NOT NULL, version INTEGER NOT NULL, manifest TEXT NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY(id,version)); CREATE TABLE IF NOT EXISTS event_claims(event_id TEXT NOT NULL, event_version INTEGER NOT NULL, player TEXT NOT NULL, claim_key TEXT NOT NULL, reward_receipt TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY(event_id,event_version,player,claim_key)); CREATE TABLE IF NOT EXISTS event_progress(event_id TEXT NOT NULL, event_version INTEGER NOT NULL, player TEXT NOT NULL, metric TEXT NOT NULL, value INTEGER NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY(event_id,event_version,player,metric)); CREATE TABLE IF NOT EXISTS event_shop_stock(event_id TEXT NOT NULL,event_version INTEGER NOT NULL,offer_id TEXT NOT NULL,period TEXT NOT NULL,remaining INTEGER NOT NULL,PRIMARY KEY(event_id,event_version,offer_id,period)); CREATE TABLE IF NOT EXISTS event_shop_purchases(event_id TEXT NOT NULL,event_version INTEGER NOT NULL,player TEXT NOT NULL,offer_id TEXT NOT NULL,request_id TEXT NOT NULL,purchase_period TEXT NOT NULL,price INTEGER NOT NULL,reward_receipt TEXT NOT NULL,created_at TEXT NOT NULL,PRIMARY KEY(event_id,event_version,player,request_id)); CREATE INDEX IF NOT EXISTS event_shop_player_offer_idx ON event_shop_purchases(event_id,event_version,player,offer_id,purchase_period); CREATE INDEX IF NOT EXISTS event_claims_player_idx ON event_claims(player,event_id,event_version); CREATE INDEX IF NOT EXISTS event_progress_player_idx ON event_progress(player,event_id,event_version);');
   db.exec('INSERT OR IGNORE INTO event_versions SELECT id,version,manifest,updated_at FROM events;');
   let activeCache=null,activeCacheAt=0;
   const read=row=>row?JSON.parse(row.manifest):null;
@@ -76,5 +77,39 @@ export function createEventStore(db,clock=()=>Date.now()){
       db.prepare('INSERT INTO event_claims VALUES(?,?,?,?,?,?)').run(event.id,event.version,player,claimKey,receipt,new Date(clock()).toISOString());db.exec('COMMIT');return {claimed:true,rewardReceipt:receipt,event,delivery};
     }catch(error){db.exec('ROLLBACK');throw error;}
   };
-  return {list,history,get,upsert,active,status,recordProgress,recordActiveProgress,claim,state:(event,now=clock())=>eventState(event,now)};
+  const purchase=(eventId,eventVersion,player,offerId,requestId,onPurchase=null)=>{
+    if(typeof player!=='string'||player.length<1||player.length>128)throw new Error('Invalid player.');
+    if(!Number.isSafeInteger(eventVersion)||eventVersion<1)throw new Error('Invalid event version.');
+    if(typeof offerId!=='string'||!/^[a-z0-9][a-z0-9_-]{0,63}$/.test(offerId))throw new Error('Invalid shop offer.');
+    if(typeof requestId!=='string'||!/^[a-zA-Z0-9_-]{8,80}$/.test(requestId))throw new Error('Invalid purchase request id.');
+    const current=get(eventId);if(!current)throw new Error('Unknown event.');
+    const event=current.version===eventVersion?current:history().find(candidate=>candidate.id===eventId&&candidate.version===eventVersion);
+    if(!event)throw new Error('Unknown event version.');
+    if(!['event_shop','token_exchange','collaboration_pack'].includes(event.type))throw new Error('This event has no shop.');
+    const offer=(event.config.shopOffers??[]).find(candidate=>candidate.id===offerId);if(!offer)throw new Error('Unknown shop offer.');
+    const spec=definition(event);if(!spec||spec.metric!==event.config.currencyMetric)throw new Error('Shop currency progress is not configured.');
+    const now=clock(),iso=new Date(now).toISOString(),day=iso.slice(0,10),restock=event.config.restock==='utc-day'?'utc-day':'event';
+    const stockPeriod=restock==='utc-day'?day:'event',limitPeriod=event.config.purchaseLimitScope==='utc-day'?day:'event';
+    const purchaseId=createHash('sha256').update(`${event.id}:${event.version}:${player}:${requestId}`).digest('hex');
+    const rewardReceipt=`shop:${purchaseId}`;
+    db.exec('BEGIN IMMEDIATE');try{
+      const prior=db.prepare('SELECT * FROM event_shop_purchases WHERE event_id=? AND event_version=? AND player=? AND request_id=?').get(event.id,event.version,player,requestId);
+      if(prior){db.exec('COMMIT');return {purchased:false,duplicate:true,purchaseId,rewardReceipt:prior.reward_receipt,offerId:prior.offer_id,price:prior.price};}
+      if(current.version!==eventVersion)throw new Error('Shop event version is no longer current. Refresh the shop.');
+      if(eventState(event,now)!=='active')throw new Error('Event shop is not active.');
+      const progress=db.prepare('SELECT value FROM event_progress WHERE event_id=? AND event_version=? AND player=? AND metric=?').get(event.id,event.version,player,spec.metric),balance=Number(progress?.value??0);
+      if(balance<offer.price)throw new Error('Not enough event currency.');
+      const count=db.prepare('SELECT COUNT(*) AS count FROM event_shop_purchases WHERE event_id=? AND event_version=? AND player=? AND offer_id=? AND purchase_period=?').get(event.id,event.version,player,offer.id,limitPeriod);
+      if(Number(count?.count??0)>=offer.playerLimit)throw new Error('Player purchase limit reached.');
+      db.prepare('INSERT OR IGNORE INTO event_shop_stock(event_id,event_version,offer_id,period,remaining) VALUES(?,?,?,?,?)').run(event.id,event.version,offer.id,stockPeriod,offer.stock);
+      const stock=db.prepare('SELECT remaining FROM event_shop_stock WHERE event_id=? AND event_version=? AND offer_id=? AND period=?').get(event.id,event.version,offer.id,stockPeriod);
+      if(!stock||stock.remaining<1)throw new Error('This shop offer is sold out.');
+      const delivery=onPurchase?onPurchase(event,player,rewardReceipt,offer):[];
+      db.prepare('UPDATE event_progress SET value=value-?,updated_at=? WHERE event_id=? AND event_version=? AND player=? AND metric=?').run(offer.price,iso,event.id,event.version,player,spec.metric);
+      db.prepare('UPDATE event_shop_stock SET remaining=remaining-1 WHERE event_id=? AND event_version=? AND offer_id=? AND period=? AND remaining>0').run(event.id,event.version,offer.id,stockPeriod);
+      db.prepare('INSERT INTO event_shop_purchases(event_id,event_version,player,offer_id,request_id,purchase_period,price,reward_receipt,created_at) VALUES(?,?,?,?,?,?,?,?,?)').run(event.id,event.version,player,offer.id,requestId,limitPeriod,offer.price,rewardReceipt,iso);
+      db.exec('COMMIT');return {purchased:true,duplicate:false,purchaseId,rewardReceipt,offerId:offer.id,price:offer.price,balance:balance-offer.price,stockRemaining:stock.remaining-1,delivery};
+    }catch(error){db.exec('ROLLBACK');throw error;}
+  };
+  return {list,history,get,upsert,active,status,recordProgress,recordActiveProgress,claim,purchase,state:(event,now=clock())=>eventState(event,now)};
 }

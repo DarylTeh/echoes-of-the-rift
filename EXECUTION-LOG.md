@@ -1,5 +1,11 @@
 # Execution log
 
+## Current server feature - revision 52, 2 October 2026
+
+Added authenticated `POST /event-shop-purchase`. Purchases validate the pinned event version and active schedule, token balance, per-player cap and shared stock; token debit, stock decrement, idempotency receipt and item inbox grant commit atomically in SQLite. Retries return the original purchase, while any failed grant rolls back the spend and stock change. Added tests for success, idempotency after version changes, stale versions, insufficient currency, player caps, shared stock depletion and rollback.
+
+Validation: full `npm test` passes across persistence, account, admin, progression, event and inbox suites. No Unity code or build changed; client shop integration waits on the player's wireframe feedback. Oracle remains unconnected: checked-in endpoints are loopback, the latest deployment notes report no VM/public IP, and the live CLI inventory query did not return usable data in this turn.
+
 ## Current design pack - revision 51, 2 October 2026
 
 Generated 30 individual, editable 1280×720 landscape SVG wireframes plus an HTML browse index and editing guide in `Design/Wireframes/`. The pack covers existing onboarding, town, inventory, shop, settings, events, combat, recovery and results screens, and labels unimplemented goals/profile/matchmaking pages as concepts. Added a small Python generator at `Tools/GenerateUiWireframes.py` so the vector layouts can be rebuilt after feedback.
