@@ -41,6 +41,8 @@ export function validateEventManifest(input){
    if(input.config.restock!==undefined&&!['event','utc-day'].includes(input.config.restock))throw new Error('Shop restock must be event or utc-day.');
    if(input.config.purchaseLimitScope!==undefined&&!['event','utc-day'].includes(input.config.purchaseLimitScope))throw new Error('Shop purchaseLimitScope must be event or utc-day.');
   }
+  if(input.config.progressPerClear!==undefined&&(!Number.isSafeInteger(input.config.progressPerClear)||input.config.progressPerClear<1||input.config.progressPerClear>100000))throw new Error('progressPerClear must be an integer from 1 to 100000.');
+  if(input.config.dailyTokenCap!==undefined&&(!Number.isSafeInteger(input.config.dailyTokenCap)||input.config.dailyTokenCap<1||input.config.dailyTokenCap>2_000_000_000))throw new Error('dailyTokenCap must be a positive bounded integer.');
   return true;
 }
 export function normalizeEventManifest(input){

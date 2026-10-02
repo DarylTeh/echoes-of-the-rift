@@ -2,7 +2,7 @@
 
 ## Status
 
-Revision 53, 2 October 2026. Live OCI CLI inventory and capacity reports confirm the tenancy is subscribed only to `ap-singapore-1`, with one availability domain and no compute instances. The existing `echoes-rift-vcn` and public subnet are available. Always Free `VM.Standard.A1.Flex` (1 OCPU/6 GB), `VM.Standard.E2.1.Micro`, and paid `VM.Standard.E4.Flex` (2 OCPU/12 GB) all reported `OUT_OF_HOST_CAPACITY`; paid `VM.Standard.E5.Flex` (2 OCPU/12 GB) reported `AVAILABLE` and the tenancy has sufficient E5 limits. No VM or public IP has been created.
+Revision 55, 2 October 2026. Final live OCI CLI check at 2026-10-02 14:27 UTC confirms the tenancy is subscribed only to `ap-singapore-1`, with one availability domain and no compute instances or reserved public IPv4 addresses. The existing `echoes-rift-vcn` and public subnet are available. Always Free `VM.Standard.A1.Flex` (1 OCPU/6 GB) and `VM.Standard.E2.1.Micro` report `OUT_OF_HOST_CAPACITY`; paid `VM.Standard.E4.Flex` (2 OCPU/12 GB) also reported out of capacity in the earlier same-day check. Paid `VM.Standard.E5.Flex` (2 OCPU/12 GB) still reports `AVAILABLE`, and the tenancy has sufficient E5 limits. No VM or public IP has been created.
 
 The E5 option is not Always Free. Oracle's listed E5 rates of $0.030/OCPU-hour and $0.002/GB-hour put 2 OCPUs plus 12 GB at about $0.084/hour or $61.32 for a 730-hour month, before boot storage, public networking, taxes or any applicable credits. No paid resources were launched. Always Free compute must be provisioned in the home region; this tenancy has only one AD there. Subscribing to another region does not move the Always Free compute allowance and Oracle does not permit unsubscribing from a region.
 

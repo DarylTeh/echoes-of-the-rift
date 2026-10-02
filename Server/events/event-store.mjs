@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 
 export function createEventStore(db,clock=()=>Date.now()){
   db.exec('CREATE TABLE IF NOT EXISTS events(id TEXT PRIMARY KEY, version INTEGER NOT NULL, manifest TEXT NOT NULL, updated_at TEXT NOT NULL); CREATE TABLE IF NOT EXISTS event_versions(id TEXT NOT NULL, version INTEGER NOT NULL, manifest TEXT NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY(id,version)); CREATE TABLE IF NOT EXISTS event_claims(event_id TEXT NOT NULL, event_version INTEGER NOT NULL, player TEXT NOT NULL, claim_key TEXT NOT NULL, reward_receipt TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY(event_id,event_version,player,claim_key)); CREATE TABLE IF NOT EXISTS event_progress(event_id TEXT NOT NULL, event_version INTEGER NOT NULL, player TEXT NOT NULL, metric TEXT NOT NULL, value INTEGER NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY(event_id,event_version,player,metric)); CREATE TABLE IF NOT EXISTS event_shop_stock(event_id TEXT NOT NULL,event_version INTEGER NOT NULL,offer_id TEXT NOT NULL,period TEXT NOT NULL,remaining INTEGER NOT NULL,PRIMARY KEY(event_id,event_version,offer_id,period)); CREATE TABLE IF NOT EXISTS event_shop_purchases(event_id TEXT NOT NULL,event_version INTEGER NOT NULL,player TEXT NOT NULL,offer_id TEXT NOT NULL,request_id TEXT NOT NULL,purchase_period TEXT NOT NULL,price INTEGER NOT NULL,reward_receipt TEXT NOT NULL,created_at TEXT NOT NULL,PRIMARY KEY(event_id,event_version,player,request_id)); CREATE INDEX IF NOT EXISTS event_shop_player_offer_idx ON event_shop_purchases(event_id,event_version,player,offer_id,purchase_period); CREATE INDEX IF NOT EXISTS event_claims_player_idx ON event_claims(player,event_id,event_version); CREATE INDEX IF NOT EXISTS event_progress_player_idx ON event_progress(player,event_id,event_version);');
+  db.exec('CREATE TABLE IF NOT EXISTS event_daily_earnings(event_id TEXT NOT NULL,event_version INTEGER NOT NULL,player TEXT NOT NULL,metric TEXT NOT NULL,utc_day TEXT NOT NULL,earned INTEGER NOT NULL,PRIMARY KEY(event_id,event_version,player,metric,utc_day));');
   db.exec('INSERT OR IGNORE INTO event_versions SELECT id,version,manifest,updated_at FROM events;');
   let activeCache=null,activeCacheAt=0;
   const read=row=>row?JSON.parse(row.manifest):null;
@@ -63,7 +64,28 @@ export function createEventStore(db,clock=()=>Date.now()){
     return readProgress(event,player);
   };
   const recordActiveProgress=(player,mode,facts={})=>{
-    const results=[];for(const event of active()){const spec=definition(event),amount=spec?facts[spec.metric]:null;if(Number.isSafeInteger(amount)&&amount>0){try{results.push(recordProgress(event.id,player,amount,spec.metric,mode));}catch(error){if(!/Mode is not eligible/.test(error.message))throw error;}}}return results;
+    if(typeof player!=='string'||player.length<1||player.length>128)throw new Error('Invalid player.');
+    if(!facts||typeof facts!=='object'||Array.isArray(facts))throw new Error('Invalid progress facts.');
+    const results=[],now=clock(),iso=new Date(now).toISOString(),utcDay=iso.slice(0,10);
+    db.exec('SAVEPOINT record_active_event_progress');try{
+      for(const event of active()){
+        const spec=definition(event);if(!spec)continue;
+        const clearCount=facts['verified-event-clears'],configuredRate=event.config.progressPerClear;
+        let amount=Number.isSafeInteger(configuredRate)&&Number.isSafeInteger(clearCount)&&clearCount>0?configuredRate*clearCount:facts[spec.metric];
+        if(!Number.isSafeInteger(amount)||amount<1)continue;
+        try{if(spec.modes.length>0&&(typeof mode!=='string'||!spec.modes.includes(mode)))throw new Error('Mode is not eligible for this event.');}
+        catch(error){if(/Mode is not eligible/.test(error.message))continue;throw error;}
+        amount=Math.min(100000,amount);
+        const prior=readProgress(event,player),progressCap=spec.cap??Number.MAX_SAFE_INTEGER,progressRoom=Math.max(0,progressCap-(prior?.value??0));
+        const dailyCap=event.config.dailyTokenCap,dailyRow=Number.isSafeInteger(dailyCap)?db.prepare('SELECT earned FROM event_daily_earnings WHERE event_id=? AND event_version=? AND player=? AND metric=? AND utc_day=?').get(event.id,event.version,player,spec.metric,utcDay):null;
+        const dailyRoom=Number.isSafeInteger(dailyCap)?Math.max(0,dailyCap-Number(dailyRow?.earned??0)):Number.MAX_SAFE_INTEGER;
+        const earned=Math.min(amount,progressRoom,dailyRoom);if(earned<1)continue;
+        const progress=recordProgress(event.id,player,earned,spec.metric,mode);
+        if(Number.isSafeInteger(dailyCap))db.prepare('INSERT INTO event_daily_earnings(event_id,event_version,player,metric,utc_day,earned) VALUES(?,?,?,?,?,?) ON CONFLICT(event_id,event_version,player,metric,utc_day) DO UPDATE SET earned=earned+excluded.earned').run(event.id,event.version,player,spec.metric,utcDay,earned);
+        results.push({eventId:event.id,...progress,earnedToday:earned});
+      }
+      db.exec('RELEASE SAVEPOINT record_active_event_progress');return results;
+    }catch(error){db.exec('ROLLBACK TO SAVEPOINT record_active_event_progress');db.exec('RELEASE SAVEPOINT record_active_event_progress');throw error;}
   };
   const claim=(eventId,player,claimKey,rewardReceipt,onFirstClaim=null)=>{
     if(typeof player!=='string'||player.length<1||player.length>128)throw new Error('Invalid player.');
@@ -121,6 +143,7 @@ export function createEventStore(db,clock=()=>Date.now()){
     const now=clock(),iso=new Date(now).toISOString(),day=iso.slice(0,10),state=eventState(event,now);
     const stockPeriod=event.config.restock==='utc-day'?day:'event',limitPeriod=event.config.purchaseLimitScope==='utc-day'?day:'event';
     const progress=db.prepare('SELECT value FROM event_progress WHERE event_id=? AND event_version=? AND player=? AND metric=?').get(event.id,event.version,player,spec.metric),balance=Number(progress?.value??0);
+    const dailyEarnCap=Number.isSafeInteger(event.config.dailyTokenCap)?event.config.dailyTokenCap:0,dailyRow=dailyEarnCap?db.prepare('SELECT earned FROM event_daily_earnings WHERE event_id=? AND event_version=? AND player=? AND metric=? AND utc_day=?').get(event.id,event.version,player,spec.metric,day):null,earnedToday=Number(dailyRow?.earned??0);
     const offers=(event.config.shopOffers??[]).map(offer=>{
       const stockRow=db.prepare('SELECT remaining FROM event_shop_stock WHERE event_id=? AND event_version=? AND offer_id=? AND period=?').get(event.id,event.version,offer.id,stockPeriod);
       const stockRemaining=stockRow?Number(stockRow.remaining):offer.stock;
@@ -133,7 +156,7 @@ export function createEventStore(db,clock=()=>Date.now()){
       else if(balance<offer.price)reason='Not enough event currency.';
       return {id:offer.id,price:offer.price,stock:offer.stock,stockRemaining,playerLimit:offer.playerLimit,purchasesRemaining,reward:offer.reward,canPurchase:reason==='Ready to purchase.',reason};
     });
-    return {eventId:event.id,eventVersion:event.version,state,serverTime:iso,currencyMetric:spec.metric,balance,restock:stockPeriod==='event'?'event':'utc-day',purchaseLimitScope:limitPeriod==='event'?'event':'utc-day',offers};
+    return {eventId:event.id,eventVersion:event.version,state,serverTime:iso,currencyMetric:spec.metric,balance,dailyEarnCap,earnedToday,dailyEarnRemaining:dailyEarnCap?Math.max(0,dailyEarnCap-earnedToday):null,restock:stockPeriod==='event'?'event':'utc-day',purchaseLimitScope:limitPeriod==='event'?'event':'utc-day',offers};
   };
   return {list,history,get,upsert,active,status,shopStatus,recordProgress,recordActiveProgress,claim,purchase,state:(event,now=clock())=>eventState(event,now)};
 }

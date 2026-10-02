@@ -1,5 +1,11 @@
 # Execution log
 
+## Current server economy - revision 55, 2 October 2026
+
+Event progress now reads `progressPerClear` and `dailyTokenCap` from each manifest. Added UTC-day earning records keyed by event version/player/metric. Verified clear rewards are bounded by the event progress cap and the daily earning cap; `/event-shop-status` returns cap/earned/remaining values. Manifest validation rejects invalid configured rates and caps. Legacy event manifests retain the existing ten-token fallback when they do not yet define a rate.
+
+Validation: full `npm test` passes, including rate precedence, mode filtering, no over-cap earning and UTC-day rollover. No client or Unity build changed. Final OCI CLI recheck at 2026-10-02 14:27 UTC found A1 Flex and E2.1.Micro still out of host capacity, E5 Flex available, and no VM or reserved public IPv4; no resources were launched.
+
 ## Current server API - revision 54, 2 October 2026
 
 Added authenticated `POST /event-shop-status` for the active version-pinned shop manifest. It returns server time/state, currency metric and balance, offer rewards/prices, shared remaining stock, the player's remaining per-offer limit and purchase eligibility/reason. Reads do not create or mutate stock records. The existing purchase endpoint still revalidates all constraints inside its write transaction.

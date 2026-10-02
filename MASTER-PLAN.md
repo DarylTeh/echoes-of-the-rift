@@ -1,8 +1,18 @@
 # Echoes of the Rift master plan
 
-Revision 54 - 2 October 2026. Read-only event-shop status API.
+Revision 55 - 2 October 2026. Configurable event-currency earning.
 
-## Current iteration - revision 54: shop offer and eligibility status
+## Current iteration - revision 55: event earning rates and daily caps
+
+Verified event progress now honors each event manifest's `progressPerClear` and `dailyTokenCap`, with UTC-day earnings recorded per player, event version and metric. Earning is capped by both the event's total progress cap and the per-day cap. The event-shop status response includes the daily cap, amount earned today and remaining daily earning allowance. Existing manifests without an earning rate retain their previous ten-token campaign-clear fallback; new templates explicitly configure the rate and cap. Invalid rates/caps are rejected before publication.
+
+Validation: full `npm test` passes, including configured rate precedence, an exhausted daily cap, UTC rollover, mode eligibility, status output and manifest bounds. No Unity UI changed; bazaar integration still waits on wireframe feedback. Final OCI recheck at 2026-10-02 14:27 UTC found A1 Flex and E2.1.Micro still out of host capacity, paid E5 Flex still available, and no VM or reserved public IPv4. No cloud resources were launched.
+
+Next: integrate the approved shop wireframes against the server-owned status and purchase endpoints. Keep the remaining combat/gameplay UI changes behind player review; continue with another server feature only where it does not preempt that review.
+
+## Previous revision 54: read-only event-shop status API
+
+## Revision 54 details: shop offer and eligibility status
 
 Added authenticated `POST /event-shop-status`, version-pinned to the current event manifest. It returns UTC server time and state, player event-token balance, each configured reward/price, shared remaining stock, the player's remaining purchase allowance and a clear purchase eligibility reason. A status read does not create stock records or mutate player data; the purchase route remains authoritative if balance or shared stock changes afterward. Tests cover empty stock initialization, balance/stock updates after purchase, limit eligibility and stale manifest rejection.
 
