@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="1280" height="720" viewBox="0 0 1280 720">
+<title>Sign in — Echoes of the Rift wireframe</title>
+<desc>Editable low-fidelity screen layout. All boxes, labels and controls are separate vector elements.</desc>
+<rect width="1280" height="720" fill="#15141b"/>
+<text x="32" y="38" class="heading">Sign in</text>
+<text x="1245" y="36" text-anchor="end" class="tag">EXISTING FLOW · REDESIGN PROPOSAL</text>
+<line x1="32" y1="54" x2="1248" y2="54" stroke="#777386" stroke-width="1"/>
+<rect x="100" y="200" width="450" height="360" rx="12" fill="#302e3a" fill-opacity=".94" stroke="#777386" stroke-width="2"/><path d="M112 188 L538 548 M538 188 L112 548" stroke="#777386" stroke-width="1"/><text x="325.0" y="385.0" text-anchor="middle" class="small">HERO / GAME LOGO</text><text x="100" y="165" text-anchor="start" class="body">ECHOES OF THE RIFT</text><rect x="650" y="105" width="530" height="500" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="915.0" y="360.0" text-anchor="middle" class="paneltitle">ACCOUNT</text><text x="700" y="210" text-anchor="start" class="body">Welcome back</text><rect x="710" y="257" width="410" height="58" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="915.0" y="291.0" text-anchor="middle" class="paneltitle">Username field</text><rect x="710" y="337" width="410" height="58" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="915.0" y="371.0" text-anchor="middle" class="paneltitle">Password field</text><rect x="710" y="431" width="410" height="64" rx="12" fill="#5cd3d0" fill-opacity=".94" stroke="#5cd3d0" stroke-width="2"/><text x="915.0" y="468.0" text-anchor="middle" class="button">Sign in</text><text x="710" y="545" text-anchor="start" class="body">Create account</text><text x="925" y="545" text-anchor="start" class="body">Forgot password?</text>
+<line x1="32" y1="676" x2="1248" y2="676" stroke="#777386" stroke-width="1"/>
+<text x="34" y="704" class="small">DESIGN QUESTION</text><text x="190" y="704" class="body">Choose the first action: Sign in or Create account?</text>
+<style>
+  text { font-family: Arial, sans-serif; fill: #f2eff8; }
+  .heading { font-size: 25px; font-weight: 700; } .tag { font-size: 12px; fill: #5cd3d0; font-weight: 700; letter-spacing: 1px; }
+  .paneltitle { font-size: 15px; font-weight: 600; fill: #aaa6b8; letter-spacing: .6px; }
+  .body { font-size: 17px; fill: #f2eff8; } .small { font-size: 12px; fill: #aaa6b8; }
+  .button { font-size: 17px; font-weight: 700; fill: #15141b; }
+</style>
+</svg>

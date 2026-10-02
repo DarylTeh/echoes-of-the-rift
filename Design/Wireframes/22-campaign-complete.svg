@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="1280" height="720" viewBox="0 0 1280 720">
+<title>Campaign complete — Echoes of the Rift wireframe</title>
+<desc>Editable low-fidelity screen layout. All boxes, labels and controls are separate vector elements.</desc>
+<rect width="1280" height="720" fill="#15141b"/>
+<text x="32" y="38" class="heading">Campaign complete</text>
+<text x="1245" y="36" text-anchor="end" class="tag">EXISTING FLOW · REDESIGN PROPOSAL</text>
+<line x1="32" y1="54" x2="1248" y2="54" stroke="#777386" stroke-width="1"/>
+<rect x="270" y="55" width="740" height="610" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="640.0" y="365.0" text-anchor="middle" class="paneltitle">CAMPAIGN COMPLETE</text><rect x="360" y="145" width="170" height="185" rx="12" fill="#302e3a" fill-opacity=".94" stroke="#777386" stroke-width="2"/><path d="M372 133 L518 318 M518 133 L372 318" stroke="#777386" stroke-width="1"/><text x="445.0" y="242.5" text-anchor="middle" class="small">FINAL BOSS / HERO</text><text x="580" y="200" text-anchor="start" class="body">VICTORY</text><text x="580" y="275" text-anchor="start" class="body">Campaign · difficulty · time</text><rect x="365" y="350" width="555" height="105" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="642.5" y="407.5" text-anchor="middle" class="paneltitle">REWARDS · UNLOCKS · PERSONAL BEST</text><rect x="535" y="539" width="355" height="66" rx="12" fill="#5cd3d0" fill-opacity=".94" stroke="#5cd3d0" stroke-width="2"/><text x="712.5" y="577.0" text-anchor="middle" class="button">Return to Rift Haven</text>
+<line x1="32" y1="676" x2="1248" y2="676" stroke="#777386" stroke-width="1"/>
+<text x="34" y="704" class="small">DESIGN QUESTION</text><text x="190" y="704" class="body">What should completion celebrate beyond loot?</text>
+<style>
+  text { font-family: Arial, sans-serif; fill: #f2eff8; }
+  .heading { font-size: 25px; font-weight: 700; } .tag { font-size: 12px; fill: #5cd3d0; font-weight: 700; letter-spacing: 1px; }
+  .paneltitle { font-size: 15px; font-weight: 600; fill: #aaa6b8; letter-spacing: .6px; }
+  .body { font-size: 17px; fill: #f2eff8; } .small { font-size: 12px; fill: #aaa6b8; }
+  .button { font-size: 17px; font-weight: 700; fill: #15141b; }
+</style>
+</svg>

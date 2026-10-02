@@ -1,6 +1,14 @@
 # Echoes of the Rift master plan
 
-Revision 50 - 2 October 2026. Strict player-facing UI audit and navigation reset.
+Revision 51 - 2 October 2026. Editable screen wireframes for player review.
+
+## Current iteration - revision 51: design feedback pack
+
+Created 30 separate, editable 1280×720 landscape SVG wireframes for the current player-facing screens and key conceptual gaps. The pack is in [Design/Wireframes](Design/Wireframes/README.md); open `Design/Wireframes/index.html` to browse each screen. `Tools/GenerateUiWireframes.py` regenerates the vector layouts. Existing flows and proposed concepts are labelled separately, and each file asks one high-impact design question. These are low-fidelity proposals for the player to edit; they are not final art or approved UI decisions.
+
+Next: incorporate the player's edited wireframes and answers, then implement the approved navigation/hierarchy changes screen-by-screen. Keep UI implementation behind that visual review rather than adding more controls before the player can approve the layout. The strict review remains in [Docs/UI-STRICT-REVIEW.md](Docs/UI-STRICT-REVIEW.md).
+
+## Previous revision 50: strict player-facing UI audit
 
 ## Current iteration - revision 50: screen-by-screen UX review
 

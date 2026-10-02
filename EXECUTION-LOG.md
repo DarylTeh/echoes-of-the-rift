@@ -1,5 +1,11 @@
 # Execution log
 
+## Current design pack - revision 51, 2 October 2026
+
+Generated 30 individual, editable 1280×720 landscape SVG wireframes plus an HTML browse index and editing guide in `Design/Wireframes/`. The pack covers existing onboarding, town, inventory, shop, settings, events, combat, recovery and results screens, and labels unimplemented goals/profile/matchmaking pages as concepts. Added a small Python generator at `Tools/GenerateUiWireframes.py` so the vector layouts can be rebuilt after feedback.
+
+Validation: all 30 SVG files parse as XML; index presence confirmed; repository diff whitespace check passed. No Unity/game code changed and no runtime build was run. The next design iteration depends on the player's edits/preferences.
+
 ## Current review - revision 50, 2 October 2026
 
 Performed a strict source-level review of every current player-facing screen and interaction state, from startup/login through town, inventory/shop, skills, events/inbox, combat, pause, revive, results, save recovery, reconnect and leaderboard. Compared each available surface to the existing two-pass My Heroes UI audit, five sampled gameplay videos, wiki notes and user screenshots. Findings and a prioritized redesign/acceptance sequence are in `Docs/UI-STRICT-REVIEW.md`; `MASTER-PLAN.md` now treats navigation hierarchy as the next UI slice.

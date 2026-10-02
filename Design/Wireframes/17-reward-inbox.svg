@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="1280" height="720" viewBox="0 0 1280 720">
+<title>Reward inbox — Echoes of the Rift wireframe</title>
+<desc>Editable low-fidelity screen layout. All boxes, labels and controls are separate vector elements.</desc>
+<rect width="1280" height="720" fill="#15141b"/>
+<text x="32" y="38" class="heading">Reward inbox</text>
+<text x="1245" y="36" text-anchor="end" class="tag">EXISTING FLOW · REDESIGN PROPOSAL</text>
+<line x1="32" y1="54" x2="1248" y2="54" stroke="#777386" stroke-width="1"/>
+<rect x="155" y="60" width="970" height="600" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="640.0" y="365.0" text-anchor="middle" class="paneltitle">REWARD INBOX</text><text x="210" y="125" text-anchor="start" class="body">Unclaimed rewards · newest first</text><rect x="200" y="168" width="865" height="82" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="632.5" y="214.0" text-anchor="middle" class="paneltitle">EVENT / SOURCE · REWARD ART · AMOUNT · DATE</text><rect x="900" y="182" width="140" height="52" rx="12" fill="#5cd3d0" fill-opacity=".94" stroke="#5cd3d0" stroke-width="2"/><text x="970.0" y="213.0" text-anchor="middle" class="button">Collect</text><rect x="200" y="273" width="865" height="82" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="632.5" y="319.0" text-anchor="middle" class="paneltitle">EVENT / SOURCE · REWARD ART · AMOUNT · DATE</text><rect x="900" y="287" width="140" height="52" rx="12" fill="#5cd3d0" fill-opacity=".94" stroke="#5cd3d0" stroke-width="2"/><text x="970.0" y="318.0" text-anchor="middle" class="button">Collect</text><rect x="200" y="378" width="865" height="82" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="632.5" y="424.0" text-anchor="middle" class="paneltitle">EVENT / SOURCE · REWARD ART · AMOUNT · DATE</text><rect x="900" y="392" width="140" height="52" rx="12" fill="#5cd3d0" fill-opacity=".94" stroke="#5cd3d0" stroke-width="2"/><text x="970.0" y="423.0" text-anchor="middle" class="button">Collect</text><rect x="875" y="575" width="165" height="50" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="957.5" y="605.0" text-anchor="middle" class="button">Refresh</text><rect x="1050" y="575" width="65" height="50" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="1082.5" y="605.0" text-anchor="middle" class="button">X</text>
+<line x1="32" y1="676" x2="1248" y2="676" stroke="#777386" stroke-width="1"/>
+<text x="34" y="704" class="small">DESIGN QUESTION</text><text x="190" y="704" class="body">Do you want a reward reveal, a quick claim, or both?</text>
+<style>
+  text { font-family: Arial, sans-serif; fill: #f2eff8; }
+  .heading { font-size: 25px; font-weight: 700; } .tag { font-size: 12px; fill: #5cd3d0; font-weight: 700; letter-spacing: 1px; }
+  .paneltitle { font-size: 15px; font-weight: 600; fill: #aaa6b8; letter-spacing: .6px; }
+  .body { font-size: 17px; fill: #f2eff8; } .small { font-size: 12px; fill: #aaa6b8; }
+  .button { font-size: 17px; font-weight: 700; fill: #15141b; }
+</style>
+</svg>

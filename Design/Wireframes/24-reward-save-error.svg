@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="1280" height="720" viewBox="0 0 1280 720">
+<title>Reward save needs attention — Echoes of the Rift wireframe</title>
+<desc>Editable low-fidelity screen layout. All boxes, labels and controls are separate vector elements.</desc>
+<rect width="1280" height="720" fill="#15141b"/>
+<text x="32" y="38" class="heading">Reward save needs attention</text>
+<text x="1245" y="36" text-anchor="end" class="tag">EXISTING FLOW · REDESIGN PROPOSAL</text>
+<line x1="32" y1="54" x2="1248" y2="54" stroke="#777386" stroke-width="1"/>
+<rect x="295" y="95" width="690" height="530" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="640.0" y="365.0" text-anchor="middle" class="paneltitle">REWARD RECOVERY</text><text x="365" y="190" text-anchor="start" class="body">Reward not saved yet</text><text x="365" y="280" text-anchor="start" class="body">Your run reward is being kept for retry. Do not close the game.</text><rect x="365" y="325" width="550" height="75" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="640.0" y="367.5" text-anchor="middle" class="paneltitle">ITEM · CURRENCY · SAVE STATUS</text><rect x="485" y="466" width="310" height="64" rx="12" fill="#5cd3d0" fill-opacity=".94" stroke="#5cd3d0" stroke-width="2"/><text x="640.0" y="503.0" text-anchor="middle" class="button">Retry save</text><text x="460" y="590" text-anchor="start" class="body">Connection / storage help</text>
+<line x1="32" y1="676" x2="1248" y2="676" stroke="#777386" stroke-width="1"/>
+<text x="34" y="704" class="small">DESIGN QUESTION</text><text x="190" y="704" class="body">Should the game remain here until the reward is safely saved?</text>
+<style>
+  text { font-family: Arial, sans-serif; fill: #f2eff8; }
+  .heading { font-size: 25px; font-weight: 700; } .tag { font-size: 12px; fill: #5cd3d0; font-weight: 700; letter-spacing: 1px; }
+  .paneltitle { font-size: 15px; font-weight: 600; fill: #aaa6b8; letter-spacing: .6px; }
+  .body { font-size: 17px; fill: #f2eff8; } .small { font-size: 12px; fill: #aaa6b8; }
+  .button { font-size: 17px; font-weight: 700; fill: #15141b; }
+</style>
+</svg>

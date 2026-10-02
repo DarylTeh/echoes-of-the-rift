@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="1280" height="720" viewBox="0 0 1280 720">
+<title>Account recovery — Echoes of the Rift wireframe</title>
+<desc>Editable low-fidelity screen layout. All boxes, labels and controls are separate vector elements.</desc>
+<rect width="1280" height="720" fill="#15141b"/>
+<text x="32" y="38" class="heading">Account recovery</text>
+<text x="1245" y="36" text-anchor="end" class="tag">EXISTING FLOW · REDESIGN PROPOSAL</text>
+<line x1="32" y1="54" x2="1248" y2="54" stroke="#777386" stroke-width="1"/>
+<rect x="330" y="75" width="620" height="570" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="640.0" y="365.0" text-anchor="middle" class="paneltitle">RECOVER ACCOUNT</text><text x="410" y="170" text-anchor="start" class="body">Recover your account</text><text x="405" y="225" text-anchor="start" class="body">Use your recovery method to reset the password.</text><rect x="420" y="262" width="440" height="58" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="640.0" y="296.0" text-anchor="middle" class="paneltitle">Username</text><rect x="420" y="342" width="440" height="58" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="640.0" y="376.0" text-anchor="middle" class="paneltitle">Recovery code</text><rect x="420" y="422" width="440" height="58" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="640.0" y="456.0" text-anchor="middle" class="paneltitle">New password</text><rect x="420" y="515" width="440" height="60" rx="12" fill="#5cd3d0" fill-opacity=".94" stroke="#5cd3d0" stroke-width="2"/><text x="640.0" y="550.0" text-anchor="middle" class="button">Reset password</text><text x="450" y="625" text-anchor="start" class="body">Back to sign in</text>
+<line x1="32" y1="676" x2="1248" y2="676" stroke="#777386" stroke-width="1"/>
+<text x="34" y="704" class="small">DESIGN QUESTION</text><text x="190" y="704" class="body">Should recovery use the saved recovery code, email, or both?</text>
+<style>
+  text { font-family: Arial, sans-serif; fill: #f2eff8; }
+  .heading { font-size: 25px; font-weight: 700; } .tag { font-size: 12px; fill: #5cd3d0; font-weight: 700; letter-spacing: 1px; }
+  .paneltitle { font-size: 15px; font-weight: 600; fill: #aaa6b8; letter-spacing: .6px; }
+  .body { font-size: 17px; fill: #f2eff8; } .small { font-size: 12px; fill: #aaa6b8; }
+  .button { font-size: 17px; font-weight: 700; fill: #15141b; }
+</style>
+</svg>

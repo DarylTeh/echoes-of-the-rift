@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" width="1280" height="720" viewBox="0 0 1280 720">
+<title>Campaign details — Echoes of the Rift wireframe</title>
+<desc>Editable low-fidelity screen layout. All boxes, labels and controls are separate vector elements.</desc>
+<rect width="1280" height="720" fill="#15141b"/>
+<text x="32" y="38" class="heading">Campaign details</text>
+<text x="1245" y="36" text-anchor="end" class="tag">EXISTING FLOW · REDESIGN PROPOSAL</text>
+<line x1="32" y1="54" x2="1248" y2="54" stroke="#777386" stroke-width="1"/>
+<rect x="230" y="65" width="820" height="590" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="640.0" y="365.0" text-anchor="middle" class="paneltitle">MODE OVERVIEW</text><rect x="295" y="175" width="300" height="230" rx="12" fill="#302e3a" fill-opacity=".94" stroke="#777386" stroke-width="2"/><path d="M307 163 L583 393 M583 163 L307 393" stroke="#777386" stroke-width="1"/><text x="445.0" y="295.0" text-anchor="middle" class="small">MODE ART / MAP</text><text x="635" y="195" text-anchor="start" class="body">CAMPAIGN</text><text x="635" y="275" text-anchor="start" class="body">Four boss-led rooms · solo or co-op test</text><text x="635" y="370" text-anchor="start" class="body">Reward preview · recommended power</text><rect x="635" y="443" width="310" height="62" rx="12" fill="#5cd3d0" fill-opacity=".94" stroke="#5cd3d0" stroke-width="2"/><text x="790.0" y="479.0" text-anchor="middle" class="button">Enter campaign</text><rect x="635" y="528" width="310" height="52" rx="12" fill="#24222e" fill-opacity=".94" stroke="#777386" stroke-width="2"/><text x="790.0" y="559.0" text-anchor="middle" class="button">Back to town</text>
+<line x1="32" y1="676" x2="1248" y2="676" stroke="#777386" stroke-width="1"/>
+<text x="34" y="704" class="small">DESIGN QUESTION</text><text x="190" y="704" class="body">Should mode details open inline or as a separate page?</text>
+<style>
+  text { font-family: Arial, sans-serif; fill: #f2eff8; }
+  .heading { font-size: 25px; font-weight: 700; } .tag { font-size: 12px; fill: #5cd3d0; font-weight: 700; letter-spacing: 1px; }
+  .paneltitle { font-size: 15px; font-weight: 600; fill: #aaa6b8; letter-spacing: .6px; }
+  .body { font-size: 17px; fill: #f2eff8; } .small { font-size: 12px; fill: #aaa6b8; }
+  .button { font-size: 17px; font-weight: 700; fill: #15141b; }
+</style>
+</svg>
