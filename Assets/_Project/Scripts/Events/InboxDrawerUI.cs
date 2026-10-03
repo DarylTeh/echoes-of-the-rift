@@ -41,7 +41,7 @@ public sealed class InboxDrawerUI : MonoBehaviour
     {
         InboxResponse result=null;string error=null;yield return InboxClient.Request(Session,(response,failure)=>{result=response;error=failure;});
         loading=false;if(root==null)yield break;
-        if(error!=null||result==null){status.text="Rewards are unavailable. Try again when connected.";return;}
+        if(error!=null||result==null){status.text="Rewards are unavailable. Try again when connected.";yield break;}
         RenderList(result.entries??Array.Empty<InboxEntry>());
     }
 
@@ -72,7 +72,7 @@ public sealed class InboxDrawerUI : MonoBehaviour
     {
         InboxClaimResponse result=null;string error=null;yield return InboxClient.Claim(Session,id,(response,failure)=>{result=response;error=failure;});
         claiming=null;if(root==null)yield break;
-        if(error!=null||result==null){status.text="Reward delivery failed. Try again.";return;}
+        if(error!=null||result==null){status.text="Reward delivery failed. Try again.";yield break;}
         if(result.profile!=null)Session.Game.ReceiveProfile(result.profile);
         status.text=result.claimed?"Reward added to your account.":"Reward already collected.";Refresh();
     }

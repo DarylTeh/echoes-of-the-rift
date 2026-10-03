@@ -1,5 +1,15 @@
 # Execution log
 
+## Current code/build/cleanup pass - revision 60, 3 October 2026
+
+Rebuilt the current town activity rail and contextual action in a non-development Windows player. Fixed four pre-existing Unity compile blockers in the Event/Inbox coroutine and TMP API usage. The build pipeline now emits an optimized player and removes only its own generated Windows target before export. Dedicated account-flow tests now select isolated HTTP/game ports in release mode, wait for the server heartbeat before launching clients, and retain test-only town/reward RPCs in the optimized player. Added explicit account-health, server-heartbeat and stage-by-stage smoke diagnostics. Release-mode UI tests now apply their simulated safe-area inset; this exposed and corrected a harness gate that previously ran only in development builds.
+
+Fresh validation: Unity compile/build PASS (`Logs/step-10-20261003-202049.log`); desktop UI PASS 350 checks; touch-layout UI PASS 351 checks; solo gameplay regression PASS for movement, dodge, cooldown, save recovery, ten runs, four bosses, rewards, inventory, pause/resume and defeat; isolated registration and resume PASS through authenticated town entry, protected session, reconnect, server-authoritative four-stage campaign rewards, pause and rankings with `runtimeErrors=False`; full `npm test` PASS. Latest built assembly SHA-256: `62FD6E42AC37FBB0989AF35B84E0702CE8AFC2873FAF982CC0EB8E33485BD551`; `Release/Windows` matches `Builds/Windows` and contains zero PDB files.
+
+Cleanup removed generated `Builds/Prototype` (166,284,298 bytes), `Builds/Smoke` (164,322,386 bytes), and duplicate `Release/Legacy` launchers (14,336 bytes), total 330,621,020 bytes. Current `Builds/Windows`, tracked release files, logs, Unity cache, local user settings, backups (including player-data/art recovery), server dependencies and live player database were preserved. The repository's canonical plans and UAT now point to the verified release. OCI and external services were not changed.
+
+## Previous code/build pass - revision 59, 3 October 2026
+
 ## Current UAT - revision 58, 3 October 2026
 
 Extended account/startup UAT on unused local ports: unavailable-service dialog and retry PASS; gameplay connection-loss/reconnect dialog PASS; both had zero runtime errors. Desktop UI bounds passed 342 checks, touch-layout mode passed 343, and full `npm test` passed account registration/login/wrong-password/recovery/logout/revocation and all other server suites. Settings > Accounts showed a protected sign-out; cancel retained the session. Source/UI review found no separate splash/loading scene and found inert login/recovery buttons still visible after account creation. Login/recovery Unity submission and confirmed sign-out → re-login remain unverified. The report distinguishes API from UI evidence.

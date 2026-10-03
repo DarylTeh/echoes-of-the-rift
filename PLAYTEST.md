@@ -1,10 +1,12 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
-## Latest UAT — 3 October 2026
+## Latest UAT — revision 60, 3 October 2026
 
-Local client/server startup, isolated register/resume-to-campaign (four stages), 342 desktop and 343 touch-mode layout checks, unavailable-server retry and in-game reconnect UI passed. Account API login, password recovery and logout tests pass; the Unity login/recovery forms and confirmed sign-out → re-login remain unverified. No separate splash/loading view exists, and post-registration login/recovery controls are inert. See [My Heroes reference UAT](Docs/UAT-2026-10-03-MyHeroes.md) for evidence and fixes. UI parity remains below 90%; physical Android device/touch testing is pending.
+The current optimized Windows release passes Unity compile/build, 350 desktop and 351 touch-layout assertions, solo movement/combat/campaign/save/reward regression, isolated account registration/resume through all four server-authoritative campaign stages, and the full server test suite. The test runner waits for the dedicated server readiness heartbeat and isolates account/game ports and data. The current UI has a Campaign / Events / Inbox activity rail and contextual service interaction; the release-mode safe-area simulation is covered. UI parity remains below 90%, and sign-in/recovery form submission, confirmed sign-out/re-login, physical Android touch and low-end-PC frame-time/memory measurement remain open. See [My Heroes reference UAT](Docs/UAT-2026-10-03-MyHeroes.md).
 
-## Current build - revision 39, 30 September 2026
+Current player: [Release/Windows/EchoesOfTheRift.exe](Release/Windows/EchoesOfTheRift.exe). Unity build log: `Logs/step-10-20261003-202049.log`. Latest desktop/touch screenshots and runtime results are under `Logs/UILayout`, `Logs/UILayoutTouch`, `Logs/Dedicated/Register` and `Logs/Dedicated/Resume`.
+
+## Previous optimization build - revision 39, 30 September 2026
 
 Revision 39 includes the low-end allocation audit: reusable co-op snapshot buffers, non-allocating rune targeting, cached network components, change-only HUD text and change-only safe-area layout work. Android/iPhone use Low quality defaults and standalone uses Medium. Desktop/touch layout checks remain automated; physical Android and low-end-PC frame-time/memory capture remain open.
 
@@ -143,4 +145,4 @@ See Server/DEPLOYMENT.md for the client/server boundary, private database, home-
 Revision 18 passes UI (258 checks), local town/campaign/inventory, dedicated registration/auto-login/reconnect, server rewards and both co-op revive methods. Tests use local processes and isolated data. Real phones, separate-device networking and public deployment remain unverified. See MASTER-PLAN.md for the next features and limitations.
 # 3 October 2026 — My Heroes town navigation iteration
 
-Source update: added a left Campaign / Events / Inbox rail and changed the permanent interaction button into a contextual in-range action; pinned map/action/rail to screen edges. The installed Unity editor currently has no valid license, so this source has not yet been rebuilt or visually UATed. Do not use prior packaged-build 342 desktop / 343 touch results as evidence for this iteration. See [master plan](MASTER-PLAN.md) revision 59 and [UAT notes](Docs/UAT-2026-10-03-MyHeroes.md).
+Revision 60 rebuilt and verified the activity rail/contextual action in the optimized Windows release. The test harness now honors simulated safe-area insets in a non-development player, and the account runner waits for the dedicated-server heartbeat before connecting. Current desktop/touch results are 350/351 with zero layout failures/runtime errors. Old generated Prototype/Smoke exports and duplicate legacy launchers have been removed; current Builds/Windows and historical logs/backups are retained. See [master plan](MASTER-PLAN.md) revision 60 and [UAT notes](Docs/UAT-2026-10-03-MyHeroes.md).

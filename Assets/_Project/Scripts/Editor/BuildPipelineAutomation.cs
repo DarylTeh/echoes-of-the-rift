@@ -17,9 +17,14 @@ public static class BuildPipelineAutomation
         IdentityValidation.Validate();
         ProjectValidation.EnsureRuntimeShaders();
         var scenes=Array.FindAll(EditorBuildSettings.scenes,s=>s.enabled); if(scenes.Length==0)throw new InvalidOperationException("No enabled build scenes.");
-        Directory.CreateDirectory(Path.GetDirectoryName(output));
+        var fullOutput=Path.GetFullPath(output);var buildRoot=Path.GetFullPath("Builds")+Path.DirectorySeparatorChar;
+        if(!fullOutput.StartsWith(buildRoot,StringComparison.OrdinalIgnoreCase))throw new InvalidOperationException("Build output must stay under Builds/.");
+        if(target==BuildTarget.StandaloneWindows64){var folder=Path.GetDirectoryName(fullOutput);if(Directory.Exists(folder))Directory.Delete(folder,true);}
+        else if(target==BuildTarget.WebGL||target==BuildTarget.iOS){if(Directory.Exists(fullOutput))Directory.Delete(fullOutput,true);}
+        else if(File.Exists(fullOutput))File.Delete(fullOutput);
+        Directory.CreateDirectory(Path.GetDirectoryName(fullOutput));
         PlayerSettings.companyName="Rift Haven"; PlayerSettings.productName="Echoes of the Rift"; PlayerSettings.bundleVersion="0.2.0";
-        var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes=Array.ConvertAll(scenes,s=>s.path),target=target,locationPathName=output,options=BuildOptions.Development });
+        var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes=Array.ConvertAll(scenes,s=>s.path),target=target,locationPathName=output,options=BuildOptions.None });
         if(report.summary.result!=BuildResult.Succeeded)throw new Exception(target+" export failed: "+report.summary.result);
         Debug.Log("BUILD_OK: "+target+" "+output);
     }

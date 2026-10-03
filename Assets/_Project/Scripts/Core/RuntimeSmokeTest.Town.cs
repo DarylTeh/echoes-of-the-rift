@@ -43,6 +43,6 @@ public sealed partial class RuntimeSmokeTest
         if(!inboxDrawer)failed=true;game.Hub.CloseDialog();
         yield return new WaitForEndOfFrame();Capture("rift-haven.png");
         if(!moved||!safe)failed=true;
-        Debug.Log($"TOWN_CHECK movement={moved} safeZone={safe} activityRail={activityRail} eventDrawer={eventDrawer} inboxDrawer={inboxDrawer} server={game.Session.UsesDedicated}");
+        Debug.Log($"TOWN_CHECK movement={moved} safeZone={safe} localSafe={game.Player.InSafeZone} localHealth={game.Player.Health}/{health} localMana={game.Player.GetComponent<SkillStanceSwapper>().Mana}/{mana} townRpc={game.Session.World.TownSafetyVerified} activityRail={activityRail} eventDrawer={eventDrawer} inboxDrawer={inboxDrawer} server={game.Session.UsesDedicated}");
     }
 }

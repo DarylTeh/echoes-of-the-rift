@@ -48,7 +48,7 @@ public sealed class EventDrawerUI : MonoBehaviour
         yield return EventFeedClient.Request((response,failure)=>{result=response;error=failure;});
         loading=false;
         if(root==null)yield break;
-        if(error!=null||result==null){feed=null;status.text="Events are unavailable. Try again when connected.";return;}
+        if(error!=null||result==null){feed=null;status.text="Events are unavailable. Try again when connected.";yield break;}
         try{serverNow=EventCountdown.ParseUtc(result.serverTime);receivedAt=Time.realtimeSinceStartupAsDouble;feed=result;RenderList();}
         catch(Exception){feed=null;status.text="The event calendar could not be read.";}
     }
@@ -103,11 +103,11 @@ public sealed class EventDrawerUI : MonoBehaviour
         var back=GameUI.Button(detail,"Back",new Vector2(280,195),new Vector2(120,42),CloseDetails);back.name="BackToEventList";
         var type=GameUI.Label(detail,TypeLabel(item.type)+"  ·  SERVER-TIMED",new Vector2(0,146),new Vector2(600,26),16);type.alignment=TextAlignmentOptions.Center;type.color=new Color32(255,210,127,255);
         var description=ShortDescription(item.description);
-        var body=GameUI.Label(detail,description,new Vector2(0,82),new Vector2(600,86),19);body.alignment=TextAlignmentOptions.Center;body.enableWordWrapping=true;
+        var body=GameUI.Label(detail,description,new Vector2(0,82),new Vector2(600,86),19);body.alignment=TextAlignmentOptions.Center;body.textWrappingMode=TextWrappingModes.Normal;
         detailCountdown=GameUI.Label(detail,"ENDS IN  "+EventCountdown.Format(EventCountdown.Remaining(item,serverNow)),new Vector2(0,18),new Vector2(600,30),22);detailCountdown.alignment=TextAlignmentOptions.Center;detailCountdown.color=new Color32(255,210,127,255);
         var eligibility=GameUI.Label(detail,"Eligibility: checking with server...",new Vector2(0,-42),new Vector2(600,38),16);eligibility.alignment=TextAlignmentOptions.Center;eligibility.color=new Color32(208,199,235,255);
         detailEligibility=eligibility;
-        var progress=GameUI.Label(detail,"Checking server progress...",new Vector2(0,-108),new Vector2(600,72),16);progress.alignment=TextAlignmentOptions.Center;progress.enableWordWrapping=true;progress.color=new Color32(208,199,235,255);detailProgress=progress;
+        var progress=GameUI.Label(detail,"Checking server progress...",new Vector2(0,-108),new Vector2(600,72),16);progress.alignment=TextAlignmentOptions.Center;progress.textWrappingMode=TextWrappingModes.Normal;progress.color=new Color32(208,199,235,255);detailProgress=progress;
         StartCoroutine(LoadStatus(item));
         EventSystem.current?.SetSelectedGameObject(GameObject.Find("BackToEventList"));
     }

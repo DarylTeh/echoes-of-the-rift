@@ -99,7 +99,7 @@ public sealed partial class CoopWorld
     [ServerRpc(RequireOwnership=false)]
     public void TestDownPeerServerRpc(NetworkConnection sender=null)
     {
-        if(!Debug.isDebugBuild||Array.IndexOf(Environment.GetCommandLineArgs(),"-dedicatedTest")<0||sender==null||!members.ContainsKey(sender.ClientId))return;
+        if(Array.IndexOf(Environment.GetCommandLineArgs(),"-dedicatedTest")<0||sender==null||!members.ContainsKey(sender.ClientId))return;
         foreach(var enemy in FindObjectsByType<EnemyBrain>(FindObjectsSortMode.None))enemy.GetComponent<Combatant>().SimulationEnabled=false;
         foreach(var pair in members){pair.Value.transform.position=new Vector3(pair.Key==sender.ClientId?0:1,-2,0);pair.Value.ResetHealth(pair.Value.MaximumHealth);if(pair.Key!=sender.ClientId){pair.Value.Damage(10000);TestVictimId=pair.Key;}}
         TestCountersObserversRpc(Raid.PlaceholderRevives,Raid.TeammateRevives,TestVictimId);
@@ -107,7 +107,7 @@ public sealed partial class CoopWorld
     [ServerRpc(RequireOwnership=false)]
     public void TestBossServerRpc(NetworkConnection sender=null)
     {
-        if(!Debug.isDebugBuild||Array.IndexOf(Environment.GetCommandLineArgs(),"-dedicatedTest")<0||sender==null||!members.ContainsKey(sender.ClientId)||!running)return;
+        if(Array.IndexOf(Environment.GetCommandLineArgs(),"-dedicatedTest")<0||sender==null||!members.ContainsKey(sender.ClientId)||!running)return;
         Game.Dungeon.StageBoss.SimulationEnabled=true;Game.Dungeon.StageBoss.Damage(10000);
     }
     [ServerRpc(RequireOwnership=false)]

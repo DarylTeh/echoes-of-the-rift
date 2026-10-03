@@ -45,7 +45,7 @@ public sealed partial class TownHubManager : MonoBehaviour
         contextAction=interact.GetComponent<UnityEngine.UI.Button>();contextActionLabel=interact.GetComponentInChildren<TMP_Text>();interact.gameObject.SetActive(false);
         var settings=GameUI.Button(root,"",new Vector2(592,321),new Vector2(52,52),OpenSettings);settings.name="SettingsButton";GameUI.Pin((RectTransform)settings.transform,Vector2.one,new Vector2(-48,-39));
         GameUI.Icon(settings.transform,PixelArt.Icon("settings"),Vector2.zero,new Vector2(36,36));
-        var rail=GameUI.Panel(root,"TownActivityRail",new Vector2(-575,50),new Vector2(118,254));GameUI.Pin(rail,new Vector2(0,.5f),new Vector2(72,38));
+        var rail=GameUI.Panel(root,"TownActivityRail",new Vector2(-575,50),new Vector2(136,254));GameUI.Pin(rail,new Vector2(0,.5f),new Vector2(74,38));
         AddRailAction(rail,"CampaignButton","Campaign","sword",new Vector2(0,78),()=>{if(!Session.UsesDedicated||Session.Authenticated)ExpeditionRequested?.Invoke();});
         AddRailAction(rail,"EventsButton","Events","quest",new Vector2(0,0),()=>GetComponent<EventDrawerUI>()?.Open());
         AddRailAction(rail,"InboxButton","Inbox","book",new Vector2(0,-78),()=>GetComponent<InboxDrawerUI>()?.Open());
@@ -81,9 +81,9 @@ public sealed partial class TownHubManager : MonoBehaviour
     }
     private static void AddRailAction(Transform rail,string name,string label,string icon,Vector2 position,Action action)
     {
-        var button=GameUI.Button(rail,"",position,new Vector2(98,62),action);button.name=name;
-        GameUI.Icon(button.transform,PixelArt.Icon(icon),new Vector2(-27,0),new Vector2(27,27));
-        var text=GameUI.Label(button.transform,label,new Vector2(17,0),new Vector2(48,44),14);text.alignment=TextAlignmentOptions.Center;
+        var button=GameUI.Button(rail,"",position,new Vector2(116,62),action);button.name=name;
+        GameUI.Icon(button.transform,PixelArt.Icon(icon),new Vector2(-37,0),new Vector2(26,26));
+        var text=GameUI.Label(button.transform,label,new Vector2(22,0),new Vector2(70,44),12);text.alignment=TextAlignmentOptions.Center;
     }
     public void Interact(int index)
     {

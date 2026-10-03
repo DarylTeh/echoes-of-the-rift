@@ -24,7 +24,8 @@ public sealed class CoopSession : MonoBehaviour
     [Serializable] private class Endpoint { public string address; }
     private void Start()
     {
-        if(Debug.isDebugBuild&&(Array.IndexOf(Environment.GetCommandLineArgs(),"-cookieSmoke")>=0||Array.IndexOf(Environment.GetCommandLineArgs(),"-dedicatedTest")>=0)&&ushort.TryParse(Environment.GetEnvironmentVariable("RIFT_TEST_GAME_PORT"),out ushort testPort))Manager.TransportManager.Transport.SetPort(testPort);
+        var args=Environment.GetCommandLineArgs();bool dedicatedHarness=Array.IndexOf(args,"-dedicatedTest")>=0||Array.IndexOf(args,"-dedicatedClientTest")>=0;bool developerSmoke=Debug.isDebugBuild&&Array.IndexOf(args,"-cookieSmoke")>=0;
+        if((dedicatedHarness||developerSmoke)&&ushort.TryParse(Environment.GetEnvironmentVariable("RIFT_TEST_GAME_PORT"),out ushort testPort))Manager.TransportManager.Transport.SetPort(testPort);
         Manager.ClientManager.OnClientConnectionState+=ConnectionChanged;
         Manager.ServerManager.OnRemoteConnectionState+=(connection,args)=>{if(args.ConnectionState==RemoteConnectionState.Stopped)World.RemoveMember(connection.ClientId);};
         string config=Path.Combine(Application.streamingAssetsPath,"server.json");if(File.Exists(config)){var endpoint=JsonUtility.FromJson<Endpoint>(File.ReadAllText(config));if(!string.IsNullOrWhiteSpace(endpoint?.address))Address=endpoint.address;}
@@ -43,11 +44,12 @@ public sealed class CoopSession : MonoBehaviour
         var appearance=new CharacterAppearanceData{ClassId="wayfarer",PassiveSkillId="steadfast",CustomColors=true,SkinRGB=Color.white,HairRGB=Color.black,EyeRGB=Color.cyan};
         Game.Begin(appearance);Game.PrepareCoop(false);Game.Player.gameObject.SetActive(false);Active=true;
         if(!Manager.ServerManager.StartConnection())throw new InvalidOperationException("Dedicated transport could not bind.");
+        Debug.Log("DEDICATED_SERVER_STARTED: testPort="+Environment.GetEnvironmentVariable("RIFT_TEST_GAME_PORT"));
         StartCoroutine(ReportReadiness());
     }
     private IEnumerator ReportReadiness()
     {
-        while(Manager!=null){if(Manager.IsServerStarted)yield return DedicatedPersistence.Raw("/heartbeat",new ServerRequest(),(body,error)=>{});yield return new WaitForSecondsRealtime(2);}
+        while(Manager!=null){if(Manager.IsServerStarted)yield return DedicatedPersistence.Raw("/heartbeat",new ServerRequest(),(body,error)=>{if(error==null)Debug.Log("DEDICATED_HEARTBEAT_OK");else Debug.LogWarning("DEDICATED_HEARTBEAT_FAILED: "+error);});yield return new WaitForSecondsRealtime(2);}
     }
     private bool refreshing;
     public void SetAccount(AccountResponse response){PlayerId=response.id;PlayerSecret=response.ticket;}

@@ -33,6 +33,14 @@ if(($ports.GetActiveTcpListeners() | Where-Object {$_.Port -in $taskDbPort,$task
     $owned+=Start-Process -FilePath $exe -ArgumentList ('-batchmode -nographics -dedicatedServer {0} -logFile "{1}"' -f $flag,(Join-Path $output 'server.log')) -WindowStyle Hidden -PassThru
     if($Test){
         Start-Sleep -Seconds 3
+        if($Account){
+            $ready=$false
+            for($attempt=0;$attempt -lt 60;$attempt++){
+                try{$health=Invoke-RestMethod ("http://127.0.0.1:$taskAccountPort/health") -TimeoutSec 1;if($health.ready){$ready=$true;break}}catch{}
+                Start-Sleep -Milliseconds 500
+            }
+            if(-not $ready){throw 'Dedicated game server did not report its readiness heartbeat.'}
+        }
         $clients=@()
         $roles=if($Account){@('Register','Resume')}elseif($Pair){@('Leader','Peer')}else{@('Client')}
         foreach($role in $roles){

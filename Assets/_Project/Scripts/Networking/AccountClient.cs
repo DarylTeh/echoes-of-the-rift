@@ -24,12 +24,12 @@ public static class AccountClient
     [Serializable] private sealed class Health { public bool ready; }
     public static IEnumerator CheckServer(Action<bool> done)
     {
-        string url=null;try{url=ServerEndpoint.AccountUrl+"/health";}catch{done(false);yield break;}
+        string url=null;try{url=ServerEndpoint.AccountUrl+"/health";}catch(Exception exception){Debug.LogWarning("Account health endpoint is invalid: "+exception.Message);done(false);yield break;}
         using(var cancellation=new System.Threading.CancellationTokenSource(TimeSpan.FromSeconds(5)))
         {
             var task=http.GetAsync(url,cancellation.Token);while(!task.IsCompleted)yield return null;
-            if(task.IsCanceled||task.IsFaulted){done(false);yield break;}
-            using(var response=task.Result){var read=response.Content.ReadAsStringAsync();while(!read.IsCompleted)yield return null;bool ready=false;if(read.IsCompletedSuccessfully&&response.IsSuccessStatusCode)try{ready=JsonUtility.FromJson<Health>(read.Result).ready;}catch{}done(ready);}
+            if(task.IsCanceled||task.IsFaulted){Debug.LogWarning("Account health request failed for "+url+": "+task.Exception?.GetBaseException().Message);done(false);yield break;}
+            using(var response=task.Result){var read=response.Content.ReadAsStringAsync();while(!read.IsCompleted)yield return null;bool ready=false;if(read.IsCompletedSuccessfully&&response.IsSuccessStatusCode)try{ready=JsonUtility.FromJson<Health>(read.Result).ready;}catch{}if(!ready)Debug.LogWarning("Account health check returned "+(int)response.StatusCode+" for "+url+".");done(ready);}
         }
     }
     public static IEnumerator Request(string address,string route,AccountRequest request,Action<AccountResponse,string> done)

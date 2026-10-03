@@ -16,7 +16,8 @@ public sealed class UISafeArea : MonoBehaviour
     private void LateUpdate()
     {
         if(Screen.width<=0||Screen.height<=0)return;
-        Rect area=Debug.isDebugBuild&&TestArea.HasValue?TestArea.Value:Screen.safeArea;
+        bool layoutHarness=System.Array.IndexOf(System.Environment.GetCommandLineArgs(),"-uiLayoutTest")>=0;
+        Rect area=layoutHarness&&TestArea.HasValue?TestArea.Value:Screen.safeArea;
         if(area.width<=0||area.height<=0)return;
         if(lastWidth==Screen.width&&lastHeight==Screen.height&&lastArea==area)return;
         lastWidth=Screen.width;lastHeight=Screen.height;lastArea=area;

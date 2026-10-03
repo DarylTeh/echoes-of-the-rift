@@ -16,7 +16,9 @@ using UnityEngine;
         get
         {
             var config=Load();
-            if(Debug.isDebugBuild&&Array.IndexOf(Environment.GetCommandLineArgs(),"-cookieSmoke")>=0&&int.TryParse(Environment.GetEnvironmentVariable("RIFT_TEST_ACCOUNT_PORT"),out int testPort))config.accountUrl="http://127.0.0.1:"+testPort;
+            var args=Environment.GetCommandLineArgs();bool accountHarness=Array.IndexOf(args,"-accountFlowTest")>=0;
+            bool developerSmoke=Debug.isDebugBuild&&Array.IndexOf(args,"-cookieSmoke")>=0;
+            if((accountHarness||developerSmoke)&&int.TryParse(Environment.GetEnvironmentVariable("RIFT_TEST_ACCOUNT_PORT"),out int testPort))config.accountUrl="http://127.0.0.1:"+testPort;
             if(!Uri.TryCreate(config.accountUrl,UriKind.Absolute,out var uri)||(!uri.IsLoopback&&uri.Scheme!="https")||(uri.Scheme!="https"&&uri.Scheme!="http"))throw new InvalidOperationException("The account server needs a valid HTTPS address (HTTP is only allowed on this PC).");
             return config.accountUrl.TrimEnd('/');
         }

@@ -1,10 +1,12 @@
 # My Heroes reference UAT — 3 October 2026
 
-## Iteration 59 — town navigation source update
+## Current verification — revision 60
 
-Rift Haven source now has a compact left-side activity rail for Campaign, Events and Inbox; Backpack and Settings remain on the right. The old always-visible `Interact [F]` button is replaced with a contextual right-side action shown only in range, while the `F` key remains active. The rail, minimap and contextual action use edge anchoring so they can adapt across wide and narrow aspect ratios. The town runtime smoke test now checks that the activity rail, Campaign action and contextual action are present.
+The current non-development Windows player was rebuilt from source and copied into the tracked `Release/Windows` handoff. Rift Haven now includes the Campaign / Events / Inbox left activity rail, right-side Backpack and Settings, and an in-range contextual service/gate action. The rail and minimap remain pinned to the display edges. Release-mode layout tests now exercise simulated safe-area insets instead of silently bypassing them.
 
-**Not visually accepted yet.** The installed Unity 6.0 editor could not compile or rebuild because it reported `No valid Unity Editor license found` (exit 198). Therefore no fresh player screenshot or desktop/touch run includes this iteration; prior 342/343 layout passes refer to the old packaged build. The actual target comparison must wait for a licensed rebuild, with new landscape and portrait captures. This iteration is structurally closer to the reference's fixed left navigation and contextual interactions, but the 90% visual target cannot be claimed from source alone.
+Unity compile and optimized Windows export pass (`Logs/step-10-20261003-202049.log`). The current package passes 350 desktop and 351 touch-mode layout checks, the solo movement/combat/save/reward regression, isolated registration and resume through authenticated four-stage server-authoritative campaign rewards, pause and rankings, and the full server `npm test` suite. Account tests use a throwaway database and isolated ports. No physical Android or low-end-PC measurement was performed.
+
+The refreshed UI remains **below the requested 90% reference match**. The activity hierarchy is clearer, but the town remains sparse and onboarding, item inspection, paperdoll detail, shop presentation and result hierarchy still diverge. The review does not claim full visual parity from layout assertions. Current captures are under `Logs/UILayout`, `Logs/UILayoutTouch`, `Logs/Dedicated/Register` and `Logs/Dedicated/Resume`.
 
 ## Result
 
@@ -13,11 +15,10 @@ The local Windows game/server stack starts and the isolated account-to-campaign 
 ## Test conditions and evidence
 
 - Normal local server was ready on loopback (`/health` returned `ready: true`); the Windows client opened and responded at 1296×759.
-- `Tools/Run-Dedicated.ps1 -Account` passed twice (register and resume): `auth=True`, server-only rewards, four campaign stages, pause and rankings passed, with `runtimeErrors=False`. It used a throwaway account and isolated database/game ports, so no player account or normal local database was changed.
-- `Tools/Test-UI.ps1` passed 342 layout checks with zero failures and no reported runtime errors at 1280×720. These checks validate bounds and scripted states; they do not establish visual parity.
-- `Tools/Test-UI.ps1 -Touch` passed 343 touch-layout checks with zero failures and no reported runtime errors. This exercises the touch presentation mode in the desktop test build; it is not a physical Android-device test.
+- `Tools/Run-Dedicated.ps1 -Account` passed registration and resume: `auth=True`, server-only grants, four campaign stages, central rewards, pause and rankings passed with `runtimeErrors=False`. It used a throwaway account and isolated database/game ports, so the normal account database was not changed.
+- `Tools/Test-UI.ps1` passed 350 layout checks with zero failures and no reported runtime errors. `Tools/Test-UI.ps1 -Touch` passed 351. These are scripted desktop-player layout checks; they do not establish visual parity or certify physical Android touch behavior.
 - The normal client displayed “Please sign in again” after a saved session refresh failed. Its account form is the existing sign-in surface; no account details were entered and no saved session was cleared.
-- Fresh isolated captures are under `Logs/Dedicated/Register` and `Logs/Dedicated/Resume`. The normal client-only capture is `Logs/UAT/login-window.png`. Older multi-resolution layout captures are under `Logs/UILayout` and are dated 30 September; treat those as supporting visual evidence, not today's live play capture.
+- Fresh isolated captures are under `Logs/Dedicated/Register` and `Logs/Dedicated/Resume`; current multi-resolution layout captures are under `Logs/UILayout` and `Logs/UILayoutTouch`.
 - Comparisons use the user's supplied My Heroes screenshots and previously documented reference frames from [My Heroes: SEA](MYHEROES-GAMEPLAY-REFERENCES.md) and [My Heroes: Dungeon Raid](MYHEROES-GAMEPLAY-REFERENCES.md). The review does not claim a complete re-watch of either game during this UAT.
 
 ## Extended account, startup and recovery pass
@@ -44,7 +45,7 @@ The full local `npm test` suite passed, including account registration, case-ins
 
 | Surface | UAT result | Gap against reference |
 |---|---|---|
-| First launch / account | Flow works in the isolated test; a title screen precedes the account form. | My Heroes' reviewed play flow opens in its lobby/game context. The separate “Click / Tap to Enter” step delays sign-in and does not match that hierarchy. The packaged password label says `15+ characters`, while current source and account rules specify `5+`; rebuild the Windows release from current source. |
+| First launch / account | Registration and resume are exercised against the current Windows release. | My Heroes' reviewed play flow opens in its lobby/game context. The separate “Click / Tap to Enter” step delays sign-in and does not match that hierarchy. Sign-in and recovery screens still need direct end-to-end UI submissions. |
 | Town | Profile/vitals and wallet occupy familiar top corners; the live capture shows shop NPCs and gate interaction. | My Heroes has persistent left activity navigation and a denser lobby around the hero. Rift Haven is mostly empty floor with labels floating over world actors; some labels overlap the identity HUD, the hero and the interaction prompt. Utility navigation is too sparse and scattered. |
 | Combat | The packaged layout has a boss bar, objectives, minimap, skill circles and a prominent weapon action. Scripted four-stage campaign flow passes. | My Heroes keeps the center clearer, places movement at lower left, groups compact objectives at left, and puts the weapon/skills on the right. Rift Haven's objective panel and keyboard-labelled controls are desktop-shaped and visually louder; touch spacing/parity has not been validated on an Android device. |
 | Backpack | The paperdoll-plus-grid silhouette and five-column grid are recognizable. | Only three equipment slots are presented; the reference paperdoll is denser, with more gear locations and a fuller item collection. The skill shortcut is not a complete loadout/assignment screen. |

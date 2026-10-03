@@ -1,6 +1,8 @@
 # Echoes of the Rift
 
-## Current build - revision 49, 2 October 2026
+## Current build - revision 60, 3 October 2026
+
+The optimized Windows player has been rebuilt from the current Unity source and copied to the tracked `Release/Windows` handoff. Desktop UI passes 350 checks, touch-layout mode passes 351, account registration/resume passes through a four-stage server-authoritative campaign, the solo gameplay regression passes, and the full server suite passes. My Heroes visual parity remains below the requested 90%; see the current [UAT](Docs/UAT-2026-10-03-MyHeroes.md) and [master plan](MASTER-PLAN.md).
 
 The skill HUD and active-event feed now avoid repeating stable work, improving low-end frame time and repeated event requests while preserving gameplay and server authority.
 
@@ -24,7 +26,7 @@ The town now has a read-only Events drawer backed by the server-timed `/events` 
 
 The Reward Inbox is wired for recoverable server-issued currency and catalogue-item rewards. Claims are idempotent, bounded and profile-synchronised; the client cannot choose reward amounts.
 
-Validation for this review: server `npm test` passes, including version-pinned event-status coverage; the existing Windows export passes desktop UI 342 and touch UI 343 checks with zero failures/runtime errors. Source-level brace checks pass for the optimized C# files. A fresh Unity compile for this slice is currently blocked by the local Editor license and is recorded in `Logs/step-10-20260930-204549.log`.
+The current Windows export is [Release/Windows](Release/Windows), built by `Logs/step-10-20261003-202049.log`. On the current build, desktop UI passes 350 checks, touch layout passes 351, solo gameplay and isolated account registration/resume pass, and `npm test` passes. The clean build also removes only its generated `Builds/Windows` target before export. Old generated Prototype/Smoke builds and duplicate legacy launchers have been removed; historical logs and recovery backups remain local.
 
 ## Previous build - revision 35, 28 September 2026
 
@@ -127,7 +129,7 @@ Validation: final export passed 259 UI checks with zero failures/runtime errors,
 The earlier revision 19 results below are historical. This presentation-only increment preserves existing account, economy and multiplayer contracts. Catalogue/character asset detail and a full reference-quality shop/paperdoll remain unfinished; see MASTER-PLAN.md revision 20.
 
 
-## Visual update — revision 19, 24 September 2026
+## Historical visual update — revision 19, 24 September 2026
 
 Current export: `Logs/step-10-20260924-212504.log`, `Builds/Windows/EchoesOfTheRift.exe`. Original large-head chibi heroes render at 48px at 720p. Town/dungeons are larger and scroll with a bounded follow camera; the HUD stays fixed. Friendly units/NPCs and all enemies/bosses have overhead HP bars. Four campaign bosses now have separate coloured silhouettes and attack timing/radius patterns. Skill bursts, hit sparks and projectile trails are brighter. Inventory/shop uses a 5x4 right-hand grid, left-side hero/item details and merchant headings.
 
@@ -139,7 +141,7 @@ Unity 6000.6.2f1 pixel-art RPG prototype. Updated 23 September 2026, master plan
 
 Start **Echoes of the Rift Server.exe**, wait for readiness, then **Play Echoes of the Rift.exe** on the desktop. Keep the installed workspace in its existing location. The client does not start the server automatically; unavailable servers show a blocking splash error.
 
-Latest build: `Builds/Windows/EchoesOfTheRift.exe`, built by `Logs/step-10-20260924-212504.log`. Rift Haven now passes local acceptance: 258 UI checks, local town/campaign regression, dedicated registration/reconnect/reward tests and both co-op revive methods. Real-device/mobile/public-network validation remains pending.
+Current build: `Release/Windows/EchoesOfTheRift.exe`, built by `Logs/step-10-20261003-202049.log`. The current results and remaining acceptance gaps are listed at the top of this README and in the current UAT. Real-device/mobile/public-network validation remains pending.
 
 - [Master plan](MASTER-PLAN.md): authoritative requirements, implementation status and immediate next fixes.
 - [MVP roadmap](MVP-ROADMAP.md): remaining milestones and release gates.

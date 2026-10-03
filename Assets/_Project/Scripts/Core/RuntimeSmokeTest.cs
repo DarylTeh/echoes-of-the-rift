@@ -9,6 +9,7 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
 {
     private string output;
     private bool failed;
+    private readonly System.Collections.Generic.List<string> runtimeErrors=new System.Collections.Generic.List<string>();
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Init()
     {
@@ -24,7 +25,7 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         Directory.CreateDirectory(output); Application.logMessageReceived+=OnLog;
         if(Array.IndexOf(args,"-accountFlowTest")>=0&&Array.IndexOf(args,"-accountResume")<0)AccountClient.Forget();
     }
-    private void OnLog(string message,string stack,LogType type) { if(type==LogType.Exception||type==LogType.Error||type==LogType.Assert) failed=true; }
+    private void OnLog(string message,string stack,LogType type) { if(type==LogType.Exception||type==LogType.Error||type==LogType.Assert){failed=true;runtimeErrors.Add(type+": "+message+"\n"+stack);} }
     private IEnumerator Start()
     {
         yield return new WaitForSecondsRealtime(1);
@@ -222,8 +223,11 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         while((game.Hub.IsOpen||world.ReceivedSnapshots<2)&&Time.realtimeSinceStartupAsDouble<deadline){if(leader)world.CommandServerRpc("coop");yield return new WaitForSecondsRealtime(.5f);}
         yield return new WaitForSecondsRealtime(.2f);
         var expedition=FindAnyObjectByType<ExpeditionHUD>();expedition.Refresh();
-        bool hudReady=expedition.BossVisible&&expedition.PartyVisible&&expedition.BossFraction>0;
-        AuditLayout(GameObject.Find("SkillHUD").transform,"network expedition HUD");hudReady&=layoutFailures.Count==0;
+        bool bossVisible=expedition.BossVisible,partyVisible=expedition.PartyVisible;float bossFraction=expedition.BossFraction;int layoutFailuresBefore=layoutFailures.Count;
+        AuditLayout(GameObject.Find("SkillHUD").transform,"network expedition HUD");
+        bool hudReady=bossVisible&&partyVisible&&bossFraction>0&&layoutFailures.Count==layoutFailuresBefore;
+        Debug.Log($"DEDICATED_HUD_CHECK boss={bossVisible} party={partyVisible} fraction={bossFraction:0.00} newLayoutFailures={layoutFailures.Count-layoutFailuresBefore}");
+        if(layoutFailures.Count>layoutFailuresBefore)Debug.Log("DEDICATED_HUD_LAYOUT: "+string.Join(" | ",layoutFailures.GetRange(layoutFailuresBefore,layoutFailures.Count-layoutFailuresBefore)));
         yield return new WaitForEndOfFrame();Capture("party-hud.png");
         if(leader)
         {
@@ -240,7 +244,10 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
             while(world.TestRescues<1&&Time.realtimeSinceStartupAsDouble<deadline){var button=GameObject.Find("Revive")?.GetComponent<UnityEngine.UI.Button>();if(!clicked&&button!=null){button.onClick.Invoke();clicked=true;}yield return null;}
         }
         deadline=Time.realtimeSinceStartupAsDouble+8;while(game.Forge.State.Coins!=coins+15&&Time.realtimeSinceStartupAsDouble<deadline)yield return null;
-        expedition.Refresh();hudReady&=!expedition.BossVisible;
+        deadline=Time.realtimeSinceStartupAsDouble+3;
+        while(expedition.BossVisible&&Time.realtimeSinceStartupAsDouble<deadline){yield return new WaitForSecondsRealtime(.1f);expedition.Refresh();}
+        bool bossHidden=!expedition.BossVisible;hudReady&=bossHidden;
+        Debug.Log($"DEDICATED_BOSS_HIDE_CHECK hidden={bossHidden} stageCleared={game.Dungeon.IsCleared} replicaAlive={world.ReplicaBoss!=null&&world.ReplicaBoss.Alive}");
         bool passed=hudReady&&game.Cooperative&&world.TestSelfRevives>=1&&world.TestRescues>=1&&game.Forge.State.Coins==coins+15&&!failed;
         if(leader)yield return new WaitForSecondsRealtime(1);
         Finish($"{(passed?"PASS":"FAIL")} dedicated pair leader={leader} hud={hudReady} selfRevives={world.TestSelfRevives} teammateRevives={world.TestRescues} reward={game.Forge.State.Coins==coins+15} runtimeErrors={failed}");
@@ -263,7 +270,7 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
             deadline=Time.realtimeSinceStartupAsDouble+8;
             string buttonName=stage==3?"Return to town":"Next room";
             while((GameObject.Find(buttonName)==null||game.Forge.State.Coins!=coins+(stage==3?80:(stage+1)*15))&&Time.realtimeSinceStartupAsDouble<deadline)yield return null;
-            var button=GameObject.Find(buttonName)?.GetComponent<UnityEngine.UI.Button>();if(button==null){rooms=false;break;}button.onClick.Invoke();
+            var button=GameObject.Find(buttonName)?.GetComponent<UnityEngine.UI.Button>();Debug.Log($"DEDICATED_STAGE_CHECK stage={stage} coins={game.Forge.State.Coins} expected={coins+(stage==3?80:(stage+1)*15)} button={button!=null} cleared={game.Dungeon.IsCleared} snapshots={game.Session.World.ReceivedSnapshots}");if(button==null){rooms=false;break;}button.onClick.Invoke();
             yield return new WaitForSecondsRealtime(.5f);
         }
         bool rewards=game.Forge.State.Coins==coins+80&&game.Forge.State.CampaignStagesCompleted==4;
@@ -274,7 +281,7 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
     }
     private void Finish(string message)
     {
-        File.WriteAllText(Path.Combine(output,"runtime-smoke.txt"),message); Debug.Log("RUNTIME_SMOKE: "+message); Application.Quit(message.StartsWith("PASS")?0:1);
+        File.WriteAllText(Path.Combine(output,"runtime-smoke.txt"),message+(runtimeErrors.Count==0?"":"\n\nRuntime errors:\n"+string.Join("\n---\n",runtimeErrors))); Debug.Log("RUNTIME_SMOKE: "+message); Application.Quit(message.StartsWith("PASS")?0:1);
     }
     private void OnDestroy() { Application.logMessageReceived-=OnLog; }
 }
