@@ -32,6 +32,8 @@ public sealed partial class RuntimeSmokeTest
             game.Player.transform.position=TownHubManager.Positions[7];game.Hub.Interact(7);safe&=game.Hub.HasDialog;game.Hub.CloseDialog();
         }
         var eventsButton=GameObject.Find("EventsButton")?.GetComponent<UnityEngine.UI.Button>();
+        bool activityRail=GameObject.Find("TownActivityRail")!=null&&GameObject.Find("CampaignButton")!=null&&GameObject.Find("TownContextAction")!=null;
+        if(!activityRail)failed=true;
         eventsButton?.onClick.Invoke();yield return null;
         bool eventDrawer=GameObject.Find("EventDrawer")!=null&&GameObject.Find("CloseEventsButton")!=null;
         if(!eventDrawer)failed=true;game.Hub.CloseDialog();
@@ -41,6 +43,6 @@ public sealed partial class RuntimeSmokeTest
         if(!inboxDrawer)failed=true;game.Hub.CloseDialog();
         yield return new WaitForEndOfFrame();Capture("rift-haven.png");
         if(!moved||!safe)failed=true;
-        Debug.Log($"TOWN_CHECK movement={moved} safeZone={safe} eventDrawer={eventDrawer} inboxDrawer={inboxDrawer} server={game.Session.UsesDedicated}");
+        Debug.Log($"TOWN_CHECK movement={moved} safeZone={safe} activityRail={activityRail} eventDrawer={eventDrawer} inboxDrawer={inboxDrawer} server={game.Session.UsesDedicated}");
     }
 }

@@ -1,5 +1,11 @@
 # My Heroes reference UAT — 3 October 2026
 
+## Iteration 59 — town navigation source update
+
+Rift Haven source now has a compact left-side activity rail for Campaign, Events and Inbox; Backpack and Settings remain on the right. The old always-visible `Interact [F]` button is replaced with a contextual right-side action shown only in range, while the `F` key remains active. The rail, minimap and contextual action use edge anchoring so they can adapt across wide and narrow aspect ratios. The town runtime smoke test now checks that the activity rail, Campaign action and contextual action are present.
+
+**Not visually accepted yet.** The installed Unity 6.0 editor could not compile or rebuild because it reported `No valid Unity Editor license found` (exit 198). Therefore no fresh player screenshot or desktop/touch run includes this iteration; prior 342/343 layout passes refer to the old packaged build. The actual target comparison must wait for a licensed rebuild, with new landscape and portrait captures. This iteration is structurally closer to the reference's fixed left navigation and contextual interactions, but the 90% visual target cannot be claimed from source alone.
+
 ## Result
 
 The local Windows game/server stack starts and the isolated account-to-campaign flow passes. The packaged UI does **not** meet the requested 90% My Heroes: SEA / Dungeon Raid presentation or navigation match. Current perceived similarity is roughly 50–60% across the screens with usable reference evidence; this is a qualitative review, not a pixel-difference metric. Combat and the backpack retain the broad reference arrangement, while onboarding, town navigation, the item inspector and several screen proportions still diverge materially.

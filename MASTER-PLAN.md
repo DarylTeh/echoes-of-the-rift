@@ -1,6 +1,14 @@
 # Echoes of the Rift master plan
 
-Revision 58 - 3 October 2026. Account, startup and connection UAT.
+Revision 59 - 3 October 2026. My Heroes town navigation iteration.
+
+## Current iteration - revision 59: town hierarchy and contextual interaction
+
+Reworked the Rift Haven navigation source around a compact left activity rail for Campaign, Events and Inbox, keeping Backpack and Settings on the right. Replaced the always-visible `Interact [F]` control with a right-anchored prompt that appears only when the player is close enough to a service or gate; keyboard `F` remains available. Pinned the rail and minimap to screen edges for aspect-ratio safety. Extended the town runtime smoke test to require the rail, campaign action and contextual prompt.
+
+This is a meaningful source/layout change toward My Heroes' stable left activity navigation and situational interaction affordance. Visual acceptance is pending: the installed Unity Editor returned license error 198 (`No valid Unity Editor license found`), so neither a current player rebuild nor fresh desktop/touch captures could be produced. Existing 342/343 results cover the previously packaged build and are not evidence for this iteration. Activate the licensed editor, rebuild, then run desktop/touch UI checks and review fresh 1280x720 plus portrait captures before rating parity. Do not delete and replace the full UI until that fresh capture is reviewed against the My Heroes references.
+
+## Previous revision 58: account, startup and connection UAT
 
 ## Current iteration - revision 58: entry and recovery flow review
 

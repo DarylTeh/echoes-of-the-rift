@@ -141,3 +141,6 @@ See Server/DEPLOYMENT.md for the client/server boundary, private database, home-
 ## Current test status
 
 Revision 18 passes UI (258 checks), local town/campaign/inventory, dedicated registration/auto-login/reconnect, server rewards and both co-op revive methods. Tests use local processes and isolated data. Real phones, separate-device networking and public deployment remain unverified. See MASTER-PLAN.md for the next features and limitations.
+# 3 October 2026 — My Heroes town navigation iteration
+
+Source update: added a left Campaign / Events / Inbox rail and changed the permanent interaction button into a contextual in-range action; pinned map/action/rail to screen edges. The installed Unity editor currently has no valid license, so this source has not yet been rebuilt or visually UATed. Do not use prior packaged-build 342 desktop / 343 touch results as evidence for this iteration. See [master plan](MASTER-PLAN.md) revision 59 and [UAT notes](Docs/UAT-2026-10-03-MyHeroes.md).

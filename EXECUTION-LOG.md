@@ -385,3 +385,9 @@ Final export: Logs/step-10-20260924-215029.log. Master plan revised with the use
 - Reviewed fresh isolated screenshots for splash, account form, Rift Haven, collection and rankings; captured only the normal client window. Compared town/combat/backpack/inspector/shop against the supplied references and existing My Heroes source review. The 90% target is not met; full findings and the qualitative 50–60% baseline are in `Docs/UAT-2026-10-03-MyHeroes.md`.
 - Found release/source drift: shipped login label says `Password (15+ characters)` although source and server rule are `5+`. Unity client must be rebuilt/package-updated to fix the binary and deliver current source UI. The normal client also showed a failed saved-session refresh (“Please sign in again”); no stored credentials were read or cleared.
 - Normal local service remains running and healthy. Android hardware/touch acceptance and exact visual parity are still unverified.
+# 3 October 2026 — Revision 59: My Heroes town navigation iteration
+
+- Added edge-pinned Campaign / Events / Inbox activity rail to Rift Haven; kept Backpack / Settings on the opposite side.
+- Replaced the permanent Interact [F] control with a contextual in-range action, retaining keyboard F; pinned minimap and action for narrow aspect ratios.
+- Extended town runtime smoke coverage for activity rail, Campaign action and contextual prompt.
+- Verification is pending: Unity batch compile exited 198 because no valid Editor license is activated. Did not treat prior packaged-build UI results as verification for this source change. See [master plan](MASTER-PLAN.md) revision 59 and [My Heroes UAT](Docs/UAT-2026-10-03-MyHeroes.md).
