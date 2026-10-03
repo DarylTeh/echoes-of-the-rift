@@ -18,7 +18,7 @@ public static class AccountClient
     public static bool Save(string token)
     {
         Token=token;
-        try{var bytes=WindowsSessionProtection.Protect(token);string temporary=CachePath+".tmp";File.WriteAllBytes(temporary,bytes);if(File.Exists(CachePath))File.Replace(temporary,CachePath,null);else File.Move(temporary,CachePath);return true;}catch{return false;}
+        try{var bytes=WindowsSessionProtection.Protect(token);string temporary=CachePath+".tmp";File.WriteAllBytes(temporary,bytes);if(File.Exists(CachePath))File.Replace(temporary,CachePath,null);else File.Move(temporary,CachePath);return true;}catch(Exception error){Debug.LogWarning("Protected account session could not be saved: "+error.GetType().Name+" ("+error.Message+").");return false;}
     }
     public static void Forget(){Token=null;if(File.Exists(CachePath))File.Delete(CachePath);}
     [Serializable] private sealed class Health { public bool ready; }
@@ -62,7 +62,7 @@ public static class WindowsSessionProtection
     {
         if(Application.platform!=RuntimePlatform.WindowsPlayer&&Application.platform!=RuntimePlatform.WindowsEditor)throw new PlatformNotSupportedException();
         var input=new Blob{size=bytes.Length,data=Marshal.AllocHGlobal(bytes.Length)};Blob output=default;
-        try{Marshal.Copy(bytes,0,input.data,bytes.Length);bool ok=protect?CryptProtectData(ref input,"Echoes of the Rift session",IntPtr.Zero,IntPtr.Zero,IntPtr.Zero,1,out output):CryptUnprotectData(ref input,IntPtr.Zero,IntPtr.Zero,IntPtr.Zero,IntPtr.Zero,1,out output);if(!ok)throw new InvalidOperationException("Device session protection failed.");var result=new byte[output.size];Marshal.Copy(output.data,result,0,result.Length);return result;}
+        try{Marshal.Copy(bytes,0,input.data,bytes.Length);bool ok=protect?CryptProtectData(ref input,"Echoes of the Rift session",IntPtr.Zero,IntPtr.Zero,IntPtr.Zero,1,out output):CryptUnprotectData(ref input,IntPtr.Zero,IntPtr.Zero,IntPtr.Zero,IntPtr.Zero,1,out output);if(!ok)throw new InvalidOperationException("Device session protection failed (Win32 "+Marshal.GetLastWin32Error()+").");var result=new byte[output.size];Marshal.Copy(output.data,result,0,result.Length);return result;}
         finally{Marshal.FreeHGlobal(input.data);if(output.data!=IntPtr.Zero)LocalFree(output.data);}
     }
     public static byte[] Protect(string value)=>Transform(Encoding.UTF8.GetBytes(value),true);

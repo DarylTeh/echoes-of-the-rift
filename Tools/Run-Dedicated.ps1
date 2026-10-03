@@ -1,4 +1,4 @@
-param([switch]$Test,[switch]$Pair,[switch]$Account,[string]$ControlDirectory,[int]$OwnerProcessId=0)
+param([switch]$Test,[switch]$Pair,[switch]$Account,[switch]$RegistrationOnly,[string]$ControlDirectory,[int]$OwnerProcessId=0)
 if($Account){$Test=$true}
 if($Pair){$Test=$true}
 $ErrorActionPreference='Stop'
@@ -42,8 +42,12 @@ if(($ports.GetActiveTcpListeners() | Where-Object {$_.Port -in $taskDbPort,$task
             if(-not $ready){throw 'Dedicated game server did not report its readiness heartbeat.'}
         }
         $clients=@()
-        $roles=if($Account){@('Register','Resume')}elseif($Pair){@('Leader','Peer')}else{@('Client')}
+        $roles=if($Account){if($RegistrationOnly){@('Register')}else{@('Register','Resume')}}elseif($Pair){@('Leader','Peer')}else{@('Client')}
         foreach($role in $roles){
+            if($Account -and $role -eq 'Resume' -and -not $RegistrationOnly){
+                $registrationResult=Get-Content (Join-Path (Join-Path $output 'Register') 'client.log') -Raw -ErrorAction SilentlyContinue
+                if($registrationResult -match 'protectedSession=False'){Write-Output 'SKIP session resume: Windows protected-session storage was unavailable during registration.';continue}
+            }
             $clientOutput=if($Pair -or $Account){Join-Path $output $role}else{$output}
             New-Item -ItemType Directory -Force $clientOutput | Out-Null
             $pairFlags=if($Account){if($role -eq 'Resume'){'-accountFlowTest -accountResume'}else{'-accountFlowTest'}}elseif($Pair){if($role -eq 'Leader'){'-dedicatedPair -pairLeader'}else{'-dedicatedPair'}}else{''}

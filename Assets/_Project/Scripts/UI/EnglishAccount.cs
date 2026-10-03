@@ -6,7 +6,7 @@ public static class EnglishAccount
     public const string YourAdventure="Your adventure";
     public const string ChooseAUsernameAndAPasswordNyour="Choose a username and a password.\nYour local progress will be linked when available.";
     public const string CreateAccount="Create account";
-    public const string RegisterSignIn="Register / Sign in";
+    public const string SignIn="Sign in";
     public const string RecoverAccount="Recover account";
     public const string EnterYourUsernameRecoveryCodeAndA="Enter your username, recovery code and a new password.";
     public const string SigningIn="Signing in...";
@@ -17,5 +17,11 @@ public static class EnglishAccount
     public const string WelcomeBackYourProgressIsReady="Welcome back. Your progress is ready.";
     public const string Username="Username";
     public const string Password5Characters="Password (5+ characters)";
+    public const string NewPassword5Characters="New password (5+ characters)";
     public const string RecoveryCode="Recovery code";
+    public const string CopyRecoveryCode="Copy recovery code";
+    public const string IHaveSavedMyCode="I have saved my code";
+    public const string ChooseCreateOrSignIn="Create an account or sign in to continue.";
+    public const string CreateAccountDescription="Create an account to keep your progress.";
+    public const string SignInDescription="Sign in to continue your adventure.";
 }

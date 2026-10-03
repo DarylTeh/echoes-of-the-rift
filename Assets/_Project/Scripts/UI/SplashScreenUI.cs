@@ -10,13 +10,18 @@ public sealed class SplashScreenUI : MonoBehaviour
     public RectTransform Root { get; private set; }
     public TMP_InputField Username,Password,Recovery;
     public bool Ready=>account!=null;
+    public bool CanEnter=>enter!=null&&enter.interactable;
     public string LastError { get; private set; }
     private RectTransform form;
     private TMP_Text message,prompt;
     private UnityEngine.UI.Button enter,submit;
+    private UnityEngine.UI.Button createMode,signInMode,recoverMode,saveCode;
     private AccountResponse account;
     private bool busy,register=true,recover;
+    private bool recoveryCopied,recoveryAcknowledged;
     private string recoveryCode;
+    public bool RecoveryCopied=>recoveryCopied;
+    public bool RecoveryAcknowledged=>recoveryAcknowledged;
     private IEnumerator Start()
     {
         while(FindFirstObjectByType<CharacterCreatorUI>()?.Root==null)yield return null;
@@ -31,10 +36,13 @@ public sealed class SplashScreenUI : MonoBehaviour
         form=GameUI.Panel(Root,"AccountPanel",new Vector2(292,0),new Vector2(620,640));
         GameUI.Label(form,EnglishAccount.YourAdventure,new Vector2(0,270),new Vector2(520,48),32).color=GameUI.Gold;
         Username=Field(form,EnglishAccount.Username,205,false);Password=Field(form,EnglishAccount.Password5Characters,115,true);Recovery=Field(form,EnglishAccount.RecoveryCode,25,false);Recovery.gameObject.SetActive(false);
-        message=GameUI.Label(form,EnglishAccount.ChooseAUsernameAndAPasswordNyour,new Vector2(0,-74),new Vector2(520,132),22);
+        message=GameUI.Label(form,EnglishAccount.ChooseCreateOrSignIn,new Vector2(0,-74),new Vector2(520,132),22);
         submit=GameUI.Button(form,EnglishAccount.CreateAccount,new Vector2(0,-175),new Vector2(520,48),()=>Submit());
-        GameUI.Button(form,EnglishAccount.RegisterSignIn,new Vector2(-135,-240),new Vector2(250,44),()=>{if(busy||account!=null)return;register=!register;recover=false;Recovery.gameObject.SetActive(false);submit.GetComponentInChildren<TMP_Text>().text=register?"Create account":"Sign in";message.text=register?"Create an account to keep your progress.":"Welcome back. Sign in to your account.";});
-        GameUI.Button(form,EnglishAccount.RecoverAccount,new Vector2(135,-240),new Vector2(250,44),()=>{if(busy||account!=null)return;recover=true;Recovery.gameObject.SetActive(true);submit.GetComponentInChildren<TMP_Text>().text="Reset password";message.text=EnglishAccount.EnterYourUsernameRecoveryCodeAndA;});
+        createMode=GameUI.Button(form,EnglishAccount.CreateAccount,new Vector2(-135,-236),new Vector2(250,44),()=>SetMode(true,false));
+        signInMode=GameUI.Button(form,EnglishAccount.SignIn,new Vector2(135,-236),new Vector2(250,44),()=>SetMode(false,false));
+        recoverMode=GameUI.Button(form,EnglishAccount.RecoverAccount,new Vector2(0,-287),new Vector2(520,44),()=>SetMode(false,true));
+        createMode.gameObject.name="CreateAccountMode";signInMode.gameObject.name="SignInMode";recoverMode.gameObject.name="RecoverAccountMode";
+        saveCode=GameUI.Button(form,EnglishAccount.IHaveSavedMyCode,new Vector2(0,-236),new Vector2(520,44),AcknowledgeRecoveryCode);saveCode.gameObject.SetActive(false);
         form.gameObject.SetActive(false);
         AccountClient.Load();yield return CheckConnection();
     }
@@ -76,11 +84,28 @@ public sealed class SplashScreenUI : MonoBehaviour
         var text=GameUI.Label(viewport,"",Vector2.zero,new Vector2(488,38),22);field.textViewport=viewport;field.textComponent=(TextMeshProUGUI)text;field.targetGraphic=rect.GetComponent<UnityEngine.UI.Image>();field.characterLimit=128;
         field.contentType=secret?TMP_InputField.ContentType.Password:TMP_InputField.ContentType.Standard;field.lineType=TMP_InputField.LineType.SingleLine;return field;
     }
+    private void SetMode(bool create,bool reset)
+    {
+        if(busy||account!=null)return;
+        register=create;recover=reset;Recovery.gameObject.SetActive(reset);
+        string passwordLabel=reset?EnglishAccount.NewPassword5Characters:create?EnglishAccount.Password5Characters:EnglishAccount.Password5Characters.Replace(" (5+ characters)","");
+        Password.transform.Find("Label").GetComponent<TMP_Text>().text=passwordLabel;
+        submit.GetComponentInChildren<TMP_Text>().text=reset?"Reset password":create?EnglishAccount.CreateAccount:EnglishAccount.SignIn;
+        message.text=reset?EnglishAccount.EnterYourUsernameRecoveryCodeAndA:create?EnglishAccount.CreateAccountDescription:EnglishAccount.SignInDescription;
+        createMode.interactable=!create;signInMode.interactable=create;
+    }
+    private void AcknowledgeRecoveryCode()
+    {
+        if(!recoveryCopied||account==null)return;
+        recoveryAcknowledged=true;saveCode.interactable=false;enter.interactable=true;
+        message.text="Recovery code saved. You can enter your adventure.";
+    }
     private void Update(){if(prompt!=null&&!busy)prompt.alpha=.8f+.2f*Mathf.Sin(Time.unscaledTime*2);}
     public void Enter()
     {
         if(busy||unavailable!=null)return;
         if(account==null){form.gameObject.SetActive(true);Username.Select();return;}
+        if(!string.IsNullOrEmpty(recoveryCode)&&!recoveryAcknowledged)return;
         Game.ApplyAccount(account.profile);Destroy(Root.gameObject);Destroy(this);
     }
     public void Submit(bool? create=null)
@@ -108,11 +133,21 @@ public sealed class SplashScreenUI : MonoBehaviour
         prompt.text=EnglishAccount.EnterAdventure;
         if(!string.IsNullOrEmpty(response.recovery))
         {
-            recoveryCode=response.recovery;message.text=EnglishAccount.AccountReadySaveYourRecoveryCodePrivately;
-            submit.GetComponentInChildren<TMP_Text>().text="Copy recovery code";submit.onClick.RemoveAllListeners();submit.onClick.AddListener(()=>{GUIUtility.systemCopyBuffer=recoveryCode;message.text=EnglishAccount.RecoveryCodeCopiedKeepItSomewhereSafe;});
+            recoveryCode=response.recovery;recoveryCopied=false;recoveryAcknowledged=false;message.text=EnglishAccount.AccountReadySaveYourRecoveryCodePrivately;
+            submit.interactable=true;submit.gameObject.name="CopyRecoveryCodeButton";submit.GetComponentInChildren<TMP_Text>().text=EnglishAccount.CopyRecoveryCode;submit.onClick.RemoveAllListeners();submit.onClick.AddListener(()=>
+            {
+                try{GUIUtility.systemCopyBuffer=recoveryCode;recoveryCopied=true;saveCode.gameObject.SetActive(true);message.text=EnglishAccount.RecoveryCodeCopiedKeepItSomewhereSafe;}
+                catch(Exception){message.text="Could not copy the recovery code. Please try again.";}
+            });
+            createMode.gameObject.SetActive(false);signInMode.gameObject.SetActive(false);recoverMode.gameObject.SetActive(false);enter.interactable=false;
             Username.readOnly=true;Password.gameObject.SetActive(false);Recovery.gameObject.SetActive(false);
         }
-        else message.text=EnglishAccount.WelcomeBackYourProgressIsReady;
+        else
+        {
+            message.text=EnglishAccount.WelcomeBackYourProgressIsReady;
+            createMode.gameObject.SetActive(false);signInMode.gameObject.SetActive(false);recoverMode.gameObject.SetActive(false);
+            Username.readOnly=true;Password.gameObject.SetActive(false);Recovery.gameObject.SetActive(false);enter.interactable=true;
+        }
         if(!cached)message.text+="\nThis device could not save your session; sign in next time.";
     }
     private void OnDestroy(){if(unavailable!=null)Destroy(unavailable.gameObject);if(Root!=null)Destroy(Root.gameObject);recoveryCode=null;}

@@ -1,16 +1,20 @@
 # Echoes of the Rift master plan
 
-Revision 60 - 3 October 2026. Release UAT, harness fixes and repository cleanup.
+Revision 61 - 3 October 2026. Clear account entry and recovery-code handoff.
 
-## Current iteration - revision 60: clean release validation and refactor
+## Current iteration - revision 61: explicit account choices and recovery confirmation
 
-Completed the town navigation slice in the optimized Windows build and verified the current package from Unity 6000.6.2f1. Fixed the Event/Inbox iterator and TextMeshPro compile errors, made the build export a non-development player and clean only its generated `Builds/Windows` target, and made dedicated account-flow tests use isolated ports in release builds. The harness now waits for the dedicated server heartbeat and keeps its test-only town/campaign RPCs available when exercising the optimized player. Account-health diagnostics report the local endpoint and failures without logging credentials.
+Replaced the ambiguous “Register / Sign in” switch with distinct Create account, Sign in and Recover account choices. Password labeling changes with the selected mode, including an explicit new-password label during recovery. Successful authentication removes the now-inactive mode controls. New accounts and recovery resets must copy the one-time recovery code and explicitly acknowledge saving it before Enter Adventure becomes available. Login does not require a recovery-code step.
 
-The release-mode safe-area test now honors its simulated notch area, so the test exercises the same scaling path in optimized players as it does in development players. The final Windows package in `Release/Windows` matches the latest build assembly hash, contains no PDB files, and remains the tracked clone-and-play handoff. Removed only generated obsolete `Builds/Prototype`, `Builds/Smoke` and duplicate `Release/Legacy` launchers (330,621,020 bytes total). Preserved the current `Builds/Windows` export, Unity import cache, test logs, account database backup and art backup.
+Extended the optimized-player registration UAT through the code-copy and save acknowledgement, authenticated entry, and the server-authoritative four-stage campaign. The test confirms hidden inactive choices and blocks entry before recovery acknowledgement. Desktop UI passes 350 checks and touch-layout passes 351; Unity release build and full server `npm test` pass. The package in `Release/Windows` matches `Builds/Windows` at SHA-256 `E60DFA2935B868E79D9E2412E239888BBDC74DDFDABBA97C13194AB0F2C63718`.
 
-Validation on the current release: Unity compile/build PASS (`Logs/step-10-20261003-202049.log`); desktop UI PASS 350 checks; touch-layout UI PASS 351 checks; solo movement/combat/10-run campaign/save/reward regression PASS; isolated registration and resume both PASS through server-authoritative four-stage rewards, safe town, pause and rankings; `npm test` PASS. None of these results certify Android hardware or 90% visual parity. The reviewed screens remain materially below that target; entry-flow, denser town art, paperdoll, item inspector, shop and results still need product work.
+The isolated hidden test process cannot exercise Windows DPAPI session persistence: `CryptProtectData` returns Win32 error 2, so the client correctly refuses to write a plaintext refresh token. Registration/gameplay UAT is marked separately from session-resume verification; the test runner automatically skips and reports the resume leg when protected storage is unavailable. Server-side refresh, recovery and revocation continue to pass in `npm test`. A foreground player session on the user's Windows profile still needs a fresh session-cache/resume check.
 
-Next: continue the next master-plan UI/flow slice using the fresh captures in `Logs/UILayout`, `Logs/UILayoutTouch`, `Logs/Dedicated/Register` and `Logs/Dedicated/Resume`. Preserve account/server authority. Physical Android and low-end PC performance measurements remain release gates.
+Next: complete Unity sign-in and recovery submission UAT for both success and failure, verify the DPAPI session cache/resume in a normal foreground player session, and exercise confirmed Settings > Accounts sign-out followed by re-login. Then return to the My Heroes town, backpack, item-inspection and results hierarchy. Preserve the protected sign-out confirmation and honest 90% parity status.
+
+## Previous revision 60: clean release validation and refactor
+
+Revision 60 validation and repository cleanup are recorded in the preceding execution history. Physical Android and low-end PC performance measurements remain release gates.
 
 ## Previous revision 59: town hierarchy and contextual interaction
 

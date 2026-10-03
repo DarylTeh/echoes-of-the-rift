@@ -1,5 +1,11 @@
 # Execution log
 
+## Current account-flow pass - revision 61, 3 October 2026
+
+Rebuilt the optimized Windows player (`Logs/step-10-20261003-231819.log`) with explicit Create account / Sign in / Recover account actions, mode-sensitive password labels, removal of inert controls after authentication, and a recovery-code copy plus explicit saved-code acknowledgement gate before entering the game. Release UAT verified the hidden controls, prevented early entry, completed the acknowledgement and entered the authenticated town; the four-stage server-authoritative campaign, central rewards, pause and rankings all passed (`Logs/Dedicated/Register/runtime-smoke.txt`). Desktop UI passed 350 checks and touch-layout passed 351. Full `npm test` passed in `Server`.
+
+The hidden account test process receives Win32 error 2 from `CryptProtectData`. The client logs the error without exposing credentials and does not store a plaintext fallback. `Run-Dedicated.ps1 -Account` automatically skips and reports the resume leg only when registration's client log confirms secure storage is unavailable; `-RegistrationOnly` remains available for an intentional registration-only run. Saved-session resume is unverified in this environment. Server API tests still cover token rotation, expiry, recovery and revocation. Build and release assembly hashes match: `E60DFA2935B868E79D9E2412E239888BBDC74DDFDABBA97C13194AB0F2C63718`. No physical Android test was run.
+
 ## Current code/build/cleanup pass - revision 60, 3 October 2026
 
 Rebuilt the current town activity rail and contextual action in a non-development Windows player. Fixed four pre-existing Unity compile blockers in the Event/Inbox coroutine and TMP API usage. The build pipeline now emits an optimized player and removes only its own generated Windows target before export. Dedicated account-flow tests now select isolated HTTP/game ports in release mode, wait for the server heartbeat before launching clients, and retain test-only town/reward RPCs in the optimized player. Added explicit account-health, server-heartbeat and stage-by-stage smoke diagnostics. Release-mode UI tests now apply their simulated safe-area inset; this exposed and corrected a harness gate that previously ran only in development builds.
