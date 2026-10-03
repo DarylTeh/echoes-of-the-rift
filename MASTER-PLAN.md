@@ -1,6 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 56 - 3 October 2026. Read-only event schedule preview.
+Revision 57 - 3 October 2026. My Heroes gameplay UAT baseline.
+
+## Current iteration - revision 57: live local UAT and UI parity baseline
+
+Started the local server and Windows client, then ran the isolated register/resume-to-campaign acceptance flow and the packaged UI layout checks. Account/campaign flow passed twice across four stages with server-authoritative rewards, pause and rankings; UI bounds passed 342 checks with no runtime errors. A screen-by-screen comparison against the supplied My Heroes references and existing video/wiki research is recorded in [Docs/UAT-2026-10-03-MyHeroes.md](Docs/UAT-2026-10-03-MyHeroes.md).
+
+The current build is functional but does not meet the requested 90% visual/layout target. The strongest matches are the combat corner anchors and the paperdoll/grid silhouette. The biggest gaps are the extra title-entry step, sparse town navigation and actor-label collisions, desktop-shaped combat controls, three-slot gear display, weak item detail hierarchy, generic shop layout and oversized rankings panel. The release password text is also stale (`15+` versus the implemented `5+` rule). The release player requires a current Unity rebuild before its UI can reflect the source tree. Matching DirectStorage runtime DLLs have been restored to `Release/Windows`; the running local server reports ready.
+
+Next implementation: rebuild/package the current Unity source, make first-run entry direct and explicit, then implement the reviewed town navigation and label hierarchy. Continue with touch-first combat spacing and the complete gear/skill/item/shop/result hierarchy. Re-run real client screenshots and repeat this UAT; Android device acceptance remains open. Preserve the server's existing account, reward and gameplay authority.
+
+## Previous revision 56: read-only event manifest preview
 
 ## Current iteration - revision 56: safe event manifest preview
 

@@ -1,5 +1,9 @@
 # Execution log
 
+## Current UAT - revision 57, 3 October 2026
+
+Started the local Windows server/client, ran isolated register/resume gameplay through the four-stage campaign, and passed all 342 UI layout checks. Added the missing matching Unity DirectStorage runtime pair to the Windows package. The screen-by-screen reference findings and remaining 90% parity gap are recorded in [Docs/UAT-2026-10-03-MyHeroes.md](Docs/UAT-2026-10-03-MyHeroes.md).
+
 ## Current server operations - revision 56, 3 October 2026
 
 Added authenticated `POST /api/events/preview` to the localhost Swagger admin API. It runs the publication validator/normalizer, evaluates a manifest at current server time or optional UTC `previewAt`, and returns its state, next boundary and current version. Non-UTC times, invalid manifests and stale versions are rejected; preview does not persist any event state. Updated the OpenAPI definition, admin guide, live-ops runbook and master plan.
@@ -370,3 +374,10 @@ Final export: Logs/step-10-20260924-215029.log. Master plan revised with the use
 - Normal local server ports were occupied. Initial UI/local tests passed; dedicated test startup stopped safely. Added explicit test-only gameplay/account port overrides and test harness environment restoration; normal server and database were not stopped or changed by testing.
 - Final build Logs/step-10-20260924-212504.log. PASS: UI 258/0, local ten-run campaign/loot/save/inventory/pause/no-revive, SCROLL_CHECK following=True, BOSS_VARIETY_CHECK types=4, town movement/safety, dedicated Register/Resume reconnect/rewards, and Leader/Peer self-revive=1 teammateRevive=1 reward=True. No reported runtime errors.
 - Reviewed final inventory and combat captures. Remaining visual scope: direction-specific authored frames, individual spell choreography, richer item/boss detail, more boss mechanics and six-slot paperdoll migration. Restart the user's old server before playing the new maps.
+## 3 October 2026 — Revision 57, local My Heroes reference UAT
+- Started the local Windows server/client. `/health` returned ready and the client window responded. Initial player launch had failed because the tracked release omitted Unity's matching `dstorage.dll` and `dstoragecore.dll`; copied the exact build-payload pair beside the release executable and verified both file hashes match their counterparts.
+- Ran `Tools/Run-Dedicated.ps1 -Account` in isolated mode. Register and resume both passed authentication, server-only rewards, the four-stage campaign, pause and rankings; runtime errors were false. Test ports and database were isolated; no live player save/session or normal server data were changed.
+- Ran `Tools/Test-UI.ps1`: 342 bounds/layout checks passed, zero failures, no reported runtime errors. This is a layout smoke test, not a visual similarity score.
+- Reviewed fresh isolated screenshots for splash, account form, Rift Haven, collection and rankings; captured only the normal client window. Compared town/combat/backpack/inspector/shop against the supplied references and existing My Heroes source review. The 90% target is not met; full findings and the qualitative 50–60% baseline are in `Docs/UAT-2026-10-03-MyHeroes.md`.
+- Found release/source drift: shipped login label says `Password (15+ characters)` although source and server rule are `5+`. Unity client must be rebuilt/package-updated to fix the binary and deliver current source UI. The normal client also showed a failed saved-session refresh (“Please sign in again”); no stored credentials were read or cleared.
+- Normal local service remains running and healthy. Android hardware/touch acceptance and exact visual parity are still unverified.

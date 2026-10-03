@@ -1,5 +1,9 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
+## Latest UAT — 3 October 2026
+
+Local client/server startup, isolated register/resume-to-campaign (four stages), and 342 packaged UI layout checks passed. See [My Heroes reference UAT](Docs/UAT-2026-10-03-MyHeroes.md) for screenshots, limits and screen-by-screen findings. UI parity remains below the requested 90%; this is not a visual acceptance pass. Android device/touch testing is still pending.
+
 ## Current build - revision 39, 30 September 2026
 
 Revision 39 includes the low-end allocation audit: reusable co-op snapshot buffers, non-allocating rune targeting, cached network components, change-only HUD text and change-only safe-area layout work. Android/iPhone use Low quality defaults and standalone uses Medium. Desktop/touch layout checks remain automated; physical Android and low-end-PC frame-time/memory capture remain open.
