@@ -1,6 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 57 - 3 October 2026. My Heroes gameplay UAT baseline.
+Revision 58 - 3 October 2026. Account, startup and connection UAT.
+
+## Current iteration - revision 58: entry and recovery flow review
+
+Extended the local UAT through startup-service failure, in-game connection loss, Settings > Accounts, registration, the account-ready state, and server-side login/recovery/logout. The 342 desktop and 343 touch-layout checks, isolated registration/resume campaign flow, both retry/error modals and full `npm test` pass. Detailed pass levels and captures are in [Docs/UAT-2026-10-03-MyHeroes.md](Docs/UAT-2026-10-03-MyHeroes.md).
+
+New findings: the project has no dedicated branded splash or loading/progress screen; its `SplashScreenUI` is the title/account form. After account creation, Login and Recover controls remain visible but their handlers are inert. Login/recovery API behavior passes, but neither Unity submission flow has been exercised end to end; confirmed sign-out followed by UI login and a human creator-to-town path also remain open. Preserve the protected Settings > Accounts sign-out and the non-destructive retry dialogs.
+
+Next: implement and test the entry sequence (splash/loading → explicit Sign in/Create/Recover → recovery-code acknowledgement → creator if needed → town), with clear invalid-credential/reset states. Extend the Unity runtime account tests to cover success/failure for each form, confirmed logout and return/re-login. Package only after a current Unity rebuild; the release binary still carries the obsolete 15-character label. Then continue the My Heroes screen hierarchy and Android touch acceptance.
+
+## Previous revision 57: local My Heroes reference UAT
 
 ## Current iteration - revision 57: live local UAT and UI parity baseline
 

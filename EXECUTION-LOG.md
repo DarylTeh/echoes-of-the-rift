@@ -1,6 +1,10 @@
 # Execution log
 
-## Current UAT - revision 57, 3 October 2026
+## Current UAT - revision 58, 3 October 2026
+
+Extended account/startup UAT on unused local ports: unavailable-service dialog and retry PASS; gameplay connection-loss/reconnect dialog PASS; both had zero runtime errors. Desktop UI bounds passed 342 checks, touch-layout mode passed 343, and full `npm test` passed account registration/login/wrong-password/recovery/logout/revocation and all other server suites. Settings > Accounts showed a protected sign-out; cancel retained the session. Source/UI review found no separate splash/loading scene and found inert login/recovery buttons still visible after account creation. Login/recovery Unity submission and confirmed sign-out → re-login remain unverified. The report distinguishes API from UI evidence.
+
+## Previous UAT - revision 57, 3 October 2026
 
 Started the local Windows server/client, ran isolated register/resume gameplay through the four-stage campaign, and passed all 342 UI layout checks. Added the missing matching Unity DirectStorage runtime pair to the Windows package. The screen-by-screen reference findings and remaining 90% parity gap are recorded in [Docs/UAT-2026-10-03-MyHeroes.md](Docs/UAT-2026-10-03-MyHeroes.md).
 

@@ -9,9 +9,30 @@ The local Windows game/server stack starts and the isolated account-to-campaign 
 - Normal local server was ready on loopback (`/health` returned `ready: true`); the Windows client opened and responded at 1296×759.
 - `Tools/Run-Dedicated.ps1 -Account` passed twice (register and resume): `auth=True`, server-only rewards, four campaign stages, pause and rankings passed, with `runtimeErrors=False`. It used a throwaway account and isolated database/game ports, so no player account or normal local database was changed.
 - `Tools/Test-UI.ps1` passed 342 layout checks with zero failures and no reported runtime errors at 1280×720. These checks validate bounds and scripted states; they do not establish visual parity.
+- `Tools/Test-UI.ps1 -Touch` passed 343 touch-layout checks with zero failures and no reported runtime errors. This exercises the touch presentation mode in the desktop test build; it is not a physical Android-device test.
 - The normal client displayed “Please sign in again” after a saved session refresh failed. Its account form is the existing sign-in surface; no account details were entered and no saved session was cleared.
 - Fresh isolated captures are under `Logs/Dedicated/Register` and `Logs/Dedicated/Resume`. The normal client-only capture is `Logs/UAT/login-window.png`. Older multi-resolution layout captures are under `Logs/UILayout` and are dated 30 September; treat those as supporting visual evidence, not today's live play capture.
 - Comparisons use the user's supplied My Heroes screenshots and previously documented reference frames from [My Heroes: SEA](MYHEROES-GAMEPLAY-REFERENCES.md) and [My Heroes: Dungeon Raid](MYHEROES-GAMEPLAY-REFERENCES.md). The review does not claim a complete re-watch of either game during this UAT.
+
+## Extended account, startup and recovery pass
+
+The additional checks ran on 3 October using unused test-only ports. The existing user-facing server and local account database stayed untouched.
+
+| Path | Status | Evidence / remaining limit |
+|---|---|---|
+| Branded splash / boot loading | **Missing** | Source creates `SplashScreenUI` directly over the game scene. There is no separate logo/brand splash scene or first-load progress screen. The account screen's small “Connecting to server…” prompt is the only startup progress feedback. |
+| Service unavailable at launch | **Pass** | `Tools/Play.ps1 -Test` with an unused account port: `PASS unavailable aboveSplash=True blocksEntry=True retry=True runtimeErrors=False`. Screenshot: `Logs/Launcher/server-unavailable.png`. Retry kept the blocking state and never entered the game. |
+| Create account | **Pass, with UX defects** | Isolated Unity registration and account-ready screens were captured. The flow links a profile and displays a recovery-code instruction. It defaults to registration and places the title-entry button on a separate step. The code is only copied through a button; there is no explicit “copied” confirmation step before entry. |
+| Sign in | **API pass; UI partial** | Server suite passed valid login and wrong-password rejection. Source shows the UI mode toggle and routes its submit action to `login`, but the runtime harness did not submit credentials through that mode or capture its final state. The toggle is ambiguously named “Register / Sign in.” |
+| Recover account | **API pass; UI partial** | Server suite passed recovery, replacement recovery-code issue and revocation of prior sessions. The UI exposes username, recovery code and password fields, but the runtime harness did not submit this form end to end or capture the reset result. The new-password field is labelled only “Password.” |
+| Account-ready state | **UX defect** | After successful registration, “Register / Sign in” and “Recover account” remain bright and visible even though their callbacks return without action once `account != null`. Hide or disable these actions after success; keep Copy recovery code and Enter adventure as the only active choices. |
+| Settings / account safety | **Pass for navigation and cancel; incomplete settings scope** | Fresh screenshot `Logs/Dedicated/Register/settings-accounts.png` shows sign-out inside Settings > Accounts. The confirmation defaults to “Stay in game”; the automated flow canceled it and verified the token/session remained valid. The controls tab and account tab pass layout checks at desktop/touch modes and four sizes. Controls are a static key map; audio, display, remapping and touch settings are absent. The actual confirm action was not invoked on a player account. |
+| Sign out / return to sign in | **API pass; UI partial** | The API suite passed logout and session revocation. The Unity runtime test intentionally only exercised the safe cancel path; confirmed sign-out, return-to-title, then manual re-login remains to be verified with a disposable profile. |
+| In-game connection loss | **Pass** | `Tools/Test-ConnectionFailure.ps1` used an unused test-only game port: `PASS missing server modal=True reconnectButton=True runtimeErrors=False`. Screenshot: `Logs/ConnectionFailure/connection-lost.png`. Reconnect is offered and no account/sign-out action appears. |
+| Transitions and loading | **Partial / missing** | The isolated gameplay flow reaches the town and four campaign stages. No dedicated loading/transition screen or progress indicator was found; `Connecting to server…` and account-service text are brief status labels. Scene transitions should communicate what is loading and offer a clear retry if delayed. |
+| Character creation and game entry | **Partial** | The layout suite exercises the creator, while the account-to-campaign smoke path directly confirms the creator in automation. A human first-time player has not yet been observed choosing appearance and entering town end to end. |
+
+The full local `npm test` suite passed, including account registration, case-insensitive name uniqueness, wrong-password rejection, 5-character minimum, login, recovery, logout, ticket expiry/replay, refresh rotation, session revocation, concurrent registration and rate limits. This proves API behavior, not the matching Unity form behavior. `Tools/Test-UI.ps1` and `Tools/Test-UI.ps1 -Touch` respectively passed 342 and 343 checks; neither replaces hands-on testing on a touch device.
 
 ## Screen-by-screen findings
 
@@ -27,7 +48,9 @@ The local Windows game/server stack starts and the isolated account-to-campaign 
 
 ## Decision and next implementation slice
 
-The flow is playable through the automated registration, town, campaign, rewards and ranking checks. The visual/interaction target is **not accepted at 90%**. Keep the existing verified corner anchors, pixel-art presentation, account safety and server-authoritative progression. Next, bring the packaged client current, remove the extra title-entry step, establish a compact My Heroes-style town activity rail, tighten overlapping world labels, then tune combat anchors and replace the partial paperdoll/inspector/shop hierarchy against the existing screen wireframes. Repeat this UAT after the actual release rebuild and review touch controls on a phone; the current desktop result cannot certify Android usability.
+The flow is playable through automated registration, resume, town, campaign, rewards and ranking checks. The visual/interaction target is **not accepted at 90%**. First make one coherent entry flow: branded splash with an honest loading state, then explicit Sign in / Create account / Recover account screens, followed by character creation only when needed. After registration, show and confirm recovery-code handling, then enter the game; after logout, return to Sign in. Add UI automation for successful/failed login, successful/failed recovery, confirmed logout and fresh first-time creator completion. Keep service-unavailable and connection-lost retries separate and non-destructive.
+
+After those flow corrections, establish the compact My Heroes-style town activity rail, tighten overlapping world labels, tune combat anchors and complete the paperdoll/inspector/shop/result hierarchy against the existing screen wireframes. Repeat this UAT after the actual release rebuild and review touch controls on a phone; the current desktop result cannot certify Android usability.
 
 ## Runtime packaging note
 

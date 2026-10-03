@@ -2,7 +2,7 @@
 
 ## Latest UAT — 3 October 2026
 
-Local client/server startup, isolated register/resume-to-campaign (four stages), and 342 packaged UI layout checks passed. See [My Heroes reference UAT](Docs/UAT-2026-10-03-MyHeroes.md) for screenshots, limits and screen-by-screen findings. UI parity remains below the requested 90%; this is not a visual acceptance pass. Android device/touch testing is still pending.
+Local client/server startup, isolated register/resume-to-campaign (four stages), 342 desktop and 343 touch-mode layout checks, unavailable-server retry and in-game reconnect UI passed. Account API login, password recovery and logout tests pass; the Unity login/recovery forms and confirmed sign-out → re-login remain unverified. No separate splash/loading view exists, and post-registration login/recovery controls are inert. See [My Heroes reference UAT](Docs/UAT-2026-10-03-MyHeroes.md) for evidence and fixes. UI parity remains below 90%; physical Android device/touch testing is pending.
 
 ## Current build - revision 39, 30 September 2026
 
