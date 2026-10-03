@@ -20,6 +20,8 @@ Retry an uncertain request with the same requestId and identical body: it will n
 
 The **Events** group in Swagger is the live-ops calendar. `GET /api/events` shows each current manifest and its server-computed state. Use `POST /api/events` to publish a new manifest version with a future UTC `startAt` and `endAt`, a reusable `type`, configurable `config`, and a `rewards` array. To change an event, publish a higher `version`; active versions are immutable. `POST /api/events/{id}/disable` creates a disabled higher version as a kill switch. The game reads active events and the authoritative timer from the game service `POST /events`; the client does not trust its device clock.
 
+Before publishing, use `POST /api/events/preview` with `{ "manifest": { ... }, "previewAt": "2026-10-03T12:00:00.000Z" }`. The time is optional and must be UTC with a trailing `Z`. Preview validates and normalizes the manifest, reports whether it would be scheduled/active/ended/disabled at that time, shows the next schedule boundary and current published version, and makes no database changes. A preview version must be higher than the current version for that event.
+
 For a recurring event, copy the appropriate template from `Server/events/event-templates.mjs`, change the IDs, dates, text, catalog references and reward limits, validate it in staging, then publish it from Swagger. Keep reward delivery in the server transaction/inbox path; a manifest by itself never grants client-requested rewards.
 
 ## Limits and scope

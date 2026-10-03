@@ -48,10 +48,14 @@ export function startAdmin({port=8083,path=new URL('./progress.sqlite',import.me
     if(route==='/api/events')return reply(200,admin.events());
     const match=route.match(/^\/api\/players\/([a-f0-9]{32})$/);if(match)return reply(200,{id:match[1],profile:admin.profile(match[1])});
    }
-   if(req.method==='POST'&&(route==='/api/events'||/^\/api\/events\/[a-z0-9][a-z0-9_-]{2,63}\/disable$/.test(route))){
+   if(req.method==='POST'&&(route==='/api/events'||route==='/api/events/preview'||/^\/api\/events\/[a-z0-9][a-z0-9_-]{2,63}\/disable$/.test(route))){
     if(!/^application\/json(?:;|$)/i.test(req.headers['content-type']??''))throw new ApiError(400,'Use application/json.');
     let body='';for await(const chunk of req){body+=chunk;if(Buffer.byteLength(body)>65536)throw new ApiError(400,'Request too large.');}
     let data={};try{data=body.trim()?JSON.parse(body):{};}catch{throw new ApiError(400,'Invalid JSON.');}
+    if(route==='/api/events/preview'){
+     if(!data||typeof data!=='object'||Array.isArray(data)||!data.manifest||Object.keys(data).some(key=>!['manifest','previewAt'].includes(key)))throw new ApiError(400,'Provide only manifest and optional previewAt.');
+     return reply(200,admin.previewEvent(data.manifest,data.previewAt));
+    }
     if(route==='/api/events')return reply(200,admin.publishEvent(data));
     const match=route.match(/^\/api\/events\/([a-z0-9][a-z0-9_-]{2,63})\/disable$/);return reply(200,admin.disableEvent(match[1]));
    }

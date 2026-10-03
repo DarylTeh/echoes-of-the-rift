@@ -1,8 +1,18 @@
 # Echoes of the Rift master plan
 
-Revision 55 - 2 October 2026. Configurable event-currency earning.
+Revision 56 - 3 October 2026. Read-only event schedule preview.
 
-## Current iteration - revision 55: event earning rates and daily caps
+## Current iteration - revision 56: safe event manifest preview
+
+The localhost admin API now exposes `POST /api/events/preview`. It uses the same manifest validator and normalizer as publication, evaluates the UTC schedule at the supplied `previewAt` (or current server time), and returns the normalized manifest, state, next boundary and currently published version. It rejects non-UTC preview timestamps and versions that cannot be published. Preview is read-only: it does not write an event, history entry or player data.
+
+Validation: full `npm test` passes, including active/ended schedule previews, next-boundary calculation, malformed timestamp/manifest rejection, version conflict and proof that preview leaves the event list unchanged. Swagger includes the route and the operator guides explain the staging workflow.
+
+Next: use preview when preparing recurring event manifests, then run the existing publish/kill-switch staging and backup checks. Keep the event bazaar UI behind wireframe feedback; continue with another server/production-readiness slice without changing unapproved navigation.
+
+## Previous revision 55: configurable event-currency earning
+
+## Revision 55 details: event earning rates and daily caps
 
 Verified event progress now honors each event manifest's `progressPerClear` and `dailyTokenCap`, with UTC-day earnings recorded per player, event version and metric. Earning is capped by both the event's total progress cap and the per-day cap. The event-shop status response includes the daily cap, amount earned today and remaining daily earning allowance. Existing manifests without an earning rate retain their previous ten-token campaign-clear fallback; new templates explicitly configure the rate and cap. Invalid rates/caps are rejected before publication.
 

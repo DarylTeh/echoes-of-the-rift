@@ -1,5 +1,7 @@
 import {createHash} from 'node:crypto';
 import {normalizeProgression} from './progression-rules.mjs';
+import {normalizeEventManifest} from './events/event-manifest.mjs';
+import {eventState,nextBoundary,parseUtc} from './events/event-schedule.mjs';
 export const MAX_VALUE=2_000_000_000;
 export class ApiError extends Error {constructor(status,message){super(message);this.status=status;}}
 const fail=(status,message)=>{throw new ApiError(status,message);};
@@ -48,7 +50,13 @@ export function createAdminStore(store,catalog){
   }catch(e){db.exec('ROLLBACK');throw e;}
  }
  const events=()=>({events:store.events.list().map(event=>({...event,state:store.events.state(event)}))});
+ const previewEvent=(input,previewAt=new Date().toISOString())=>{
+  let manifest;try{manifest=normalizeEventManifest(input);}catch(error){fail(400,error.message);}
+  let now;try{now=parseUtc(previewAt,'previewAt');}catch(error){fail(400,error.message);}
+  const existing=store.events.get(manifest.id);if(existing&&manifest.version<=existing.version)fail(409,'Preview version must be higher than the current event version.');
+  return {manifest,state:eventState(manifest,now),evaluatedAt:new Date(now).toISOString(),nextBoundary:nextBoundary(manifest,now),currentVersion:existing?.version??null,publishable:true};
+ };
  const publishEvent=input=>{try{return store.events.upsert(input);}catch(error){fail(400,error.message);}};
  const disableEvent=id=>{const event=store.events.get(id);if(!event)fail(404,'Event not found.');return publishEvent({...event,version:event.version+1,disabled:true});};
- return {profile,players,audit,mutate,events,publishEvent,disableEvent,accounts(query){const {limit,offset}=page(query),q=String(query.q??'').slice(0,100);return {limit,offset,accounts:db.prepare('SELECT username,player FROM accounts WHERE instr(username,lower(?))>0 OR instr(player,?)>0 ORDER BY username LIMIT ? OFFSET ?').all(q,q,limit,offset)};}};
+ return {profile,players,audit,mutate,events,previewEvent,publishEvent,disableEvent,accounts(query){const {limit,offset}=page(query),q=String(query.q??'').slice(0,100);return {limit,offset,accounts:db.prepare('SELECT username,player FROM accounts WHERE instr(username,lower(?))>0 OR instr(player,?)>0 ORDER BY username LIMIT ? OFFSET ?').all(q,q,limit,offset)};}};
 }

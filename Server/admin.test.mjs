@@ -27,9 +27,14 @@ try{
  assert.equal((await fetch(`http://127.0.0.1:${port}/docs`)).status,404);
  assert.equal((await call('/api/players',undefined,'GET',{authorization:'Basic '+Buffer.from('test_admin:incorrect').toString('base64')})).status,401);
  assert.equal((await fetch(base+'/')).status,200);assert.match(await(await fetch(base+'/init.js')).text(),/validatorUrl:null/);
- const spec=await(await fetch(base+'/openapi.json')).json();assert.equal(Object.keys(spec.paths).length,15);assert.ok(spec.paths['/api/players/{id}/deleteItem'].delete);assert.ok(spec.paths['/api/events'].post);assert.ok(spec.paths['/api/events/{id}/disable'].post);
+ const spec=await(await fetch(base+'/openapi.json')).json();assert.equal(Object.keys(spec.paths).length,16);assert.ok(spec.paths['/api/players/{id}/deleteItem'].delete);assert.ok(spec.paths['/api/events'].post);assert.ok(spec.paths['/api/events/preview'].post);assert.ok(spec.paths['/api/events/{id}/disable'].post);
  const event={id:'autumn-test',version:1,type:'token_exchange',title:'Autumn Test',startAt:'2026-10-01T00:00:00.000Z',endAt:'2026-10-08T00:00:00.000Z',config:{tokenId:'autumn-token'},rewards:[]};
+ const preview=await call('/api/events/preview',{manifest:event,previewAt:'2026-10-03T12:00:00.000Z'});assert.equal(preview.status,200,JSON.stringify(preview.body));assert.equal(preview.body.state,'active');assert.equal(preview.body.evaluatedAt,'2026-10-03T12:00:00.000Z');assert.equal(preview.body.nextBoundary,event.endAt);assert.equal(preview.body.currentVersion,null);assert.equal((await call('/api/events',undefined,'GET')).body.events.length,0);
+ assert.equal((await call('/api/events/preview',{manifest:event,previewAt:'2026-10-03T12:00:00+08:00'})).status,400);
+ assert.equal((await call('/api/events/preview',{manifest:{...event,config:undefined}})).status,400);
  const published=await call('/api/events',event);assert.equal(published.status,200,JSON.stringify(published.body));assert.equal((await call('/api/events',undefined,'GET')).body.events.length,1);
+ assert.equal((await call('/api/events/preview',{manifest:event})).status,409);
+ const nextPreview=await call('/api/events/preview',{manifest:{...event,version:2},previewAt:'2026-10-09T00:00:00.000Z'});assert.equal(nextPreview.status,200);assert.equal(nextPreview.body.state,'ended');assert.equal(nextPreview.body.currentVersion,1);assert.equal((await call('/api/events',undefined,'GET')).body.events[0].version,1);
  const disabled=await call('/api/events/autumn-test/disable',{},'POST');assert.equal(disabled.status,200,JSON.stringify(disabled.body));assert.equal(disabled.body.disabled,true);
  let {b,result}=await mutate('giveGold',{amount:100});assert.equal(result.body.profile.Coins,130);
  const replay=await call(`/api/players/${id}/giveGold`,b);assert.equal(replay.body.replayed,true);assert.equal(app.store.get(id).Coins,130);

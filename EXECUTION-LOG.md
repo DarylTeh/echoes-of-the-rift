@@ -1,5 +1,11 @@
 # Execution log
 
+## Current server operations - revision 56, 3 October 2026
+
+Added authenticated `POST /api/events/preview` to the localhost Swagger admin API. It runs the publication validator/normalizer, evaluates a manifest at current server time or optional UTC `previewAt`, and returns its state, next boundary and current version. Non-UTC times, invalid manifests and stale versions are rejected; preview does not persist any event state. Updated the OpenAPI definition, admin guide, live-ops runbook and master plan.
+
+Validation: full `npm test` passes, including active/ended preview, boundary output, invalid manifest/time, stale version and no-write checks. No Unity files or OCI resources changed.
+
 ## Current server economy - revision 55, 2 October 2026
 
 Event progress now reads `progressPerClear` and `dailyTokenCap` from each manifest. Added UTC-day earning records keyed by event version/player/metric. Verified clear rewards are bounded by the event progress cap and the daily earning cap; `/event-shop-status` returns cap/earned/remaining values. Manifest validation rejects invalid configured rates and caps. Legacy event manifests retain the existing ten-token fallback when they do not yet define a rate.
