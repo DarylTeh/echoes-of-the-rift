@@ -3,8 +3,8 @@ using UnityEngine;
 // Shared source atlases, runtime slices and materials. Original PNGs remain untouched.
 public static class IllustratedArt
 {
-    private static readonly Sprite[] equipment=new Sprite[16],heroes=new Sprite[9],skillCubes=new Sprite[12];
-    private static Texture2D equipmentTexture,heroTexture,expansionTexture,skillCubeTexture;
+    private static readonly Sprite[] equipment=new Sprite[16],heroes=new Sprite[9],skillCubes=new Sprite[12],monsters=new Sprite[16],dungeonTiles=new Sprite[8];
+    private static Texture2D equipmentTexture,heroTexture,expansionTexture,skillCubeTexture,monsterTexture,dungeonTilesTexture;
     private static readonly Sprite[] expansion=new Sprite[16];
     public static Sprite Expansion(int index){if(expansionTexture==null)expansionTexture=Resources.Load<Texture2D>("Illustrated/Expansion");return expansion[index]!=null?expansion[index]:expansion[index]=Slice(expansionTexture,index,4,1);}
     private static Material uiMaterial,heroMaterial,worldMaterial;
@@ -34,6 +34,18 @@ public static class IllustratedArt
         index=Mathf.Clamp(index,0,11);
         if(skillCubeTexture==null)skillCubeTexture=Resources.Load<Texture2D>("Illustrated/SkillCubes");
         return skillCubes[index]!=null?skillCubes[index]:skillCubes[index]=Slice(skillCubeTexture,index,4,3,1);
+    }
+    public static Sprite Monster(int index)
+    {
+        index=Mathf.Clamp(index,0,15);
+        if(monsterTexture==null)monsterTexture=Resources.Load<Texture2D>("Illustrated/Monsters");
+        return monsters[index]!=null?monsters[index]:monsters[index]=Slice(monsterTexture,index,4,4,1);
+    }
+    public static Sprite FloorTile(bool wall,int variant)
+    {
+        int index=(wall?4:0)+Mathf.Clamp(variant,0,3);
+        if(dungeonTilesTexture==null)dungeonTilesTexture=Resources.Load<Texture2D>("Illustrated/DungeonTiles");
+        return dungeonTiles[index]!=null?dungeonTiles[index]:dungeonTiles[index]=Slice(dungeonTilesTexture,index,4,2,1);
     }
     public static Sprite Weapon(string family)
     {
@@ -87,5 +99,5 @@ public static class IllustratedArt
     }
     public static Sprite Item(ItemData item)=>item.Kind==ItemKind.SkillBook?Book(item.Spell):Weapon(item.Family)??item.iconSprite;
     public static Sprite Book(SpellData spell)=>Skill(spell);
-    public static bool Owns(Sprite sprite)=>sprite!=null&&(sprite.texture==equipmentTexture||sprite.texture==heroTexture||sprite.texture==expansionTexture||sprite.texture==skillCubeTexture);
+    public static bool Owns(Sprite sprite)=>sprite!=null&&(sprite.texture==equipmentTexture||sprite.texture==heroTexture||sprite.texture==expansionTexture||sprite.texture==skillCubeTexture||sprite.texture==monsterTexture||sprite.texture==dungeonTilesTexture);
 }

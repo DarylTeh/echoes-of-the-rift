@@ -1,6 +1,12 @@
 # Echoes of the Rift master plan
 
-Revision 67 - 4 October 2026. Shared skill, hero and equipment art reset.
+Revision 68 - 4 October 2026. Illustrated enemies, bosses and dungeon tiles.
+
+## Current iteration - revision 68: replace dungeon and defense enemies
+
+Added an original 4×4 monster atlas with twelve enemy silhouettes and four bosses plus a seamless 4×2 dungeon tile atlas with four dark floor and four raised wall variations. Campaign dungeons now draw varied enemies and tile art from the atlases; campaign bosses use the four boss sprites; Rift Defense selects matching enemy/boss art; co-op enemy presentation uses the same creature art. The world sprite shader applies point-sampled 5% grid quantization, while defense icons keep the matching UI shader. Existing procedural art remains as an unavailable-atlas fallback.
+
+The final Unity Windows build (`Logs/step-10-20261004-234417.log`), desktop/touch layout suites (350/351 checks, zero failures), and Rift Defense simulation (20 waves, four bosses, 15 towers) passed with no runtime errors (`Logs/MonsterUAT`); the regular campaign smoke also passed with boss-only progression and reward/save checks (`Logs/Runtime/runtime-smoke.txt`), and its arena screenshot was visually reviewed (`Logs/Runtime/arena.png`). The tracked `Release/Windows` player was synchronized with `Builds/Windows`. Interface/utility icons, richer boss attack art and combat skill effects remain next; see [ART-DIRECTION.md](Assets/_Project/Resources/Illustrated/ART-DIRECTION.md). The atlas art is an original style interpretation, not extracted MyHeroes or Random Dice art; final visual acceptance remains open.
 
 ## Current iteration - revision 67: replace shared skill, hero and equipment art
 

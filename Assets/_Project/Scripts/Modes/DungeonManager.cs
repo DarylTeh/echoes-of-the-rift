@@ -55,7 +55,7 @@ public sealed class DungeonManager : MonoBehaviour
             if(index<tiles.Count)tile=tiles[index]; else { tile=new GameObject("PooledFlagstone",typeof(SpriteRenderer),typeof(BoxCollider2D)); tile.transform.SetParent(transform,false); tiles.Add(tile); }
             index++; tile.SetActive(true); tile.transform.position=new Vector3(x-(stage.width-1)*0.5f,y-(stage.height-1)*0.5f,1); tile.transform.localScale=new Vector3(0.97f,0.97f,1);
             bool wall=x==0||y==0||x==stage.width-1||y==stage.height-1;
-            var render=tile.GetComponent<SpriteRenderer>(); render.sprite=PixelArt.Floor(wall,(x+y)%3); render.sortingOrder=-10;
+            var render=tile.GetComponent<SpriteRenderer>(); render.sprite=IllustratedArt.FloorTile(wall,(x+y)%4)??PixelArt.Floor(wall,(x+y)%3); render.sharedMaterial=IllustratedArt.Owns(render.sprite)?IllustratedArt.World:null; render.sortingOrder=-10;
             render.color=Color.white;
             tile.GetComponent<BoxCollider2D>().enabled=wall;
         }
@@ -68,7 +68,9 @@ public sealed class DungeonManager : MonoBehaviour
             if(enemyPool.Count>0)go=enemyPool.Dequeue();
             else { go=new GameObject("PooledEnemy",typeof(SpriteRenderer),typeof(CircleCollider2D),typeof(Combatant),typeof(EnemyBrain)); go.transform.SetParent(transform,false); }
             go.SetActive(true); go.transform.position=new Vector3((i%5-2)*1.5f,1.5f+(i/5)*0.5f,0); go.transform.localScale=Vector3.one*(isBoss?2:1);
-            var renderer=go.GetComponent<SpriteRenderer>(); renderer.sprite=isBoss?BossRoster.Sprite(StageIndex):(i%2==0?Slime:Skeleton); renderer.color=Color.white; renderer.sortingOrder=1;
+            var renderer=go.GetComponent<SpriteRenderer>();
+            var creature=IllustratedArt.Monster((i*3+StageIndex)%12);
+            renderer.sprite=isBoss?BossRoster.Sprite(StageIndex):(creature!=null?creature:(i%2==0?Slime:Skeleton)); renderer.color=Color.white; renderer.sharedMaterial=IllustratedArt.Owns(renderer.sprite)?IllustratedArt.World:null; renderer.sortingOrder=1;
             var collider=go.GetComponent<CircleCollider2D>(); collider.enabled=true; collider.radius=0.3f; collider.offset=new Vector2(0,0.3f);
             var health=go.GetComponent<Combatant>(); health.IsPlayer=false; health.SimulationEnabled=true; health.ResetHealth(isBoss?100+StageIndex*55:35+StageIndex*10); health.Died+=OnEnemyDied;
             var brain=go.GetComponent<EnemyBrain>(); brain.Pooled=true; brain.Target=Player; brain.Pattern=isBoss?BossRoster.Pattern(StageIndex):null; brain.ResetBrain(); active.Add(health); if(isBoss)stageBoss=health;

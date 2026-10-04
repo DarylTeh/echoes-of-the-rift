@@ -195,7 +195,7 @@ public sealed partial class CoopWorld : NetworkBehaviour
             go.GetComponent<Combatant>().ApplySnapshot(snapshot.Health,snapshot.Maximum);
             if(snapshot.IsBoss)ReplicaBoss=go.GetComponent<Combatant>();
             if(snapshot.IsPlayer){var customizer=go.GetComponent<CharacterCustomizer>();if(!customizer.Appearance.Equals(snapshot.Appearance))customizer.Apply(snapshot.Appearance);customizer.SetEquipmentTier(snapshot.WeaponTier);customizer.SetWeapon(snapshot.WeaponFamily,snapshot.WeaponTier);}
-            if(!snapshot.IsPlayer) { var renderer=go.GetComponent<SpriteRenderer>(); renderer.sprite=snapshot.IsBoss?BossRoster.Sprite(stage):snapshot.Sprite==0?Game.Slime:Game.Skeleton; renderer.sortingOrder=1; go.transform.localScale=Vector3.one*(snapshot.IsBoss?2:1); }
+            if(!snapshot.IsPlayer) { var renderer=go.GetComponent<SpriteRenderer>(); renderer.sprite=snapshot.IsBoss?BossRoster.Sprite(stage):IllustratedArt.Monster(snapshot.Sprite%12)??(snapshot.Sprite==0?Game.Slime:Game.Skeleton); renderer.sharedMaterial=IllustratedArt.Owns(renderer.sprite)?IllustratedArt.World:null; renderer.sortingOrder=1; go.transform.localScale=Vector3.one*(snapshot.IsBoss?2:1); }
         }
         removedReplicaIds.Clear(); foreach(var pair in replicas)if(!presentReplicaIds.Contains(pair.Key)){Destroy(pair.Value);removedReplicaIds.Add(pair.Key);} foreach(int id in removedReplicaIds)replicas.Remove(id);
         if(stage>=0){Game.Dungeon.SetReplicaCleared(cleared);Game.SetReplicaState(cleared,defeated);}

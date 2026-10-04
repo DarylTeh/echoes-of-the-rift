@@ -1,5 +1,13 @@
 # Execution log
 
+## Illustrated enemies and boss art - revision 68, 4 October 2026
+
+- Generated and imported an original transparent 4×4 monster atlas with twelve enemy sprites and four distinct boss sprites, plus a seamless 4×2 dark-stone floor/wall atlas.
+- Added shared runtime slicing in `IllustratedArt.Monster`; dungeon rooms, campaign bosses, Rift Defense and co-op enemy presentation now resolve the shared creatures. Applied the existing point-sampled world shader for 5% pixel quantization; Rift Defense tokens use the matching UI shader.
+- Replaced campaign room procedural floor sprites with the shared floor/wall tiles while retaining the existing collision boundary and keeping the procedural floor as an asset fallback.
+- Updated `MASTER-PLAN.md`, `MVP-ROADMAP.md`, `README.md`, `PLAYTEST.md`, and `Assets/_Project/Resources/Illustrated/ART-DIRECTION.md` with atlas mapping, status and remaining art scope.
+- Validation: final optimized Windows build passed (`Logs/step-10-20261004-234417.log`); desktop/touch layout smoke passed 350/351 checks, zero failures/runtime errors; Rift Defense passed 20 waves, four bosses and 15 towers with no runtime errors (`Logs/MonsterUAT`). `Builds/Windows` and tracked `Release/Windows` assembly SHA-256 hashes match. The regular campaign smoke passed movement, ten-run boss/reward/save checks, inventory/catalogue, pause/resume/defeat, and zero runtime errors (`Logs/Runtime/runtime-smoke.txt`); its arena capture was visually reviewed. Server/account suites were not rerun in this art-only iteration.
+
 ## Shared skill, hero and equipment art reset - revision 67, 4 October 2026
 
 - Generated an original transparent 4×3 elemental cube atlas, 3×3 nine-race hero atlas, and two 4×4 equipment atlases based on the supplied visual references. Reviewed the MyHeroes community wiki and Random Dice dice catalogue for broad art direction; no game assets were downloaded or republished.

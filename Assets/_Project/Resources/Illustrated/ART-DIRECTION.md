@@ -1,6 +1,6 @@
-# Shared skill cubes and MyHeroes-scale heroes — revision 23
+# Shared skill cubes, heroes, creatures and dungeon tiles — revision 25
 
-This is the current art direction. The previous illustrated hero, item, weapon and skill atlases are superseded where these sheets are used. The new originals take their visual cues from the supplied MyHeroes: SEA and Random Dice references: tiny readable action-RPG heroes, square pixel clusters, jewel-color silhouettes, dark outlines, richly shaded gear, and recognizable glossy skill dice. The art is newly generated and does not reuse game files.
+This is the current art direction. The new originals take their visual cues from the supplied MyHeroes: SEA and Random Dice references: tiny readable action-RPG heroes, square pixel clusters, jewel-color silhouettes, dark outlines, richly shaded gear, recognizable glossy skill dice and distinctive dungeon creatures. The art is newly generated and does not reuse game files.
 
 `SkillCubes.png` is a transparent 4×3 atlas. Its rows are: Flame, Crescent Slash, Verdant Mend, Starburst; Frost, Sun Ward, Thorn, Arcane Portal; Meteor, Lightning, Wind, Shield. `IllustratedArt.Skill` is the shared lookup for skill HUDs, skill-book items and Rift Defense towers. This keeps a skill's art identical wherever that skill appears. The cube's own neon particles provide the base glow; existing tier-border VFX adds rarity emphasis in item slots.
 
@@ -8,7 +8,11 @@ This is the current art direction. The previous illustrated hero, item, weapon a
 
 `Equipment.png` and `Expansion.png` are transparent 4×4 item atlases. Equipment rows: saber, ember greatsword, thorn bow, crescent scythe; crystal staff, rune hammer, horned helm, plate armor; leaf pendant, amethyst ring, wing boots, frost greaves; celestial pauldrons, cyan shield, ember gauntlets, orbiting charm. Expansion rows: spear, boomerang, pistols, crossbow; boots, leggings, pauldrons, shield; frost daggers, orb focus, war axe, wind chakram; trident, ranger bow, moon sickle, warhammer. Existing weapon-family mappings still select these shared icons throughout inventory, shop and item details.
 
-Current replacement scope: hero, skill, equipment and weapon artwork. General interface/economy symbols, enemies, terrain and attack effects are still on procedural/older sources and remain for the next replacement batches. Retire those only after their consumers have migrated and the build passes.
+`Monsters.png` is a transparent 4×4 creature atlas. Row one: thorn goblin, ember imp, frost slime, bat wraith. Row two: mushroom brute, gold beetle, tidal serpent, crystal spider. Row three: skull knight, sun phoenix, three-headed hydra, storm golem. Row four: thorn treant, fire dragon, leviathan, cosmic titan bosses. `IllustratedArt.Monster` is the shared runtime slice map; campaign rooms, boss fights, Rift Defense and co-op presentation now resolve creature art from this atlas. The 5% point-sampling world shader applies to character-sized world sprites and the UI shader is used for board tokens.
+
+`DungeonTiles.png` is a transparent 4×2 atlas: four seamless dark-stone floor variants and four matching raised-boundary stone variants. `IllustratedArt.FloorTile` supplies the procedural dungeon grid; its 5% point-sampled world shader keeps the pixel edge while the original colliders and room dimensions stay unchanged. The earlier procedural tile remains only as a missing-atlas fallback.
+
+Current replacement scope completed in source: hero, skill, equipment, weapons, dungeon enemies, bosses and room/floor tiles. Remaining: general interface/economy symbols, distinct boss attack presentation, and richer skill/combat effects. Retire old art only after each consumer has migrated and its build/playtest passes.
 
 References reviewed for the visual language: [MyHeroes Wiki on Fandom](https://myheroesofficial.fandom.com/wiki/MyHeroes_Wiki) and the [Random Dice Wiki dice catalogue](https://randomdice.wiki.gg/wiki/Dice). These are broad style references, not copied source images.
 

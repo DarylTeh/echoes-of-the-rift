@@ -1,8 +1,8 @@
 # Echoes of the Rift
 
-## Current build - revision 67, 4 October 2026
+## Current build - revision 68, 4 October 2026
 
-The optimized Windows player has been rebuilt from the current Unity source and copied to the tracked `Release/Windows` handoff. This revision adds the nine-race pixel hero sheet, two new equipment atlases and shared neon skill cubes, then passes desktop/touch UI checks (350/351) and the 20-wave/four-boss Rift Defense smoke test. Account and server tests were not rerun in this art iteration; their latest results remain in the execution log. Enemy, environment, effect and remaining utility art are still scheduled for replacement, and the requested 90% MyHeroes visual parity remains open; see [art direction](Assets/_Project/Resources/Illustrated/ART-DIRECTION.md), the current [UAT](Docs/UAT-2026-10-03-MyHeroes.md) and [master plan](MASTER-PLAN.md).
+The optimized Windows player has been rebuilt from the current Unity source and copied to the tracked `Release/Windows` handoff. Revision 68 adds a shared 4×4 pixel creature atlas for dungeon enemies, campaign bosses, Rift Defense and co-op, plus seamless dark-stone floor/wall tiles for campaign rooms. The optimized build, desktop/touch UI checks (350/351), and 20-wave/four-boss defense test passed; see `Logs/MonsterUAT`, [art direction](Assets/_Project/Resources/Illustrated/ART-DIRECTION.md), [UAT notes](Docs/UAT-2026-10-03-MyHeroes.md) and [master plan](MASTER-PLAN.md). Utility art, attack effects, final visual acceptance and 90% MyHeroes parity remain open.
 
 The skill HUD and active-event feed now avoid repeating stable work, improving low-end frame time and repeated event requests while preserving gameplay and server authority.
 

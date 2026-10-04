@@ -12,8 +12,7 @@ public sealed class RiftDefenseMode : MonoBehaviour
     private const int Rows=3, Columns=5, MaxWaves=20;
     private const float SummonCost=10, UpgradeCost=14;
     private static readonly Color[] RankColors={new Color32(92,205,255,255),new Color32(154,112,255,255),new Color32(255,101,209,255),new Color32(255,188,74,255),new Color32(255,82,114,255)};
-    private static readonly Color[] EnemyColors={new Color32(255,183,84,255),new Color32(134,156,181,255),new Color32(131,255,182,255),new Color32(138,205,255,255),new Color32(231,119,255,255)};
-    private static readonly string[] BossNames={"Cinder Knight","Mire Matron","Clockwork Colossus","Ashen Gatekeeper"};
+    private static readonly string[] BossNames={"Thorn Warden","Sun Dragon","Tidal Leviathan","Rift Titan"};
     private readonly Tower[] towers=new Tower[Rows*Columns];
     private readonly List<Enemy> enemies=new List<Enemy>(24);
     private readonly List<BookPick> deck=new List<BookPick>(5);
@@ -198,10 +197,11 @@ public sealed class RiftDefenseMode : MonoBehaviour
             if(!boss&&archetype==2)hp*=.62f;     // swarmling
             var enemy=new Enemy {Lane=(lane+n)%Rows,Progress=Columns-.5f,MaxHealth=hp,Health=hp,Speed=speed,Boss=boss};
             if(boss&&lastBossWave!=wave){bossCount++;lastBossWave=wave;}
-            var sprite=game.Slime!=null?game.Slime:PixelArt.Icon("book");
+            int creatureIndex=boss?12+Mathf.Clamp(bossType,0,3):archetype;
+            var sprite=IllustratedArt.Monster(creatureIndex);if(sprite==null)sprite=game.Slime!=null?game.Slime:PixelArt.Icon("book");
             var icon=GameUI.Icon(board,sprite,new Vector2(-200+(Columns-.5f-enemy.Progress)*80,82-enemy.Lane*76),boss?new Vector2(52,52):new Vector2(28,28));
             icon.name=boss?"RiftBoss_"+BossNames[Mathf.Clamp(bossType,0,BossNames.Length-1)].Replace(" ",""):"RiftEnemy"+archetype;
-            icon.color=boss?(Color)(wave==MaxWaves?new Color32(255,64,139,255):new Color32(255,170,82,255)):EnemyColors[archetype];enemy.View=icon.gameObject;enemies.Add(enemy);
+            icon.color=Color.white;enemy.View=icon.gameObject;enemies.Add(enemy);
             var bar=GameUI.Rect("EnemyHealthBar",board,Vector2.one*.5f,new Vector2(-200+(Columns-.5f-enemy.Progress)*80,62-enemy.Lane*76),new Vector2(boss?48:30,6));bar.gameObject.AddComponent<UnityEngine.UI.Image>().color=new Color32(20,18,31,255);enemy.Bar=bar.gameObject;
             var fillRect=GameUI.Rect("EnemyHealthFill",bar,Vector2.zero,Vector2.zero,new Vector2(boss?44:26,4));fillRect.anchorMin=new Vector2(0,0.5f);fillRect.anchorMax=new Vector2(0,0.5f);fillRect.pivot=new Vector2(0,0.5f);fillRect.anchoredPosition=new Vector2(1,0);fillRect.gameObject.AddComponent<UnityEngine.UI.Image>().color=boss?new Color32(255,69,161,255):new Color32(255,93,106,255);enemy.HealthFill=fillRect.gameObject;
         }
