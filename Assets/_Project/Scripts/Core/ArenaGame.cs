@@ -13,6 +13,7 @@ public sealed class ArenaGame : MonoBehaviour
     public ItemTierUpManager Forge { get; private set; }
     public DungeonManager Dungeon { get; private set; }
     public TownHubManager Hub { get; private set; }
+    public RiftDefenseMode Defense { get; private set; }
     public CoopSession Session;
     public bool Cooperative { get; private set; }
     private CharacterCreatorUI creator;
@@ -90,6 +91,7 @@ public sealed class ArenaGame : MonoBehaviour
         Dungeon=gameObject.AddComponent<DungeonManager>(); Dungeon.Configuration=Stages; Dungeon.Slime=Slime; Dungeon.Skeleton=Skeleton; Dungeon.Boss=Boss; Dungeon.Player=Player; Dungeon.RoomCleared+=ClearRoom;
         Hub=gameObject.AddComponent<TownHubManager>(); Hub.Forge=Forge; Hub.ExpeditionRequested+=StartExpedition;
         Hub.Session=Session;
+        Defense=gameObject.AddComponent<RiftDefenseMode>();Defense.Configure(this);
         var events=gameObject.AddComponent<EventDrawerUI>();events.Session=Session;
         var inbox=gameObject.AddComponent<InboxDrawerUI>();inbox.Session=Session;
         var pause=gameObject.AddComponent<PauseManager>(); pause.PauseChanged+=paused=>{controller.ControlsEnabled=!paused&&(Hub.IsOpen||!finished);if(Session.UsesDedicated&&!Session.DedicatedServer&&!Cooperative&&Session.World.ClientReady)Session.World.CommandServerRpc(paused?"pause":"resume");};
@@ -102,6 +104,7 @@ public sealed class ArenaGame : MonoBehaviour
     }
     public void StartExpedition()
     {
+        Defense?.Close();
         if(Session.UsesDedicated&&!Session.DedicatedServer){Session.World.CommandServerRpc("campaign");return;}
         rewardedStage=-1;
         Hub.Close(); Player.InSafeZone=false; ClearResult(); finished=false; controller.ControlsEnabled=true; Player.ResetHealth(Forge.Stats.MaxHealth); controller.Skills.ResetCooldowns(); Dungeon.StartRun(); RefreshStage();

@@ -24,7 +24,7 @@ The core promise is:
 | P1 | Boss and chapter identity | Creates memorable content and shareable moments | Each major boss has a silhouette, arena rule, phase change, signature reward and unique defeat beat |
 | P1 | Collection showcase and recognition | Converts investment into status players can show | Profile, town inspection and end-of-run cards show rare gear, cosmetics, titles and verified achievements |
 | P1 | Social cooperation | Gives multiplayer a purpose beyond seeing another avatar | Players can join a short co-op objective, rescue a teammate, contribute to a shared goal and receive clear credit |
-| P1 | Rift Defense skill-book mode | Reuses the collection in a strategic short-session format with strong replay value | Solo seeded defense is readable, fair across collections and completable in 6–10 minutes |
+| P1 · in progress | Rift Defense skill-book mode | Reuses the collection in a strategic short-session format with strong replay value | Client prototype now has lanes, skill-book towers, merges and a 20-wave boss clear; server authority, runtime tuning, rewards and device timing remain open |
 | P2 | Town life and player expression | Makes the hub a destination rather than a loading screen | NPC routines, rotating contracts, cosmetic spaces and player-created displays change between visits |
 | P2 | Seasonal collaborations and story packs | Adds discoverable peaks without destabilizing the base game | A collaboration is a self-contained content namespace with legal sunset, rerun and reward recovery rules |
 | P2 | Creator/community layer | Extends content discovery while keeping moderation manageable | Safe loadout guides, boss notes and screenshots can be searched, reported, revised and removed |

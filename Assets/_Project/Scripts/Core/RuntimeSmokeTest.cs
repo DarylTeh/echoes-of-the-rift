@@ -39,6 +39,19 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         creator.Preview.Apply(new CharacterAppearanceData { SkinIndex=2,HairStyle=2,HairColor=1,ClassId="wayfarer",PassiveSkillId="steadfast" });
         game.Begin(creator.Preview.Appearance);
         var arguments=Environment.GetCommandLineArgs();
+        if(Array.IndexOf(arguments,"-riftDefenseTest")>=0)
+        {
+            string defenseResult=Path.Combine(Application.persistentDataPath,"rift-defense-test.txt");if(File.Exists(defenseResult))File.Delete(defenseResult);
+            game.Defense.StartSmokeTest();
+            double deadline=Time.realtimeSinceStartupAsDouble+55;
+            while(Time.realtimeSinceStartupAsDouble<deadline&&runtimeErrors.Count==0)
+            {
+                if(File.Exists(defenseResult))break;
+                yield return null;
+            }
+            string result=File.Exists(defenseResult)?File.ReadAllText(defenseResult):"FAIL smoke test timed out";
+            Finish(result+" runtimeErrors="+failed);yield break;
+        }
         if(Array.IndexOf(arguments,"-uiLayoutTest")>=0){yield return TestInventoryLayouts(game);yield break;}
         if(Array.IndexOf(arguments,"-cookieCoopHost")>=0||Array.IndexOf(arguments,"-cookieCoopClient")>=0)
         {

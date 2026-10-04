@@ -1,6 +1,18 @@
 # Echoes of the Rift master plan
 
-Revision 62 - 4 October 2026. Account form error-state UAT.
+Revision 63 - 4 October 2026. Rift Defense first playable slice.
+
+## Current iteration - revision 63: develop the planned modes
+
+Rift Defense is now reachable from the North / Raids gate and runs a solo 5-lane, 20-wave match. The screen uses the player's owned skill books where available and fills a short deck with the character's actual active skills so a new account can try the mode. Towers summon onto a 5x7 board, attack enemies with overhead HP bars, upgrade with match-only Rift Mana, merge matching books, and use a hero burst. Waves culminate in an Ashen Gatekeeper. Match power and Mana are not written into the account economy.
+
+This is an early local simulation. Its wave pacing, balance, board readability and 6–10 minute target need runtime playtest; it currently has no authoritative server run state, reconnect recovery, reward receipt or reward grant. Rift Defense remains in development until those gates pass. The existing two-player co-op test remains separately available at North; 4/8-player raids are still unavailable. East DPS Trial and West World Boss remain planned and are the next mode briefs to implement after Rift Defense runtime validation.
+
+Validation: the full current Assembly-CSharp source set compiles with the cached Unity Roslyn references (`Logs/rift-defense-csharp-compile.log`). The installed Unity editor exited before compilation with license error 198 (`Logs/step-10-20261004-142752.log`), so there is no rebuilt player or runtime/visual pass for revision 63. The Rift Defense smoke scenario is implemented but could not run without that player build.
+
+Next: restore a valid Unity editor license, run the Rift Defense 20-wave smoke test and inspect a fresh match capture. Tune wave pressure from the measured run, then add authoritative server validation and transactional rewards. After that develop the East DPS Trial, West World Boss, then the 4/8-player raid architecture and encounters.
+
+## Previous revision 62: sign-in and recovery error-state UAT
 
 ## Current iteration - revision 62: submit and verify sign-in/recovery errors
 
@@ -8,7 +20,7 @@ Extended the release account-flow smoke test to submit invalid credentials throu
 
 Validation: Unity optimized Windows build passed (`Logs/step-10-20261004-141156.log`); desktop UI passed 350 checks; touch-layout passed 351; account registration/recovery-code gate/authenticated campaign passed, with resume correctly skipped and reported because this hidden session still receives DPAPI Win32 error 2; full server `npm test` passed. `Release/Windows` matches `Builds/Windows` at SHA-256 `D7DB0BE44A6300955FA5FB306B9809DBEB4F0B39937797F646BE1F12BAC29563` and includes no PDB files. The recovery-error capture was visually reviewed.
 
-Next: test successful Unity sign-in and recovery, then confirmed Settings > Accounts sign-out and return/re-login in a normal foreground player session. Verify DPAPI resume there. After the account flow is complete, move back to My Heroes screen hierarchy improvements; Android and low-end PC device validation remain open.
+Revision 62's next item was to test successful Unity sign-in/recovery and confirmed Settings > Accounts sign-out/re-login in a foreground player. Revision 63 temporarily prioritizes the requested mode development; that account-flow check and Android/low-end PC device validation remain open.
 
 ## Previous revision 61: explicit account choices and recovery confirmation
 

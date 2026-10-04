@@ -92,12 +92,17 @@ public sealed partial class TownHubManager : MonoBehaviour
         if(Session.UsesDedicated&&!Session.Authenticated){hint.text="Waiting for server connection.";return;}
         if(index<5){GetComponent<InventoryModal>().OpenMerchant(Names[index]);return;}
         if(index==6){ExpeditionRequested?.Invoke();return;}
-        dialog=GameUI.Panel(root,"GateDialog",Vector2.zero,new Vector2(620,260));
+        dialog=GameUI.Panel(root,"GateDialog",Vector2.zero,new Vector2(620,index==5?330:260));
         string message=index==5?"4-player and 8-player raids are in development.\nThe current 2-player co-op test is available below.":index==7?"Boss DPS trial is in development.":"Global world boss is in development.";
-        GameUI.Label(dialog,Names[index],new Vector2(0,90),new Vector2(550,40),28).color=GameUI.Gold;
-        GameUI.Label(dialog,message,new Vector2(0,24),new Vector2(550,86),22);
-        GameUI.Button(dialog,"Close",new Vector2(170,-82),new Vector2(180,42),CloseDialog);
-        if(index==5&&Session.UsesDedicated)GameUI.Button(dialog,"2-player co-op test",new Vector2(-125,-82),new Vector2(340,42),()=>{CloseDialog();Session.World.CommandServerRpc("coop");});
+        GameUI.Label(dialog,Names[index],new Vector2(0,index==5?124:90),new Vector2(550,40),28).color=GameUI.Gold;
+        GameUI.Label(dialog,message,new Vector2(0,index==5?66:24),new Vector2(550,70),index==5?18:22);
+        if(index==5)
+        {
+            GameUI.Button(dialog,"Rift Defense",new Vector2(0,-14),new Vector2(280,46),()=>{CloseDialog();GetComponent<RiftDefenseMode>()?.Open();}).name="RiftDefenseLaunch";
+            if(Session.UsesDedicated)GameUI.Button(dialog,"2-player co-op test",new Vector2(0,-74),new Vector2(340,42),()=>{CloseDialog();Session.World.CommandServerRpc("coop");}).name="CoopTestLaunch";
+            GameUI.Button(dialog,"Close",new Vector2(0,-132),new Vector2(180,38),CloseDialog);
+        }
+        else GameUI.Button(dialog,"Close",new Vector2(170,-82),new Vector2(180,42),CloseDialog);
         Session.Game.Player.GetComponent<PlayerController>().ControlsEnabled=false;
     }
     public bool HasDialog=>dialog!=null||settingsRoot!=null||GetComponent<EventDrawerUI>()?.IsOpen==true||GetComponent<InboxDrawerUI>()?.IsOpen==true;

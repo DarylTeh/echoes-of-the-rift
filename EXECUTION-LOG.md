@@ -1,5 +1,11 @@
 # Execution log
 
+## Current game-mode implementation - revision 63, 4 October 2026
+
+Added `RiftDefenseMode` and a launch action at the North / Raids gate. The solo loop has five lanes, a 5x7 placement grid, a starter trial deck drawn from the player's real active skills (using owned books first), match-only Rift Mana, summoning, upgrades, matching merges, a hero burst, escalating enemy waves, enemy HP bars and an Ashen Gatekeeper on wave 20. A fast smoke scenario now exercises a complete clear and writes a compact result for the runtime harness. No account reward is granted yet; rewards wait for the authoritative mode-run contract.
+
+The full Assembly-CSharp source compilation passed using the Unity-generated reference response file and installed Roslyn compiler (`Logs/rift-defense-csharp-compile.log`). The regular Unity batch compile was attempted and stopped before compilation because this editor session has no valid license (`Logs/step-10-20261004-142752.log`, exit 198). The new runtime smoke test and visual layout are therefore unverified; no player executable was rebuilt. Remaining mode work is deliberately sequenced: validate and tune Rift Defense, then implement East DPS Trial, West World Boss, and finally scalable 4/8-player raids. These require server-owned scores/rewards and larger-party authority before release.
+
 ## Current account-form UAT - revision 62, 4 October 2026
 
 The optimized Windows player (`Logs/step-10-20261004-141156.log`) now runs invalid sign-in and recovery submissions through the actual mode and submit buttons. Both return server errors without creating an account-ready state; the recovery form’s replacement-password label is asserted. Fresh error-state captures: `Logs/Dedicated/Register/sign-in-rejected.png` and `recovery-rejected.png`. The registration, recovery-code copy/acknowledgement gate, authenticated town entry and four-stage campaign still pass. Desktop UI: 350 checks; touch UI: 351; full `npm test`: PASS. Package assembly hash is `D7DB0BE44A6300955FA5FB306B9809DBEB4F0B39937797F646BE1F12BAC29563`, matching between build and release; no PDB files.

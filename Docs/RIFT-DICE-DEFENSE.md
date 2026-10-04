@@ -1,6 +1,6 @@
 # Rift Defense — skill-book tower mode
 
-Revision 33, 28 September 2026.
+Revision 63, 4 October 2026.
 
 Rift Defense is an optional tower-defense mode built around the existing skill-book collection. It should feel like Echoes of the Rift from the first tap: the same books, elements, names, neon effects and bosses appear in a new tactical format, but the rules are separated from campaign combat so the mode cannot destabilize normal progression.
 
@@ -15,6 +15,12 @@ The Clash of Critters ads point toward a simple, readable lane-defense fantasy: 
 > Build a spellbook deck, defend the Rift gate, merge under pressure, and make one clever counter before the boss reaches the core.
 
 The first version should be solo, 6–10 minutes, 20 waves, one boss and a compact 5x7 placement grid. Add co-op after the solo rules are stable. Do not start with PvP; random outcomes and network latency make balance and player trust harder before the core is proven.
+
+## Revision 63 implementation state
+
+The first playable solo client slice is wired to the North / Raids gate. It has a five-lane board with a 5x7 placement grid, uses owned skill books first and current class skills to complete a starter trial deck, auto-fires at enemies, shows enemy HP bars, and supports summon, upgrade, merge and a hero burst. The 20th wave creates one Ashen Gatekeeper. Mana and match state are local and isolated from the profile. This gives a new account a no-purchase way to learn the mechanic.
+
+This is not release-ready: the new code has only passed a source compilation against the cached Unity references. Unity batch compilation could not start because its license is unavailable, so runtime behavior, balance, timing and screenshots remain unverified. Server-authoritative seeds, actions, reconnects and reward receipts are still required before rewards are enabled. Do not describe the 6–10-minute target as measured until a full run has been timed on target devices.
 
 ## Core match loop
 
