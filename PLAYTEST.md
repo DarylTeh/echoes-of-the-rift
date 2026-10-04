@@ -1,5 +1,9 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
+## Rift Defense UAT — revision 65, 4 October 2026
+
+Twenty distinct Random Dice co-op gameplay recordings informed the mode. The Windows development player now passes all 20 waves and four boss appearances with no runtime errors; the general runtime smoke suite also passes. The defense harness uses a full 5x3 board of rank-5 towers, so it confirms scheduling and victory flow rather than ordinary-player balance. The separate `Release/Windows` player remains the previous accepted release. Human-run duration/balance, fresh match UI review and Android/low-end-PC performance are still open. Research and current acceptance details: [Rift Defense gameplay review](Docs/RIFT-DICE-DEFENSE.md).
+
 ## Latest UAT — revision 60, 3 October 2026
 
 The current optimized Windows release passes Unity compile/build, 350 desktop and 351 touch-layout assertions, solo movement/combat/campaign/save/reward regression, isolated account registration/resume through all four server-authoritative campaign stages, and the full server test suite. The test runner waits for the dedicated server readiness heartbeat and isolates account/game ports and data. The current UI has a Campaign / Events / Inbox activity rail and contextual service interaction; the release-mode safe-area simulation is covered. UI parity remains below 90%, and sign-in/recovery form submission, confirmed sign-out/re-login, physical Android touch and low-end-PC frame-time/memory measurement remain open. See [My Heroes reference UAT](Docs/UAT-2026-10-03-MyHeroes.md).

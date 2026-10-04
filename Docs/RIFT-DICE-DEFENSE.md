@@ -1,6 +1,33 @@
 # Rift Defense — skill-book tower mode
 
-Revision 63, 4 October 2026.
+Revision 65, 4 October 2026.
+
+## Co-op gameplay reference study
+
+Before this iteration's build work, 20 distinct Random Dice co-op recordings were opened in the browser and inspected during match footage (usually around 0:30–1:30; long-run recordings show later wave states too). This sample intentionally includes beginners, deck guides, long-wave farming, support/control, gear tests, challenge/co-op comparisons and viewer matches. It is a qualitative UI and loop review, not a frame-by-frame or balance-data extraction.
+
+1. [Time + Solar co-op](https://www.youtube.com/watch?v=6qKKIpLH_R0) — two player boards, wave and SP controls.
+2. [Co-op wave 4976](https://www.youtube.com/watch?v=GV1EFlaL7Wo) — compact board state remains readable in a very long run.
+3. [Combo + Alignment co-op](https://www.youtube.com/watch?v=o3IORBsfeB4) — randomized board assembly and co-op play.
+4. [Soul / Sword / Snow / Scope wave 2500+](https://www.youtube.com/watch?v=vQ9z11Fa4as) — late-wave builds and high-effect density.
+5. [Holy Sword + Lunar + Scope co-op](https://www.youtube.com/watch?v=Hk53sFM9Ido) — two simultaneous boards, deck roles and a shared wave HUD.
+6. [Co-op wave 5138](https://www.youtube.com/watch?v=Vl-SlN-SEis) — evolving board and bottom summon/upgrade controls.
+7. [NimbleThor multiplayer/co-op overview](https://www.youtube.com/watch?v=39mCCKHE-00) — paired boards, wave pressure and summon economy.
+8. [DarkDream wave 1000+ challenge](https://www.youtube.com/watch?v=45w0PCPk0oE) — accelerated late-wave co-op and boss pressure.
+9. [Co-op wave 20630](https://www.youtube.com/watch?v=AcXYvquLReE) — high-wave state and compact progression strip.
+10. [1 to 1050 co-op setup guide](https://www.youtube.com/watch?v=RPt2VliiPwg) — build setup and high-wave play.
+11. [No-legendary beginner co-op, wave 70](https://www.youtube.com/watch?v=zkIlMsNxdFM) — early progression and a starter-friendly board.
+12. [Viewer co-op stream](https://www.youtube.com/watch?v=JuhXq7hwiEw) — live-match presentation and viewer interaction.
+13. [Monostortion co-op](https://www.youtube.com/watch?v=5xYT2qeDAW4) — board growth, positioning and late-run coordination.
+14. [Gear Dice co-op test](https://www.youtube.com/watch?v=mh77GTshDJk) — gear interaction within normal board play.
+15. [Holy Sword + Medusa co-op guide](https://www.youtube.com/watch?v=v0xJZxRoJ2Q) — high-wave paired boards.
+16. [Recharge co-op stream](https://www.youtube.com/watch?v=W5h40lHbl9M) — evolving build and long-session interface.
+17. [Medusa Rage critical co-op guide](https://www.youtube.com/watch?v=80DFXz-dh-M) — side-by-side player board progression.
+18. [Beginner co-op deck](https://www.youtube.com/watch?v=VEJ9Z1oeyI0) — beginner board and readable deck explanation.
+19. [Control co-op deck](https://www.youtube.com/watch?v=3j6Yxu2GJv8) — paired grids and crowd-control role.
+20. [Current-meta wave 500 co-op](https://www.youtube.com/watch?v=NuOnE7peeDM) — meta setup, support role and late-wave play.
+
+Repeated patterns from the footage: paired, equal-weight boards stay visible at once; wave status and match currency are always near the top; the player repeatedly summons and merges under pressure; board occupancy and dice face/rank communicate build state; action buttons and progression remain grouped below the board; special dice create distinct support, control, economy and damage roles. Co-op is about complementary builds as much as raw damage. High-wave videos speed up or compress downtime, but the actual board and action states remain legible. We should borrow these interaction patterns and pacing cues while using Echoes' spell-book fiction, original art and its own UI assets.
 
 Rift Defense is an optional tower-defense mode built around the existing skill-book collection. It should feel like Echoes of the Rift from the first tap: the same books, elements, names, neon effects and bosses appear in a new tactical format, but the rules are separated from campaign combat so the mode cannot destabilize normal progression.
 
@@ -14,13 +41,17 @@ The Clash of Critters ads point toward a simple, readable lane-defense fantasy: 
 
 > Build a spellbook deck, defend the Rift gate, merge under pressure, and make one clever counter before the boss reaches the core.
 
-The first version should be solo, 6–10 minutes, 20 waves, one boss and a compact 5x7 placement grid. Add co-op after the solo rules are stable. Do not start with PvP; random outcomes and network latency make balance and player trust harder before the core is proven.
+The first version is solo, 20 waves and a compact 5x3 placement board; its duration remains unmeasured. The co-op samples informed the board size, random summon/merge loop and elite-wave rhythm, while the first implementation stays solo until its rules can be tested locally. Add the paired second board and shared run after the solo rules are stable. Do not start with PvP; random outcomes and network latency make balance and player trust harder before the core is proven.
 
-## Revision 63 implementation state
+## Revision 65 implementation state
 
-The first playable solo client slice is wired to the North / Raids gate. It has a five-lane board with a 5x7 placement grid, uses owned skill books first and current class skills to complete a starter trial deck, auto-fires at enemies, shows enemy HP bars, and supports summon, upgrade, merge and a hero burst. The 20th wave creates one Ashen Gatekeeper. Mana and match state are local and isolated from the profile. This gives a new account a no-purchase way to learn the mechanic.
+The solo client slice is wired to the North / Raids gate. It has a 5x3 board, fills a five-book trial deck from owned books and the character's current active skills, and randomly summons from that deck. Books auto-fire, enemies have overhead HP bars, and players can upgrade a selected tower, merge two identical books at the same star rank (the result is a random deck book at the next rank), or cast the hero burst. Runner, armored and swarm units vary speed and health. Waves 5, 10, 15 and 20 each introduce an elite; the final boss is Ashen Gatekeeper. Rift Mana and match state remain local and isolated from the profile. New accounts can try the mode without a purchase.
 
-This is not release-ready: the new code has only passed a source compilation against the cached Unity references. Unity batch compilation could not start because its license is unavailable, so runtime behavior, balance, timing and screenshots remain unverified. Server-authoritative seeds, actions, reconnects and reward receipts are still required before rewards are enabled. Do not describe the 6–10-minute target as measured until a full run has been timed on target devices.
+This iteration was built after inspecting 20 distinct co-op match recordings, listed above. The first pass adopts their paired-board-friendly dimensions, random build decisions, merge pressure, persistent wave/economy cues and elite-wave cadence. This remains a solo run: actual two-player shared-wave synchronization, partner board, support casts and server-authoritative actions are future work. Bosses currently differ in identity/presentation and the Cinder Knight's pace, but the other three do not yet have their full planned mechanics.
+
+Validation: the Unity editor build passed (`Logs/step-10-20261004-153519.log`). The Windows development player completed its 20-wave deterministic defense test with four elite bosses, 100% core, 15 test towers, and no runtime errors; the general runtime suite also passed (`Logs/rift-defense-uat/player.log`). The smoke setup deliberately fills every cell and sets each book to rank 5 to stress wave completion; this does not prove human balance, progression, or a normal-run clear. Unsupported font symbols were replaced with plain-text mana and rank labels. Run duration, fresh visual review, mobile/low-end performance and ordinary-player balance remain unmeasured.
+
+This is not release-ready. Server-authoritative seeds, actions, reconnects and reward receipts are still required before rewards are enabled. Do not describe the 6–10-minute target as measured until a normal run has been timed on target devices.
 
 ## Core match loop
 
@@ -87,7 +118,7 @@ Every boss needs a readable warning, an answer, a recovery window and a signatur
 
 ## UI and performance
 
-The mobile layout should use a clear top wave/core bar, a compact deck strip, a visible Mana counter, a 5x7 board and a bottom-right hero cast. Towers use the same curved dark panels and neon border particles as the inventory. A long press opens a skill-book inspection card; dragging is the primary placement and merge gesture, with keyboard/controller alternatives on PC.
+The mobile layout uses a clear top wave/core bar, a compact deck strip, visible Rift Mana, a 5x3 board and a bottom-right hero cast. Co-op should preserve both equal-sized boards simultaneously, with wave/core/match currency in shared top chrome and controls grouped below each board. Towers use the same curved dark panels and neon border particles as the inventory. A long press opens a skill-book inspection card; dragging is the primary placement and merge gesture, with keyboard/controller alternatives on PC.
 
 Use pooled projectiles and hit effects, an upper effect budget, sprite atlases and deterministic simulation ticks. The defense board must not spawn one GameObject per projectile. The low-end preset should reduce decorative particles while preserving path hazards, boss telegraphs, tower targeting and damage numbers.
 

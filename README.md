@@ -30,7 +30,7 @@ The current Windows export is [Release/Windows](Release/Windows), built by `Logs
 
 ## Previous build - revision 35, 28 September 2026
 
-Rift Defense is now planned as an optional skill-book tower mode: five-book decks, 5x7 placement, merges, wave mutations, boss counters and a retained hero emergency cast. The full design and server rules are in [RIFT-DICE-DEFENSE.md](Docs/RIFT-DICE-DEFENSE.md).
+Rift Defense is an optional skill-book tower mode in development: five-book decks, a 5x3 board, random summons, same-rank merges, four elite encounters and a retained hero emergency cast. Twenty Random Dice co-op gameplay samples informed this iteration; the review and full design/server plan are in [RIFT-DICE-DEFENSE.md](Docs/RIFT-DICE-DEFENSE.md).
 
 The future design direction is now prioritized in [FUTURE-DESIGN-BACKLOG.md](Docs/FUTURE-DESIGN-BACKLOG.md): first-ten-minute onboarding, short expedition sessions, readable boss patterns, build synergies, collection recognition, meaningful co-op, safe live operations and real-device quality gates. It is grounded in recent award-winning design patterns and official Apple/Android guidance.
 

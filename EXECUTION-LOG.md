@@ -1,10 +1,12 @@
 # Execution log
 
-## Current game-mode implementation - revision 63, 4 October 2026
+## Rift Defense co-op study and runtime validation - revision 65, 4 October 2026
 
-Added `RiftDefenseMode` and a launch action at the North / Raids gate. The solo loop has five lanes, a 5x7 placement grid, a starter trial deck drawn from the player's real active skills (using owned books first), match-only Rift Mana, summoning, upgrades, matching merges, a hero burst, escalating enemy waves, enemy HP bars and an Ashen Gatekeeper on wave 20. A fast smoke scenario now exercises a complete clear and writes a compact result for the runtime harness. No account reward is granted yet; rewards wait for the authoritative mode-run contract.
+Inspected 20 distinct Random Dice co-op match videos before implementation, then updated Rift Defense to a compact 5x3 board with random summons from the player's starter/owned five-book deck, same-rank matching merges that reroll a deck book at the next rank, match-only Rift Mana, upgrades, hero burst, varied enemy profiles, overhead HP bars and elite bosses on waves 5, 10, 15 and 20. The final boss is Ashen Gatekeeper. Updated the smoke assertion to require all four elite encounters. No account reward is granted; rewards wait for the authoritative mode-run contract.
 
-The full Assembly-CSharp source compilation passed using the Unity-generated reference response file and installed Roslyn compiler (`Logs/rift-defense-csharp-compile.log`). The regular Unity batch compile was attempted and stopped before compilation because this editor session has no valid license (`Logs/step-10-20261004-142752.log`, exit 198). The new runtime smoke test and visual layout are therefore unverified; no player executable was rebuilt. Remaining mode work is deliberately sequenced: validate and tune Rift Defense, then implement East DPS Trial, West World Boss, and finally scalable 4/8-player raids. These require server-owned scores/rewards and larger-party authority before release.
+Using the user's existing Windows Unity license, the full Windows player build passed (`Logs/step-10-20261004-153519.log`). A dedicated player run passed the 20-wave Rift Defense smoke check: all four elite bosses spawned, the core stayed at 100%, and 15 rank-5 test towers remained active. The general runtime smoke checks passed without errors (`Logs/rift-defense-uat/player.log`). Testing exposed and fixed a wave-spawn loop, final-wave boss omission, and unsupported font symbols. The maxed-board harness is a deterministic stress test, not evidence of normal-run balance or run duration. Fresh visual review, ordinary progression/balance, Android and low-end-PC performance remain open. Next: do a real-player balance/timing pass, give each boss distinct mechanics, then build paired-board co-op and server-owned scores/rewards before East DPS Trial, West World Boss and larger raids.
+
+Research notes and all 20 video links are in `Docs/RIFT-DICE-DEFENSE.md`.
 
 ## Current account-form UAT - revision 62, 4 October 2026
 

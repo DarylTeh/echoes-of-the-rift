@@ -1,16 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 63 - 4 October 2026. Rift Defense first playable slice.
+Revision 65 - 4 October 2026. Rift Defense runtime validation and next gates.
 
-## Current iteration - revision 63: develop the planned modes
+## Current iteration - revision 65: validate Rift Defense and define its remaining gates
 
-Rift Defense is now reachable from the North / Raids gate and runs a solo 5-lane, 20-wave match. The screen uses the player's owned skill books where available and fills a short deck with the character's actual active skills so a new account can try the mode. Towers summon onto a 5x7 board, attack enemies with overhead HP bars, upgrade with match-only Rift Mana, merge matching books, and use a hero burst. Waves culminate in an Ashen Gatekeeper. Match power and Mana are not written into the account economy.
+Inspected actual gameplay footage from 20 distinct Random Dice co-op recordings before changing the mode. The sample covered beginner deck guides, live viewer matches, long-wave farming, challenge runs, damage/support/control roles and gear tests. The repeatable patterns are concurrent equal-weight boards, persistent wave and match-currency cues, randomized summon/merge decisions, legible board occupancy, and builds with complementary roles. Source links and observations are in [Docs/RIFT-DICE-DEFENSE.md](Docs/RIFT-DICE-DEFENSE.md).
 
-This is an early local simulation. Its wave pacing, balance, board readability and 6–10 minute target need runtime playtest; it currently has no authoritative server run state, reconnect recovery, reward receipt or reward grant. Rift Defense remains in development until those gates pass. The existing two-player co-op test remains separately available at North; 4/8-player raids are still unavailable. East DPS Trial and West World Boss remain planned and are the next mode briefs to implement after Rift Defense runtime validation.
+The North / Raids gate launches the solo 20-wave client simulation with a compact 5x3 board, random summons from a five-book trial deck, matching same-rank merges that reroll into a random deck book, match-only Rift Mana, upgrades, hero burst, varied enemy profiles, overhead HP bars, and an elite boss every fifth wave. New accounts can fill the deck from current class skills. No currency or rewards are written to the profile. The 20-wave target duration is unmeasured.
 
-Validation: the full current Assembly-CSharp source set compiles with the cached Unity Roslyn references (`Logs/rift-defense-csharp-compile.log`). The installed Unity editor exited before compilation with license error 198 (`Logs/step-10-20261004-142752.log`), so there is no rebuilt player or runtime/visual pass for revision 63. The Rift Defense smoke scenario is implemented but could not run without that player build.
+Validation: the Windows development build passed using the user's installed Unity license (`Logs/step-10-20261004-153519.log`). Its player smoke run completed all 20 waves and all four boss appearances with the core intact; the general runtime smoke checks reported no errors (`Logs/rift-defense-uat/player.log`). The automated defense run maxes all 15 test towers, so it is a stress/flow check only; ordinary-run balance, duration, fresh visual acceptance, Android and low-end-PC performance are still open. The shipped `Release/Windows` package has not yet been replaced by this development build.
 
-Next: restore a valid Unity editor license, run the Rift Defense 20-wave smoke test and inspect a fresh match capture. Tune wave pressure from the measured run, then add authoritative server validation and transactional rewards. After that develop the East DPS Trial, West World Boss, then the 4/8-player raid architecture and encounters.
+Next: play a normal, unassisted 20-wave run, record its duration and balance, and inspect fresh landscape and portrait captures. Implement distinct elite mechanics and paired-board co-op with server-owned seeds/actions/rewards. After Rift Defense passes those gates, develop East DPS Trial, West World Boss and scalable 4/8-player raid architecture.
 
 ## Previous revision 62: sign-in and recovery error-state UAT
 
