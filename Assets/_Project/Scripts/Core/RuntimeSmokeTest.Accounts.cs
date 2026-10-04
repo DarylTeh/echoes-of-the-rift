@@ -15,7 +15,26 @@ public sealed partial class RuntimeSmokeTest
         yield return new WaitForEndOfFrame();Capture("splash.png");
         if(!resume)
         {
-            splash.Enter();splash.Username.text="test_"+Guid.NewGuid().ToString("N").Substring(0,12);splash.Password.text="isolated account test passphrase";
+            splash.Enter();yield return null;
+            string testUsername="test_"+Guid.NewGuid().ToString("N").Substring(0,12);
+            splash.Username.text=testUsername;splash.Password.text="unused wrong passphrase";
+            GameObject.Find("SignInMode")?.GetComponent<UnityEngine.UI.Button>()?.onClick.Invoke();
+            GameObject.Find("AccountSubmitButton")?.GetComponent<UnityEngine.UI.Button>()?.onClick.Invoke();
+            deadline=Time.realtimeSinceStartupAsDouble+20;while(splash.IsBusy&&Time.realtimeSinceStartupAsDouble<deadline)yield return null;
+            bool signInRejected=!splash.Ready&&!splash.IsBusy&&!string.IsNullOrEmpty(splash.LastError);
+            yield return new WaitForEndOfFrame();Capture("sign-in-rejected.png");
+            splash.Username.text=testUsername;splash.Password.text="new test password";splash.Recovery.text="invalid-test-code";
+            GameObject.Find("RecoverAccountMode")?.GetComponent<UnityEngine.UI.Button>()?.onClick.Invoke();
+            string recoveryPasswordLabel=splash.Password.transform.Find("Label").GetComponent<TMPro.TMP_Text>().text;
+            GameObject.Find("AccountSubmitButton")?.GetComponent<UnityEngine.UI.Button>()?.onClick.Invoke();
+            deadline=Time.realtimeSinceStartupAsDouble+20;while(splash.IsBusy&&Time.realtimeSinceStartupAsDouble<deadline)yield return null;
+            bool recoveryRejected=!splash.Ready&&!splash.IsBusy&&!string.IsNullOrEmpty(splash.LastError);
+            bool recoveryForm=splash.Recovery.gameObject.activeSelf&&recoveryPasswordLabel==EnglishAccount.NewPassword5Characters;
+            yield return new WaitForEndOfFrame();Capture("recovery-rejected.png");
+            if(!signInRejected||!recoveryRejected||!recoveryForm){Finish($"FAIL account form rejection signIn={signInRejected} recovery={recoveryRejected} recoveryForm={recoveryForm}");yield break;}
+            Debug.Log("ACCOUNT_FORM_REJECTIONS_OK: invalid sign-in and recovery showed errors; recovery uses an explicit new-password label.");
+            GameObject.Find("CreateAccountMode")?.GetComponent<UnityEngine.UI.Button>()?.onClick.Invoke();
+            splash.Username.text=testUsername;splash.Password.text="isolated account test passphrase";
             yield return new WaitForEndOfFrame();Capture("registration.png");splash.Submit(true);
         }
         deadline=Time.realtimeSinceStartupAsDouble+30;

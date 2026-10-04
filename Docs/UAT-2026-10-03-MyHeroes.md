@@ -1,6 +1,12 @@
 # My Heroes reference UAT — 3 October 2026
 
-## Current verification — revision 61
+## Current verification — revision 62
+
+The account form now has release-player UAT for failed Sign in and failed Recover account submissions. Each was submitted through its visible mode and primary action; both displayed the service’s error while keeping the user unauthenticated. The recovery capture confirms the new-password label and recovery-code input. Registration still passes through copy/acknowledgement, town entry and four campaign stages. Desktop UI passed 350 checks, touch-layout passed 351, and full server `npm test` passed. Build/release assembly SHA-256: `D7DB0BE44A6300955FA5FB306B9809DBEB4F0B39937797F646BE1F12BAC29563`.
+
+The account test process reports and skips saved-session resume when DPAPI returns Win32 error 2. Successful Unity login/recovery and a confirmed sign-out/re-login cycle remain unverified. Screenshots: `Logs/Dedicated/Register/sign-in-rejected.png` and `recovery-rejected.png`. No physical Android or low-end-PC test was performed.
+
+## Previous verification — revision 61
 
 The current optimized Windows release now presents separate Create account, Sign in and Recover account choices; password labels follow the selected form. After successful authentication, inactive mode choices disappear. New-account/recovery responses require the one-time recovery code to be copied and the player to acknowledge saving it before Enter Adventure is enabled. The isolated registration flow verified the blocked state, copy action, acknowledgement and entry, then passed the server-authoritative four-stage campaign, rewards, pause and rankings.
 
@@ -36,8 +42,8 @@ The additional checks ran on 3 October using unused test-only ports. The existin
 | Branded splash / boot loading | **Missing** | Source creates `SplashScreenUI` directly over the game scene. There is no separate logo/brand splash scene or first-load progress screen. The account screen's small “Connecting to server…” prompt is the only startup progress feedback. |
 | Service unavailable at launch | **Pass** | `Tools/Play.ps1 -Test` with an unused account port: `PASS unavailable aboveSplash=True blocksEntry=True retry=True runtimeErrors=False`. Screenshot: `Logs/Launcher/server-unavailable.png`. Retry kept the blocking state and never entered the game. |
 | Create account | **Pass; session-cache verification limited** | Isolated release registration reached the account-ready state, hid the inactive account modes, blocked entry before recovery handling, then passed copy, explicit “I have saved my code” acknowledgement, and authenticated entry. The isolated hidden process received DPAPI Win32 error 2; it did not save a token, and session resume is unverified in this run. |
-| Sign in | **API pass; UI partial** | Server suite passed valid login and wrong-password rejection. The screen now has a distinct Sign in choice and routes its submit action to login, but the runtime harness did not submit credentials through this mode or capture its final state. |
-| Recover account | **API pass; UI partial** | Server suite passed recovery, replacement recovery-code issue and revocation of prior sessions. The screen now has a distinct Recover account choice and labels the replacement credential as a new password, but the runtime harness did not submit this form end to end or capture the reset result. |
+| Sign in | **API pass; UI rejection tested** | Server suite passed valid login and wrong-password rejection. The release UI now submits an invalid sign-in through its visible form and displays the error. Successful Unity sign-in remains untested. |
+| Recover account | **API pass; UI rejection tested** | Server suite passed recovery, replacement recovery-code issue and revocation of prior sessions. The release UI submits invalid recovery details and displays the server error; its recovery-code and new-password fields are visible and correctly labeled. Successful Unity recovery remains untested. |
 | Account-ready state | **Pass for registration** | Inactive Create account / Sign in / Recover account choices are removed. The copy action reveals an explicit saved-code acknowledgement; Enter Adventure stays disabled until acknowledgement. Login and recovery UI submission remain partial UAT paths. |
 | Settings / account safety | **Pass for navigation and cancel; incomplete settings scope** | Fresh screenshot `Logs/Dedicated/Register/settings-accounts.png` shows sign-out inside Settings > Accounts. The confirmation defaults to “Stay in game”; the automated flow canceled it and verified the token/session remained valid. The controls tab and account tab pass layout checks at desktop/touch modes and four sizes. Controls are a static key map; audio, display, remapping and touch settings are absent. The actual confirm action was not invoked on a player account. |
 | Sign out / return to sign in | **API pass; UI partial** | The API suite passed logout and session revocation. The Unity runtime test intentionally only exercised the safe cancel path; confirmed sign-out, return-to-title, then manual re-login remains to be verified with a disposable profile. |
@@ -61,7 +67,7 @@ The full local `npm test` suite passed, including account registration, case-ins
 
 ## Decision and next implementation slice
 
-The flow is playable through the verified registration and campaign path; server API login/recovery is covered, while Unity sign-in/recovery submission and saved-session resume need normal foreground UAT. The visual/interaction target is **not accepted at 90%**. Finish successful/failed login and recovery, DPAPI session resume, confirmed logout then re-login, and fresh first-time creator completion. Keep service-unavailable and connection-lost retries separate and non-destructive.
+The flow is playable through the verified registration and campaign path, and UI rejection states are tested. Successful Unity sign-in/recovery, saved-session resume and confirmed logout→re-login still need normal foreground UAT. The visual/interaction target is **not accepted at 90%**. Finish those account paths and fresh first-time creator completion. Keep service-unavailable and connection-lost retries separate and non-destructive.
 
 After those flow corrections, establish the compact My Heroes-style town activity rail, tighten overlapping world labels, tune combat anchors and complete the paperdoll/inspector/shop/result hierarchy against the existing screen wireframes. Repeat this UAT after the actual release rebuild and review touch controls on a phone; the current desktop result cannot certify Android usability.
 

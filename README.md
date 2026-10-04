@@ -1,8 +1,8 @@
 # Echoes of the Rift
 
-## Current build - revision 61, 3 October 2026
+## Current build - revision 62, 4 October 2026
 
-The optimized Windows player has been rebuilt from the current Unity source and copied to the tracked `Release/Windows` handoff. Desktop UI passes 350 checks, touch-layout mode passes 351, account registration through recovery-code acknowledgement and a four-stage server-authoritative campaign passes, and the full server suite passes. Saved-session resume is unverified because the hidden test process cannot access Windows DPAPI (Win32 error 2); no plaintext fallback is used. My Heroes visual parity remains below the requested 90%; see the current [UAT](Docs/UAT-2026-10-03-MyHeroes.md) and [master plan](MASTER-PLAN.md).
+The optimized Windows player has been rebuilt from the current Unity source and copied to the tracked `Release/Windows` handoff. Desktop UI passes 350 checks, touch-layout mode passes 351, account-form rejection states and registration through recovery-code acknowledgement/campaign pass, and the full server suite passes. Saved-session resume is unverified because the hidden test process cannot access Windows DPAPI (Win32 error 2); no plaintext fallback is used. My Heroes visual parity remains below the requested 90%; see the current [UAT](Docs/UAT-2026-10-03-MyHeroes.md) and [master plan](MASTER-PLAN.md).
 
 The skill HUD and active-event feed now avoid repeating stable work, improving low-end frame time and repeated event requests while preserving gameplay and server authority.
 

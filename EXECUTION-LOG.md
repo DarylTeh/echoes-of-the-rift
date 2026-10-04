@@ -1,5 +1,11 @@
 # Execution log
 
+## Current account-form UAT - revision 62, 4 October 2026
+
+The optimized Windows player (`Logs/step-10-20261004-141156.log`) now runs invalid sign-in and recovery submissions through the actual mode and submit buttons. Both return server errors without creating an account-ready state; the recovery form’s replacement-password label is asserted. Fresh error-state captures: `Logs/Dedicated/Register/sign-in-rejected.png` and `recovery-rejected.png`. The registration, recovery-code copy/acknowledgement gate, authenticated town entry and four-stage campaign still pass. Desktop UI: 350 checks; touch UI: 351; full `npm test`: PASS. Package assembly hash is `D7DB0BE44A6300955FA5FB306B9809DBEB4F0B39937797F646BE1F12BAC29563`, matching between build and release; no PDB files.
+
+Session persistence remains a scoped limitation: Windows DPAPI reports Win32 error 2 in the hidden test process. The runner clearly skips only the resume leg in that condition; it does not store a plaintext token. Successful Unity sign-in/recovery and confirmed sign-out→re-login remain open for normal foreground UAT. No Android device test was performed.
+
 ## Current account-flow pass - revision 61, 3 October 2026
 
 Rebuilt the optimized Windows player (`Logs/step-10-20261003-231819.log`) with explicit Create account / Sign in / Recover account actions, mode-sensitive password labels, removal of inert controls after authentication, and a recovery-code copy plus explicit saved-code acknowledgement gate before entering the game. Release UAT verified the hidden controls, prevented early entry, completed the acknowledgement and entered the authenticated town; the four-stage server-authoritative campaign, central rewards, pause and rankings all passed (`Logs/Dedicated/Register/runtime-smoke.txt`). Desktop UI passed 350 checks and touch-layout passed 351. Full `npm test` passed in `Server`.

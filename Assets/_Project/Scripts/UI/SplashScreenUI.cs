@@ -10,6 +10,7 @@ public sealed class SplashScreenUI : MonoBehaviour
     public RectTransform Root { get; private set; }
     public TMP_InputField Username,Password,Recovery;
     public bool Ready=>account!=null;
+    public bool IsBusy=>busy;
     public bool CanEnter=>enter!=null&&enter.interactable;
     public string LastError { get; private set; }
     private RectTransform form;
@@ -38,6 +39,7 @@ public sealed class SplashScreenUI : MonoBehaviour
         Username=Field(form,EnglishAccount.Username,205,false);Password=Field(form,EnglishAccount.Password5Characters,115,true);Recovery=Field(form,EnglishAccount.RecoveryCode,25,false);Recovery.gameObject.SetActive(false);
         message=GameUI.Label(form,EnglishAccount.ChooseCreateOrSignIn,new Vector2(0,-74),new Vector2(520,132),22);
         submit=GameUI.Button(form,EnglishAccount.CreateAccount,new Vector2(0,-175),new Vector2(520,48),()=>Submit());
+        submit.gameObject.name="AccountSubmitButton";
         createMode=GameUI.Button(form,EnglishAccount.CreateAccount,new Vector2(-135,-236),new Vector2(250,44),()=>SetMode(true,false));
         signInMode=GameUI.Button(form,EnglishAccount.SignIn,new Vector2(135,-236),new Vector2(250,44),()=>SetMode(false,false));
         recoverMode=GameUI.Button(form,EnglishAccount.RecoverAccount,new Vector2(0,-287),new Vector2(520,44),()=>SetMode(false,true));
@@ -114,7 +116,7 @@ public sealed class SplashScreenUI : MonoBehaviour
     }
     private IEnumerator Authenticate()
     {
-        busy=true;submit.interactable=false;message.text=EnglishAccount.ContactingTheAccountService;
+        LastError=null;busy=true;submit.interactable=false;message.text=EnglishAccount.ContactingTheAccountService;
         var request=new AccountRequest{username=Username.text,password=Password.text,recovery=Recovery.text};Password.text="";
         if(register&&!recover)
         {

@@ -1,16 +1,18 @@
 # Echoes of the Rift master plan
 
-Revision 61 - 3 October 2026. Clear account entry and recovery-code handoff.
+Revision 62 - 4 October 2026. Account form error-state UAT.
 
-## Current iteration - revision 61: explicit account choices and recovery confirmation
+## Current iteration - revision 62: submit and verify sign-in/recovery errors
 
-Replaced the ambiguous “Register / Sign in” switch with distinct Create account, Sign in and Recover account choices. Password labeling changes with the selected mode, including an explicit new-password label during recovery. Successful authentication removes the now-inactive mode controls. New accounts and recovery resets must copy the one-time recovery code and explicitly acknowledge saving it before Enter Adventure becomes available. Login does not require a recovery-code step.
+Extended the release account-flow smoke test to submit invalid credentials through the actual Sign in control and invalid recovery details through Recover account. Both forms remain usable, report a server error without claiming success, and preserve the typed username. The recovery form is verified to expose a clearly labeled “New password (5+ characters)” field. Fresh captures are saved at `Logs/Dedicated/Register/sign-in-rejected.png` and `Logs/Dedicated/Register/recovery-rejected.png`.
 
-Extended the optimized-player registration UAT through the code-copy and save acknowledgement, authenticated entry, and the server-authoritative four-stage campaign. The test confirms hidden inactive choices and blocks entry before recovery acknowledgement. Desktop UI passes 350 checks and touch-layout passes 351; Unity release build and full server `npm test` pass. The package in `Release/Windows` matches `Builds/Windows` at SHA-256 `E60DFA2935B868E79D9E2412E239888BBDC74DDFDABBA97C13194AB0F2C63718`.
+Validation: Unity optimized Windows build passed (`Logs/step-10-20261004-141156.log`); desktop UI passed 350 checks; touch-layout passed 351; account registration/recovery-code gate/authenticated campaign passed, with resume correctly skipped and reported because this hidden session still receives DPAPI Win32 error 2; full server `npm test` passed. `Release/Windows` matches `Builds/Windows` at SHA-256 `D7DB0BE44A6300955FA5FB306B9809DBEB4F0B39937797F646BE1F12BAC29563` and includes no PDB files. The recovery-error capture was visually reviewed.
 
-The isolated hidden test process cannot exercise Windows DPAPI session persistence: `CryptProtectData` returns Win32 error 2, so the client correctly refuses to write a plaintext refresh token. Registration/gameplay UAT is marked separately from session-resume verification; the test runner automatically skips and reports the resume leg when protected storage is unavailable. Server-side refresh, recovery and revocation continue to pass in `npm test`. A foreground player session on the user's Windows profile still needs a fresh session-cache/resume check.
+Next: test successful Unity sign-in and recovery, then confirmed Settings > Accounts sign-out and return/re-login in a normal foreground player session. Verify DPAPI resume there. After the account flow is complete, move back to My Heroes screen hierarchy improvements; Android and low-end PC device validation remain open.
 
-Next: complete Unity sign-in and recovery submission UAT for both success and failure, verify the DPAPI session cache/resume in a normal foreground player session, and exercise confirmed Settings > Accounts sign-out followed by re-login. Then return to the My Heroes town, backpack, item-inspection and results hierarchy. Preserve the protected sign-out confirmation and honest 90% parity status.
+## Previous revision 61: explicit account choices and recovery confirmation
+
+Revision 61 account-entry implementation and validation are recorded in the execution history. Protected session resume still requires a foreground player check.
 
 ## Previous revision 60: clean release validation and refactor
 
