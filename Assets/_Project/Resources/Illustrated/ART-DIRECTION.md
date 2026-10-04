@@ -1,4 +1,4 @@
-# Shared skill cubes, heroes, creatures and dungeon tiles — revision 25
+# Shared hero, gear, creature, utility and effect art — revision 26
 
 This is the current art direction. The new originals take their visual cues from the supplied MyHeroes: SEA and Random Dice references: tiny readable action-RPG heroes, square pixel clusters, jewel-color silhouettes, dark outlines, richly shaded gear, recognizable glossy skill dice and distinctive dungeon creatures. The art is newly generated and does not reuse game files.
 
@@ -12,7 +12,11 @@ This is the current art direction. The new originals take their visual cues from
 
 `DungeonTiles.png` is a transparent 4×2 atlas: four seamless dark-stone floor variants and four matching raised-boundary stone variants. `IllustratedArt.FloorTile` supplies the procedural dungeon grid; its 5% point-sampled world shader keeps the pixel edge while the original colliders and room dimensions stay unchanged. The earlier procedural tile remains only as a missing-atlas fallback.
 
-Current replacement scope completed in source: hero, skill, equipment, weapons, dungeon enemies, bosses and room/floor tiles. Remaining: general interface/economy symbols, distinct boss attack presentation, and richer skill/combat effects. Retire old art only after each consumer has migrated and its build/playtest passes.
+`UtilityIcons.png` is a transparent 4×4 atlas mapped through `IllustratedArt.UtilityIcon` and the common `PixelArt.Icon` entry point. It provides shared coin, gem, settings, weapon, backpack, quest, swap, dodge, book, shield, potion, chest, heart, compass, inbox and rune icons. Existing HUD and modal calls inherit the atlas without changing their layout or hit targets.
+
+`CombatEffects.png` is a transparent 4×4 atlas of four blade arcs, elemental impacts, rune circles and defensive/boss bursts. The shared `CombatVisual` selects a matching effect by attack type and color, animates one short alpha/scale flash, and reuses the existing bounded burst pool. Long boss telegraph rings remain clear outlines. Spell bolts share the rune symbol and 5% world sampling.
+
+Current shared-art replacement scope completed in source: hero, skill, equipment, weapons, dungeon enemies, bosses, room/floor tiles, utility symbols and common attack flashes. Remaining: richer distinct boss attack sequences, animated directional heroes, and further screen-by-screen visual polish. Retire old art only after each consumer has migrated and its build/playtest passes.
 
 References reviewed for the visual language: [MyHeroes Wiki on Fandom](https://myheroesofficial.fandom.com/wiki/MyHeroes_Wiki) and the [Random Dice Wiki dice catalogue](https://randomdice.wiki.gg/wiki/Dice). These are broad style references, not copied source images.
 

@@ -1,6 +1,12 @@
 # Echoes of the Rift master plan
 
-Revision 68 - 4 October 2026. Illustrated enemies, bosses and dungeon tiles.
+Revision 69 - 5 October 2026. Shared utility symbols and impact effects.
+
+## Current iteration - revision 69: unify utility symbols and combat flashes
+
+Added 16 shared utility icons and 16 colorful combat-effect sprites. Existing `PixelArt.Icon` callers now resolve familiar currency, settings, bag, quest, dodge/swap, book and skill symbols through one atlas, preserving all UI placement and touch targets. Slash and short spell/buff impacts receive a color-matched alpha/scale flash from a bounded pool; spell bolts use the shared rune symbol. The larger boss telegraphs retain their readable outline rings. New textures use point filtering and the existing 5% sampling shader.
+
+The optimized Windows build (`Logs/step-10-20261005-043751.log`), regular campaign progression smoke, desktop/touch layout suites (350/351), and 20-wave/four-boss/15-tower Rift Defense smoke all passed without runtime errors. Inventory and arena captures were visually inspected (`Logs/Runtime/inventory.png`, `Logs/Runtime/arena.png`); the tested player was synced into `Release/Windows`. Remaining presentation work is distinct multi-stage boss attacks, directional hero animations, and further per-screen polish. See [ART-DIRECTION.md](Assets/_Project/Resources/Illustrated/ART-DIRECTION.md) for atlas maps.
 
 ## Current iteration - revision 68: replace dungeon and defense enemies
 

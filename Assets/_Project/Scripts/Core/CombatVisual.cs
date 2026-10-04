@@ -19,6 +19,7 @@ public sealed class CombatVisual : MonoBehaviour
     private Color tint;
     private LineRenderer cachedLine;
     private SpriteRenderer[] cachedSparks;
+    private SpriteRenderer cachedFlash;
     private static Material sharedLineMaterial;
     private static readonly System.Collections.Generic.Queue<CombatVisual> idle=new System.Collections.Generic.Queue<CombatVisual>();
     private static int burstCount;
@@ -49,6 +50,11 @@ public sealed class CombatVisual : MonoBehaviour
             var line=effect.cachedLine;line.useWorldSpace=false;line.loop=true;line.positionCount=32;line.sortingOrder=5;
             if(sharedLineMaterial==null)sharedLineMaterial=new Material(Shader.Find("Sprites/Default"));
             line.sharedMaterial=sharedLineMaterial;line.startWidth=line.endWidth=isBurst?.13f:.07f;
+            if(isBurst)
+            {
+                var flashObject=new GameObject("IllustratedImpact");flashObject.transform.SetParent(effect.transform,false);
+                effect.cachedFlash=flashObject.AddComponent<SpriteRenderer>();effect.cachedFlash.sortingOrder=4;
+            }
             effect.cachedSparks=new SpriteRenderer[isBurst?12:0];
             for(int i=0;i<effect.cachedSparks.Length;i++)
             {
@@ -61,6 +67,13 @@ public sealed class CombatVisual : MonoBehaviour
         effect.gameObject.SetActive(true);effect.transform.position=position;effect.transform.localScale=Vector3.one;
         effect.remaining=effect.total=duration;effect.tint=color;effect.cachedLine.startColor=effect.cachedLine.endColor=color;
         effect.cachedLine.loop=arc>=359;
+        if(effect.cachedFlash!=null)
+        {
+            var flash=effect.cachedFlash;flash.sprite=IllustratedArt.CombatEffect(color,arc<359);
+            flash.sharedMaterial=IllustratedArt.Owns(flash.sprite)?IllustratedArt.World:null;flash.color=Color.white;
+            flash.transform.localScale=Vector3.one*Mathf.Max(.2f,radius);
+            float angle=arc<359?Mathf.Atan2(aim.y,aim.x)*Mathf.Rad2Deg:0;flash.transform.localRotation=Quaternion.Euler(0,0,angle);
+        }
         for(int i=0;i<32;i++){float angle=Mathf.Atan2(aim.y,aim.x)+(i/31f-.5f)*arc*Mathf.Deg2Rad;effect.cachedLine.SetPosition(i,new Vector3(Mathf.Cos(angle)*radius,Mathf.Sin(angle)*radius,0));}
         for(int i=0;i<effect.cachedSparks.Length;i++){float angle=Mathf.Atan2(aim.y,aim.x)+(i/11f-.5f)*arc*Mathf.Deg2Rad;var spark=effect.cachedSparks[i];spark.transform.localPosition=new Vector3(Mathf.Cos(angle),Mathf.Sin(angle),0)*radius*.6f;spark.color=i%3==0?Color.white:color;}
     }
@@ -71,6 +84,7 @@ public sealed class CombatVisual : MonoBehaviour
         {
             float t=1-Mathf.Clamp01(remaining/Mathf.Max(.01f,total));transform.localScale=Vector3.one*(.6f+t*.7f);
             var color=Color.Lerp(Color.white,tint,t);color.a=1-t;cachedLine.startColor=cachedLine.endColor=color;
+            if(cachedFlash!=null){var flashColor=Color.white;flashColor.a=1-t;cachedFlash.color=flashColor;}
             foreach(var sprite in cachedSparks){var c=sprite.color;c.a=1-t;sprite.color=c;}
         }
         if(remaining>0)return;

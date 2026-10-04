@@ -47,6 +47,7 @@ public static class PixelArt
     }
     public static Sprite Icon(string family,int variant=0,int tier=1)
     {
+        var illustrated=IllustratedArt.UtilityIcon(family);if(illustrated!=null)return illustrated;
         string key=family+variant+"/"+tier;if(cache.TryGetValue(key,out var sprite))return sprite;
         var a=new Raster();Color metal=new Color32(177,207,218,255),leather=new Color32(123,77,58,255),glow=Color.HSVToRGB((variant*.117f+tier*.073f)%1,.65f,.95f);
         switch(family.ToLowerInvariant())

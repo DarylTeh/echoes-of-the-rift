@@ -3,8 +3,8 @@ using UnityEngine;
 // Shared source atlases, runtime slices and materials. Original PNGs remain untouched.
 public static class IllustratedArt
 {
-    private static readonly Sprite[] equipment=new Sprite[16],heroes=new Sprite[9],skillCubes=new Sprite[12],monsters=new Sprite[16],dungeonTiles=new Sprite[8];
-    private static Texture2D equipmentTexture,heroTexture,expansionTexture,skillCubeTexture,monsterTexture,dungeonTilesTexture;
+    private static readonly Sprite[] equipment=new Sprite[16],heroes=new Sprite[9],skillCubes=new Sprite[12],monsters=new Sprite[16],dungeonTiles=new Sprite[8],utilityIcons=new Sprite[16],combatEffects=new Sprite[16];
+    private static Texture2D equipmentTexture,heroTexture,expansionTexture,skillCubeTexture,monsterTexture,dungeonTilesTexture,utilityIconsTexture,combatEffectsTexture;
     private static readonly Sprite[] expansion=new Sprite[16];
     public static Sprite Expansion(int index){if(expansionTexture==null)expansionTexture=Resources.Load<Texture2D>("Illustrated/Expansion");return expansion[index]!=null?expansion[index]:expansion[index]=Slice(expansionTexture,index,4,1);}
     private static Material uiMaterial,heroMaterial,worldMaterial;
@@ -46,6 +46,52 @@ public static class IllustratedArt
         int index=(wall?4:0)+Mathf.Clamp(variant,0,3);
         if(dungeonTilesTexture==null)dungeonTilesTexture=Resources.Load<Texture2D>("Illustrated/DungeonTiles");
         return dungeonTiles[index]!=null?dungeonTiles[index]:dungeonTiles[index]=Slice(dungeonTilesTexture,index,4,2,1);
+    }
+    public static Sprite UtilityIcon(string family)
+    {
+        int index;
+        switch((family??string.Empty).ToLowerInvariant())
+        {
+            case "gold":case "coin":return Utility(0);
+            case "gem":case "gems":case "diamond":return Utility(1);
+            case "settings":case "gear":return Utility(2);
+            case "sword":case "weapon":return Utility(3);
+            case "bag":case "backpack":case "inventory":return Utility(4);
+            case "quest":case "daily":return Utility(5);
+            case "swap":case "switch":return Utility(6);
+            case "dodge":case "dash":return Utility(7);
+            case "book":case "spellbook":case "skillbook":return Utility(8);
+            case "shield":case "defense":return Utility(9);
+            case "potion":case "health":return Utility(10);
+            case "chest":case "loot":return Utility(11);
+            case "heart":case "life":return Utility(12);
+            case "map":case "compass":return Utility(13);
+            case "mail":case "inbox":return Utility(14);
+            case "skill":case "rune":case "magic":return Utility(15);
+            default:index=-1;break;
+        }
+        return index<0?null:Utility(index);
+    }
+    private static Sprite Utility(int index)
+    {
+        if(utilityIconsTexture==null)utilityIconsTexture=Resources.Load<Texture2D>("Illustrated/UtilityIcons");
+        return utilityIcons[index]!=null?utilityIcons[index]:utilityIcons[index]=Slice(utilityIconsTexture,index,4,4,1);
+    }
+    public static Sprite CombatEffect(Color color,bool slash)
+    {
+        if(combatEffectsTexture==null)combatEffectsTexture=Resources.Load<Texture2D>("Illustrated/CombatEffects");
+        Color.RGBToHSV(color,out float hue,out float saturation,out float value);
+        int index;
+        if(slash)index=hue<.08f||hue>.94f?0:hue<.48f?2:hue<.68f?1:3;
+        else if(hue<.06f||hue>.96f)index=4;
+        else if(hue<.16f)index=8;
+        else if(hue<.42f)index=7;
+        else if(hue<.56f)index=5;
+        else if(hue<.70f)index=6;
+        else if(hue<.90f)index=11;
+        else index=14;
+        if(saturation<.18f)index=10;
+        return combatEffects[index]!=null?combatEffects[index]:combatEffects[index]=Slice(combatEffectsTexture,index,4,4,2);
     }
     public static Sprite Weapon(string family)
     {
@@ -99,5 +145,5 @@ public static class IllustratedArt
     }
     public static Sprite Item(ItemData item)=>item.Kind==ItemKind.SkillBook?Book(item.Spell):Weapon(item.Family)??item.iconSprite;
     public static Sprite Book(SpellData spell)=>Skill(spell);
-    public static bool Owns(Sprite sprite)=>sprite!=null&&(sprite.texture==equipmentTexture||sprite.texture==heroTexture||sprite.texture==expansionTexture||sprite.texture==skillCubeTexture||sprite.texture==monsterTexture||sprite.texture==dungeonTilesTexture);
+    public static bool Owns(Sprite sprite)=>sprite!=null&&(sprite.texture==equipmentTexture||sprite.texture==heroTexture||sprite.texture==expansionTexture||sprite.texture==skillCubeTexture||sprite.texture==monsterTexture||sprite.texture==dungeonTilesTexture||sprite.texture==utilityIconsTexture||sprite.texture==combatEffectsTexture);
 }

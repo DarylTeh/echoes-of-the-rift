@@ -1,5 +1,12 @@
 # Execution log
 
+## Shared utility icons and combat flashes - revision 69, 5 October 2026
+
+- Generated an original 4×4 utility icon atlas and 4×4 combat effects atlas; added both to the Unity point-filtered resource import pipeline.
+- Routed established `PixelArt.Icon` families to the new shared symbol map without moving controls. Currency, settings, inventory, quest, swap/dodge, book, shield, potion, chest, heart, map, inbox and skill symbols now share atlas art.
+- Connected short weapon slashes and spell/buff bursts to color-matched illustrated effects. The flashes animate alpha and scale on the existing bounded burst pool; long boss telegraphs remain outline rings. Spell bolts use the rune symbol with the pixel sampling shader.
+- Validation: optimized Windows build passed (`Logs/step-10-20261005-043751.log`); desktop/touch layouts passed 350/351 checks with zero failures/runtime errors; the campaign smoke passed movement, ten-run progression/reward/save recovery, inventory and pause/resume/defeat checks; Rift Defense passed 20 waves/four bosses/15 towers without runtime errors (`Logs/UtilityCombatUAT`). `Builds/Windows` and `Release/Windows` assemblies have matching hashes. Inventory and arena captures were visually reviewed. Full server/account suites and physical-device performance were not rerun.
+
 ## Illustrated enemies and boss art - revision 68, 4 October 2026
 
 - Generated and imported an original transparent 4×4 monster atlas with twelve enemy sprites and four distinct boss sprites, plus a seamless 4×2 dark-stone floor/wall atlas.

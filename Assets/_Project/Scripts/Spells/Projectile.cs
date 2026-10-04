@@ -17,7 +17,7 @@ public sealed class Projectile : MonoBehaviour
     public static Projectile Spawn(Vector2 position,Vector2 direction,float damage,float range,Combatant owner,Color? color=null,int pierce=1,bool returning=false,string family=null)
     {
         var go=new GameObject("SpellBolt"); go.transform.position=position;
-        var render=go.AddComponent<SpriteRenderer>(); render.sprite=ArcaneBoltVFX.Sprite; render.color=color??GameUI.Gold; render.sortingOrder=8; go.transform.localScale=new Vector3(.55f,.35f,1);
+        var render=go.AddComponent<SpriteRenderer>(); render.sprite=ArcaneBoltVFX.Sprite; render.color=color??GameUI.Gold; render.sortingOrder=8; if(IllustratedArt.Owns(render.sprite))render.sharedMaterial=IllustratedArt.World; go.transform.localScale=new Vector3(.55f,.35f,1);
         if(family!=null){render.sprite=IllustratedArt.Weapon(family)??render.sprite;render.color=Color.white;render.sharedMaterial=IllustratedArt.World;go.transform.localScale=Vector3.one*.55f;}
         go.AddComponent<ArcaneBoltVFX>();
         var projectile=go.AddComponent<Projectile>(); projectile.direction=direction.normalized; projectile.damage=damage; projectile.remaining=range; projectile.owner=owner;projectile.pierce=Mathf.Max(1,pierce);projectile.returning=returning;projectile.VisualFamily=family;projectile.rendererCache=render;return projectile;

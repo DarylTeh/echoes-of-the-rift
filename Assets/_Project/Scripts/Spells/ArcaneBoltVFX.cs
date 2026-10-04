@@ -2,7 +2,7 @@ using UnityEngine;
 public sealed class ArcaneBoltVFX:MonoBehaviour
 {
     private static Sprite sprite;
-    public static Sprite Sprite {get {if(sprite!=null)return sprite;var a=new PixelArt.Raster();a.L(1,16,23,16,Color.white,3);a.Diamond(23,16,8,Color.white);return sprite=a.Finish();}}
+    public static Sprite Sprite {get {if(sprite!=null)return sprite;sprite=IllustratedArt.UtilityIcon("skill");if(sprite!=null)return sprite;var a=new PixelArt.Raster();a.L(1,16,23,16,Color.white,3);a.Diamond(23,16,8,Color.white);return sprite=a.Finish();}}
     private Vector3 previous;private float next;private SpriteRenderer rendererCache;
     private void Start(){previous=transform.position;rendererCache=GetComponent<SpriteRenderer>();}
     private void LateUpdate()
