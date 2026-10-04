@@ -40,6 +40,8 @@ public sealed class CharacterCustomizer : MonoBehaviour
             {
                 renderer.sharedMaterial=IllustratedArt.HeroMaterial;
                 if(palette==null)palette=new MaterialPropertyBlock();
+                // Keep the creator's skin/hair controls working while preserving race details
+                // that the shader does not classify as skin or hair.
                 palette.SetFloat("_Customize",1);palette.SetFloat("_Race",data.Race);
                 palette.SetColor("_Skin",skin);palette.SetColor("_Hair",hair);palette.SetColor("_Eyes",eyes);renderer.SetPropertyBlock(palette);
             }
@@ -49,7 +51,9 @@ public sealed class CharacterCustomizer : MonoBehaviour
             weapon=new GameObject("EquippedWeapon").AddComponent<SpriteRenderer>();weapon.transform.SetParent(transform,false);weapon.sortingOrder=12;
             trail=weapon.gameObject.AddComponent<WeaponTrailVFX>();
         }
-        weapon.gameObject.layer=gameObject.layer;weapon.transform.localPosition=new Vector3(.65f,.8f,0)*PresentationScale;weapon.transform.localScale=Vector3.one*PresentationScale;
+        // Keep the visible weapon beside the tiny hero sprite; centring the full icon
+        // on the face made the new compact race sprites unreadable.
+        weapon.gameObject.layer=gameObject.layer;weapon.transform.localPosition=new Vector3(.92f,.25f,0)*PresentationScale;weapon.transform.localScale=Vector3.one*(PresentationScale*.86f);
         SetWeapon("sword",EquipmentTier);
     }
     private Vector3 previousPosition;

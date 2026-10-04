@@ -113,7 +113,7 @@ public sealed class RiftDefenseMode : MonoBehaviour
             {
                 var spell=skills.GetSpell(i);if(spell==null||deck.Exists(x=>x.Spell.Id==spell.Id))continue;
                 var item=Array.Find(game.Items,x=>x!=null&&x.Spell==spell);
-                deck.Add(new BookPick {Spell=spell,ItemId=item!=null?item.Id:"trial-"+spell.Id,Icon=spell.skillIcon!=null?spell.skillIcon:IllustratedArt.Book(spell),Color=spell.Color});
+                deck.Add(new BookPick {Spell=spell,ItemId=item!=null?item.Id:"trial-"+spell.Id,Icon=IllustratedArt.Skill(spell)??spell.skillIcon,Color=spell.Color});
             }
         }
     }
@@ -316,8 +316,11 @@ public sealed class RiftDefenseMode : MonoBehaviour
     {
         float deadline=Time.realtimeSinceStartup+50;while(running&&Time.realtimeSinceStartup<deadline)yield return null;
         bool passed=completed&&wave==MaxWaves&&bossCount==4&&core>0&&TowerCount>0&&mana>=0;
-        System.IO.Directory.CreateDirectory(Application.persistentDataPath);
-        System.IO.File.WriteAllText(System.IO.Path.Combine(Application.persistentDataPath,"rift-defense-test.txt"),(passed?"PASS":"FAIL")+" waves="+wave+" boss="+bossCount+" core="+core+" towers="+TowerCount+" mana="+mana);
+        var args=Environment.GetCommandLineArgs();int outputIndex=Array.IndexOf(args,"-cookieOutput");
+        string outputDirectory=outputIndex>=0&&outputIndex+1<args.Length?args[outputIndex+1]:Application.persistentDataPath;
+        if(string.IsNullOrWhiteSpace(outputDirectory))outputDirectory=System.IO.Path.GetTempPath();
+        System.IO.Directory.CreateDirectory(outputDirectory);
+        System.IO.File.WriteAllText(System.IO.Path.Combine(outputDirectory,"rift-defense-test.txt"),(passed?"PASS":"FAIL")+" waves="+wave+" boss="+bossCount+" core="+core+" towers="+TowerCount+" mana="+mana);
         Debug.Log("RIFT_DEFENSE_CHECK "+(passed?"PASS":"FAIL")+" waves="+wave+" bosses="+bossCount+" core="+core+" towers="+TowerCount+" mana="+mana);
         testFast=false;if(root!=null)Destroy(root.gameObject);root=null;
     }

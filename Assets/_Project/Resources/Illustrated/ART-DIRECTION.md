@@ -1,4 +1,18 @@
-# Approved illustrated art — revision 22
+# Shared skill cubes and MyHeroes-scale heroes — revision 23
+
+This is the current art direction. The previous illustrated hero, item, weapon and skill atlases are superseded where these sheets are used. The new originals take their visual cues from the supplied MyHeroes: SEA and Random Dice references: tiny readable action-RPG heroes, square pixel clusters, jewel-color silhouettes, dark outlines, richly shaded gear, and recognizable glossy skill dice. The art is newly generated and does not reuse game files.
+
+`SkillCubes.png` is a transparent 4×3 atlas. Its rows are: Flame, Crescent Slash, Verdant Mend, Starburst; Frost, Sun Ward, Thorn, Arcane Portal; Meteor, Lightning, Wind, Shield. `IllustratedArt.Skill` is the shared lookup for skill HUDs, skill-book items and Rift Defense towers. This keeps a skill's art identical wherever that skill appears. The cube's own neon particles provide the base glow; existing tier-border VFX adds rarity emphasis in item slots.
+
+`Heroes.png` is a transparent 3×3 race atlas. It keeps the nine saved race choices and consistent armor, changing the visible race trait for each. Its pixels are sampled with point filtering and the existing 5% pixel-grid quantization; skin/hair palette controls remain enabled. Player weapons remain separate, so equipped weapon changes still show in the world.
+
+`Equipment.png` and `Expansion.png` are transparent 4×4 item atlases. Equipment rows: saber, ember greatsword, thorn bow, crescent scythe; crystal staff, rune hammer, horned helm, plate armor; leaf pendant, amethyst ring, wing boots, frost greaves; celestial pauldrons, cyan shield, ember gauntlets, orbiting charm. Expansion rows: spear, boomerang, pistols, crossbow; boots, leggings, pauldrons, shield; frost daggers, orb focus, war axe, wind chakram; trident, ranger bow, moon sickle, warhammer. Existing weapon-family mappings still select these shared icons throughout inventory, shop and item details.
+
+Current replacement scope: hero, skill, equipment and weapon artwork. General interface/economy symbols, enemies, terrain and attack effects are still on procedural/older sources and remain for the next replacement batches. Retire those only after their consumers have migrated and the build passes.
+
+References reviewed for the visual language: [MyHeroes Wiki on Fandom](https://myheroesofficial.fandom.com/wiki/MyHeroes_Wiki) and the [Random Dice Wiki dice catalogue](https://randomdice.wiki.gg/wiki/Dice). These are broad style references, not copied source images.
+
+## Superseded revision 22 notes
 
 Generated with the built-in image-generation tool. User approved both sheets, then requested 5% pixelation. Source PNGs retain original RGBA pixels and alpha. Runtime shaders quantize sampling to floor(textureDimensions * 0.95) samples per axis with point filtering; this is a subtle 5% reduction in linear sampling density, not a 5%-of-size mosaic.
 
@@ -15,4 +29,3 @@ Create a production game sprite atlas for Echoes of the Rift. Transparent alpha 
 ## Hero prompt
 
 Production pixel art CHARACTER SPRITE SHEET for top-down RPG Echoes of the Rift. True transparent background, no writing, no border or grid. Exactly 3x3 regular equal cells on square canvas, 9 complete individual tiny heroes, each same size and position within cell. Closely match My Heroes Dungeon Raid chibi sprites: VERY large broad squared head, tiny squat torso and short legs, two black vertical eyes with tiny cyan highlight, hard square pixel clusters, thick deep purple ink outline, not painted anime. Detail like Brave Frontier equipment in miniature. Each hero entirely fits cell with generous 15% empty padding; entire body head to boots visible. Front-facing slight top-down view. All have richly shaded copper-orange hair, warm tan skin, cobalt/navy and gold segmented armour, silver highlights, purple cape, small sapphire chest jewel. No held weapons (equipped weapon separate). Native 48x48 sprite look with nearest-neighbor enlarged pixels, NO antialias gradients. Nine races left to right row by row: human with spiky hair; elf with long pointed ears; dwarf with orange beard; orc with lower tusks; goblin with huge pointed ears; undead with skull face; beastkin with lizard ears and tail; demon with curved horns; angel with small white-blue feather wings. Armour consistent across all nine. Sharp readable silhouettes, very expressive large faces, ornate but compact gear. Distinct professional sprite assets not a poster.
-

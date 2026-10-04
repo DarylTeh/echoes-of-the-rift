@@ -1,6 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 66 - 4 October 2026. Rift Defense reference-layout correction.
+Revision 67 - 4 October 2026. Shared skill, hero and equipment art reset.
+
+## Current iteration - revision 67: replace shared skill, hero and equipment art
+
+The art reset replaces the race, equipment and expansion atlases, and adds a 12-icon neon skill-cube atlas. `IllustratedArt.Skill` and `Book` now share the same cube selection across main-mode skill HUDs, inventory skill books and Rift Defense deck/towers. The inventory, shop and item details use the new equipment art through their existing family mapping. Hero race choices still select the corresponding race sprite; the existing skin/hair palette controls remain active. New atlas textures use point filtering and the existing 5% pixel-grid sampling. The face-covering weapon position was moved beside the compact hero.
+
+The art follows the supplied MyHeroes: SEA / Random Dice visual language without extracting their game assets. Reference reading: [MyHeroes Wiki](https://myheroesofficial.fandom.com/wiki/MyHeroes_Wiki) and [Random Dice dice catalogue](https://randomdice.wiki.gg/wiki/Dice). The cube atlas is shared art, rather than a Rift Defense-only treatment.
+
+The Unity Windows build passed (`Logs/step-10-20261004-223947.log`), desktop and touch-layout suites passed 350/351 checks with zero failures, and Rift Defense passed 20 waves/four bosses using 15 towers (`Logs/ArtUAT/FinalDefense/runtime-smoke.txt`). Inventory and combat captures in `Logs/ArtUAT/Final` were visually reviewed. The tested player was copied to the tracked `Release/Windows` handoff, and both player executable hashes match. Utility/interface symbols, enemies, world tiles, attack effects and remaining procedural art still need replacement. See [ART-DIRECTION.md](Assets/_Project/Resources/Illustrated/ART-DIRECTION.md) for atlas maps and remaining scope. This is not yet user acceptance of full-art replacement or 90% MyHeroes parity.
+
+## Previous revision 66: Rift Defense reference-layout correction
 
 ## Current iteration - revision 66: rebuild the Rift Defense screen from the reference composition
 

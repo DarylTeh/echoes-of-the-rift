@@ -1,5 +1,13 @@
 # Execution log
 
+## Shared skill, hero and equipment art reset - revision 67, 4 October 2026
+
+- Generated an original transparent 4×3 elemental cube atlas, 3×3 nine-race hero atlas, and two 4×4 equipment atlases based on the supplied visual references. Reviewed the MyHeroes community wiki and Random Dice dice catalogue for broad art direction; no game assets were downloaded or republished.
+- Routed `IllustratedArt.Skill` and `Book` through the same 12-cube cache; main combat HUD, skill books, and Rift Defense now resolve to one consistent cube per skill. Rift Defense fallback selection now prefers the shared atlas.
+- Replaced hero, equipment and expansion resource sheets while retaining the existing nine race selection indices, weapon-family mapping, editable skin/hair palette controls, and sprite-grid sampling. Moved the equipment sprite beside the hero so it no longer obscures the face.
+- Added atlas maps, reference links, and staged replacement scope to `Assets/_Project/Resources/Illustrated/ART-DIRECTION.md`; updated master plan, roadmap and playtest status.
+- Validation: optimized Unity Windows build passed (`Logs/step-10-20261004-223947.log`); desktop/touch-layout smoke passed 350/351 checks with zero failures/runtime errors; Rift Defense passed 20 waves, four bosses and all 15 towers (`Logs/ArtUAT/FinalDefense/runtime-smoke.txt`). Screenshots were visually inspected; cube icons appear in combat, loadout and Rift Defense, while the hero and gear remain legible. The tested executable was copied to `Release/Windows`; its SHA-256 matches `Builds/Windows`. Enemy/terrain/UI/utility and attack-effect art remain for subsequent replacements; see revision 67 master plan for scope.
+
 ## Rift Defense reference-layout preview - revision 66, 4 October 2026
 
 Inspected 20 distinct Random Dice co-op match videos before implementation, then updated Rift Defense to a compact 5x3 board with random summons from the player's starter/owned five-book deck, same-rank matching merges that reroll a deck book at the next rank, match-only Rift Mana, upgrades, hero burst, varied enemy profiles, overhead HP bars and elite bosses on waves 5, 10, 15 and 20. The final boss is Ashen Gatekeeper. Updated the smoke assertion to require all four elite encounters. No account reward is granted; rewards wait for the authoritative mode-run contract.

@@ -47,7 +47,7 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         }
         if(Array.IndexOf(arguments,"-riftDefenseTest")>=0)
         {
-            string defenseResult=Path.Combine(Application.persistentDataPath,"rift-defense-test.txt");if(File.Exists(defenseResult))File.Delete(defenseResult);
+            string defenseResult=Path.Combine(output,"rift-defense-test.txt");if(File.Exists(defenseResult))File.Delete(defenseResult);
             game.Defense.StartSmokeTest();
             double deadline=Time.realtimeSinceStartupAsDouble+55;
             while(Time.realtimeSinceStartupAsDouble<deadline&&runtimeErrors.Count==0)

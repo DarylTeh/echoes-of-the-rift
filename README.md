@@ -1,8 +1,8 @@
 # Echoes of the Rift
 
-## Current build - revision 62, 4 October 2026
+## Current build - revision 67, 4 October 2026
 
-The optimized Windows player has been rebuilt from the current Unity source and copied to the tracked `Release/Windows` handoff. Desktop UI passes 350 checks, touch-layout mode passes 351, account-form rejection states and registration through recovery-code acknowledgement/campaign pass, and the full server suite passes. Saved-session resume is unverified because the hidden test process cannot access Windows DPAPI (Win32 error 2); no plaintext fallback is used. My Heroes visual parity remains below the requested 90%; see the current [UAT](Docs/UAT-2026-10-03-MyHeroes.md) and [master plan](MASTER-PLAN.md).
+The optimized Windows player has been rebuilt from the current Unity source and copied to the tracked `Release/Windows` handoff. This revision adds the nine-race pixel hero sheet, two new equipment atlases and shared neon skill cubes, then passes desktop/touch UI checks (350/351) and the 20-wave/four-boss Rift Defense smoke test. Account and server tests were not rerun in this art iteration; their latest results remain in the execution log. Enemy, environment, effect and remaining utility art are still scheduled for replacement, and the requested 90% MyHeroes visual parity remains open; see [art direction](Assets/_Project/Resources/Illustrated/ART-DIRECTION.md), the current [UAT](Docs/UAT-2026-10-03-MyHeroes.md) and [master plan](MASTER-PLAN.md).
 
 The skill HUD and active-event feed now avoid repeating stable work, improving low-end frame time and repeated event requests while preserving gameplay and server authority.
 
@@ -141,7 +141,7 @@ Unity 6000.6.2f1 pixel-art RPG prototype. Updated 23 September 2026, master plan
 
 Start **Echoes of the Rift Server.exe**, wait for readiness, then **Play Echoes of the Rift.exe** on the desktop. Keep the installed workspace in its existing location. The client does not start the server automatically; unavailable servers show a blocking splash error.
 
-Current build: `Release/Windows/EchoesOfTheRift.exe`, built by `Logs/step-10-20261003-202049.log`. The current results and remaining acceptance gaps are listed at the top of this README and in the current UAT. Real-device/mobile/public-network validation remains pending.
+Current build: `Release/Windows/EchoesOfTheRift.exe`, built by `Logs/step-10-20261004-222324.log`. Art screenshots and smoke results are in `Logs/ArtUAT`. Real-device/mobile/public-network validation remains pending.
 
 - [Master plan](MASTER-PLAN.md): authoritative requirements, implementation status and immediate next fixes.
 - [MVP roadmap](MVP-ROADMAP.md): remaining milestones and release gates.
@@ -150,4 +150,4 @@ Current build: `Release/Windows/EchoesOfTheRift.exe`, built by `Logs/step-10-202
 - [Deployment guide](Server/DEPLOYMENT.md): local PC now, Oracle preparation later.
 - [Execution log](EXECUTION-LOG.md): changes and dated evidence; historical passes are not current acceptance.
 
-Current scope: four boss-led campaign stages, two-player co-op, inventory/fusion and local server accounts. No public server, mobile release, 4/8-player raid mode, real ads/purchases, live community publishing, gems or database-managed balance yet. Original art is a prototype pass and still needs the requested visual overhaul.
+Current scope: four boss-led campaign stages, two-player co-op, inventory/fusion and local server accounts. No public server, mobile release, 4/8-player raid mode, real ads/purchases, live community publishing, gems or database-managed balance yet. Hero, equipment and skill atlases have been replaced; enemies, terrain, effects and remaining UI art still need the new visual pass.

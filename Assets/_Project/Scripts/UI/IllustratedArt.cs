@@ -3,20 +3,22 @@ using UnityEngine;
 // Shared source atlases, runtime slices and materials. Original PNGs remain untouched.
 public static class IllustratedArt
 {
-    private static readonly Sprite[] equipment=new Sprite[16],heroes=new Sprite[9];
-    private static Texture2D equipmentTexture,heroTexture,expansionTexture;
+    private static readonly Sprite[] equipment=new Sprite[16],heroes=new Sprite[9],skillCubes=new Sprite[12];
+    private static Texture2D equipmentTexture,heroTexture,expansionTexture,skillCubeTexture;
     private static readonly Sprite[] expansion=new Sprite[16];
     public static Sprite Expansion(int index){if(expansionTexture==null)expansionTexture=Resources.Load<Texture2D>("Illustrated/Expansion");return expansion[index]!=null?expansion[index]:expansion[index]=Slice(expansionTexture,index,4,1);}
     private static Material uiMaterial,heroMaterial,worldMaterial;
     public static Material UI => uiMaterial!=null?uiMaterial:uiMaterial=new Material(Shader.Find("EchoesOfTheRift/IllustratedUI"));
     public static Material World => worldMaterial!=null?worldMaterial:worldMaterial=new Material(Shader.Find("EchoesOfTheRift/IllustratedHero"));
     public static Material HeroMaterial => heroMaterial!=null?heroMaterial:heroMaterial=new Material(Shader.Find("EchoesOfTheRift/IllustratedHero"));
-    private static Sprite Slice(Texture2D texture,int index,int columns,float worldSize)
+    private static Sprite Slice(Texture2D texture,int index,int columns,int rows,float worldSize)
     {
         if(texture==null)return null;
-        float cellX=texture.width/(float)columns,cellY=texture.height/(float)columns;
+        texture.filterMode=FilterMode.Point;texture.wrapMode=TextureWrapMode.Clamp;texture.anisoLevel=0;
+        float cellX=texture.width/(float)columns,cellY=texture.height/(float)rows;
         return Sprite.Create(texture,new Rect(index%columns*cellX,texture.height-(index/columns+1)*cellY,cellX,cellY),Vector2.one*.5f,cellY/worldSize,0,SpriteMeshType.FullRect);
     }
+    private static Sprite Slice(Texture2D texture,int index,int columns,float worldSize)=>Slice(texture,index,columns,columns,worldSize);
     public static Sprite Hero(int race)
     {
         race=Mathf.Clamp(race,0,8);if(heroTexture==null)heroTexture=Resources.Load<Texture2D>("Illustrated/Heroes");
@@ -26,6 +28,12 @@ public static class IllustratedArt
     {
         index=Mathf.Clamp(index,0,15);if(equipmentTexture==null)equipmentTexture=Resources.Load<Texture2D>("Illustrated/Equipment");
         return equipment[index]!=null?equipment[index]:equipment[index]=Slice(equipmentTexture,index,4,1);
+    }
+    private static Sprite SkillCube(int index)
+    {
+        index=Mathf.Clamp(index,0,11);
+        if(skillCubeTexture==null)skillCubeTexture=Resources.Load<Texture2D>("Illustrated/SkillCubes");
+        return skillCubes[index]!=null?skillCubes[index]:skillCubes[index]=Slice(skillCubeTexture,index,4,3,1);
     }
     public static Sprite Weapon(string family)
     {
@@ -51,14 +59,33 @@ public static class IllustratedArt
     public static Sprite Skill(SpellData spell)
     {
         if(spell==null)return null;
-        if(spell.Effect>=SpellEffect.FanShot)return Expansion(12+(int)spell.Effect-(int)SpellEffect.FanShot);
-        if(spell.Effect==SpellEffect.Mend)return Equipment(12);
-        if(spell.Effect==SpellEffect.SummonRune)return Equipment(13);
-        if(spell.Effect==SpellEffect.StatBuff||spell.Effect==SpellEffect.StanceModifier)return Equipment(15);
-        if(spell.Effect==SpellEffect.DashStrike)return Equipment(14);
-        return Equipment(spell.Color.b>spell.Color.r?11:10);
+        string id=spell.Id??string.Empty;
+        if(id.Contains("flame")||id.Contains("fire")||id.Contains("ember"))return SkillCube(0);
+        if(id.Contains("slash")||id.Contains("dash")||id.Contains("blade"))return SkillCube(1);
+        if(id.Contains("heal")||id.Contains("mend")||id.Contains("leaf"))return SkillCube(2);
+        if(id.Contains("star")||id.Contains("rune")||id.Contains("comet"))return SkillCube(3);
+        if(id.Contains("frost")||id.Contains("ice"))return SkillCube(4);
+        if(id.Contains("ward")||id.Contains("shield"))return SkillCube(11);
+        if(id.Contains("buff")||id.Contains("sun")||id.Contains("oath"))return SkillCube(5);
+        if(id.Contains("thorn")||id.Contains("root")||id.Contains("poison"))return SkillCube(6);
+        if(id.Contains("arcane")||id.Contains("portal"))return SkillCube(7);
+        if(id.Contains("meteor")||id.Contains("burst"))return SkillCube(8);
+        if(id.Contains("lightning")||id.Contains("spark"))return SkillCube(9);
+        if(id.Contains("wind")||id.Contains("whirl")||id.Contains("tempest"))return SkillCube(10);
+        switch(spell.Effect)
+        {
+            case SpellEffect.Burst:return SkillCube(8);
+            case SpellEffect.DashStrike:return SkillCube(1);
+            case SpellEffect.Mend:return SkillCube(2);
+            case SpellEffect.SummonRune:return SkillCube(7);
+            case SpellEffect.StatBuff:case SpellEffect.StanceModifier:return SkillCube(5);
+            case SpellEffect.FanShot:case SpellEffect.Whirlwind:return SkillCube(10);
+            case SpellEffect.PiercingLance:return SkillCube(4);
+            case SpellEffect.OrbitHammers:return SkillCube(9);
+            default:return spell.Color.r>spell.Color.g?SkillCube(0):spell.Color.g>spell.Color.b?SkillCube(6):SkillCube(4);
+        }
     }
     public static Sprite Item(ItemData item)=>item.Kind==ItemKind.SkillBook?Book(item.Spell):Weapon(item.Family)??item.iconSprite;
-    public static Sprite Book(SpellData spell)=>Expansion(spell==null?8:spell.Effect==SpellEffect.Mend||spell.Effect==SpellEffect.SummonRune?11:spell.Effect==SpellEffect.Whirlwind?9:spell.Color.b>spell.Color.r?10:9);
-    public static bool Owns(Sprite sprite)=>sprite!=null&&(sprite.texture==equipmentTexture||sprite.texture==heroTexture||sprite.texture==expansionTexture);
+    public static Sprite Book(SpellData spell)=>Skill(spell);
+    public static bool Owns(Sprite sprite)=>sprite!=null&&(sprite.texture==equipmentTexture||sprite.texture==heroTexture||sprite.texture==expansionTexture||sprite.texture==skillCubeTexture);
 }
