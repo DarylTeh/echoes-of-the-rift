@@ -1,16 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 65 - 4 October 2026. Rift Defense runtime validation and next gates.
+Revision 66 - 4 October 2026. Rift Defense reference-layout correction.
 
-## Current iteration - revision 65: validate Rift Defense and define its remaining gates
+## Current iteration - revision 66: rebuild the Rift Defense screen from the reference composition
 
 Inspected actual gameplay footage from 20 distinct Random Dice co-op recordings before changing the mode. The sample covered beginner deck guides, live viewer matches, long-wave farming, challenge runs, damage/support/control roles and gear tests. The repeatable patterns are concurrent equal-weight boards, persistent wave and match-currency cues, randomized summon/merge decisions, legible board occupancy, and builds with complementary roles. Source links and observations are in [Docs/RIFT-DICE-DEFENSE.md](Docs/RIFT-DICE-DEFENSE.md).
 
-The North / Raids gate launches the solo 20-wave client simulation with a compact 5x3 board, random summons from a five-book trial deck, matching same-rank merges that reroll into a random deck book, match-only Rift Mana, upgrades, hero burst, varied enemy profiles, overhead HP bars, and an elite boss every fifth wave. New accounts can fill the deck from current class skills. No currency or rewards are written to the profile. The 20-wave target duration is unmeasured.
+The Rift Defense screen now uses a portrait 5x3 book board, a compact deck strip, left-to-right enemy lane, core bars, a stacked co-op partner board area, and grouped bottom controls. Tiers pulse around tower borders. The partner board is explicitly inactive because networked shared-board play is still planned. The single-player simulation still has random summons, same-rank merges, match-only Rift Mana, upgrades, hero burst, varied enemy profiles and bosses every fifth wave. No currency or rewards are written to the profile.
 
-Validation: the Windows development build passed using the user's installed Unity license (`Logs/step-10-20261004-153519.log`). Its player smoke run completed all 20 waves and all four boss appearances with the core intact; the general runtime smoke checks reported no errors (`Logs/rift-defense-uat/player.log`). The automated defense run maxes all 15 test towers, so it is a stress/flow check only; ordinary-run balance, duration, fresh visual acceptance, Android and low-end-PC performance are still open. The shipped `Release/Windows` package has not yet been replaced by this development build.
+Validation: the updated Windows development build passed (`Logs/step-10-20261004-213203.log`); the portrait 20-wave stress run passed with four bosses and no runtime errors (`Logs/RiftDefenseRegression/player.log`). A visible preview launches with `-cookieSmoke -showRiftDefense` and writes `Logs/RiftDefensePreview/rift-defense-preview.png`. The max-rank test setup verifies progression flow only. Human-run balance/duration, visual acceptance against a full co-op match, actual shared-board networking, Android and low-end-PC performance remain open. The shipped `Release/Windows` package has not been replaced.
 
-Next: play a normal, unassisted 20-wave run, record its duration and balance, and inspect fresh landscape and portrait captures. Implement distinct elite mechanics and paired-board co-op with server-owned seeds/actions/rewards. After Rift Defense passes those gates, develop East DPS Trial, West World Boss and scalable 4/8-player raid architecture.
+Next: replace the inactive partner board with server-synchronized co-op, and match the remaining in-match reference interactions (dice upgrade/merge feedback, enemy pressure, and boss presentation) using original Echoes art. Then play a normal run, measure timing/balance, and validate on Android/low-end PC. After these gates, develop East DPS Trial, West World Boss and scalable 4/8-player raids.
 
 ## Previous revision 62: sign-in and recovery error-state UAT
 

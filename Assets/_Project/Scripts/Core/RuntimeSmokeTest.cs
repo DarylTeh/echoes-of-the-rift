@@ -39,6 +39,12 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         creator.Preview.Apply(new CharacterAppearanceData { SkinIndex=2,HairStyle=2,HairColor=1,ClassId="wayfarer",PassiveSkillId="steadfast" });
         game.Begin(creator.Preview.Appearance);
         var arguments=Environment.GetCommandLineArgs();
+        if(Array.IndexOf(arguments,"-showRiftDefense")>=0)
+        {
+            game.Defense.StartPreviewShowcase();
+            yield return new WaitForEndOfFrame();ScreenCapture.CaptureScreenshot(Path.Combine(output,"rift-defense-preview.png"));
+            yield break;
+        }
         if(Array.IndexOf(arguments,"-riftDefenseTest")>=0)
         {
             string defenseResult=Path.Combine(Application.persistentDataPath,"rift-defense-test.txt");if(File.Exists(defenseResult))File.Delete(defenseResult);

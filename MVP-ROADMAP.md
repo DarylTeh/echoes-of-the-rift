@@ -4,7 +4,7 @@ Revision 64, 4 October 2026. This is the current checklist; historical build not
 
 ## Current iteration - revision 64, 4 October 2026
 
-Completed the latest optimized release, account/campaign tests and repository cleanup; the existing release remains the last verified Windows release player. Revision 65 built a separate Windows development player and passed a 20-wave/four-boss stress test plus general runtime smoke checks. The automated defense run uses a full grid of rank-5 towers, so ordinary balance/duration and visual acceptance remain open, as do Android/low-end-PC measurements. Rift Defense findings and next gates are in `Docs/RIFT-DICE-DEFENSE.md`.
+Completed the latest optimized release, account/campaign tests and repository cleanup; the existing release remains the last verified Windows release player. Revision 66 reshaped the Rift Defense UI to the supplied portrait co-op reference composition and added a visible development showcase. Its updated build and 20-wave/four-boss stress test pass. Actual shared-board co-op, ordinary-run balance/duration, final visual acceptance, and Android/low-end-PC measurements remain open. Rift Defense findings and next gates are in `Docs/RIFT-DICE-DEFENSE.md`.
 
 ## Historical build note - revision 49, 2 October 2026
 

@@ -1,8 +1,8 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
-## Rift Defense UAT — revision 65, 4 October 2026
+## Rift Defense reference-layout iteration — revision 66, 4 October 2026
 
-Twenty distinct Random Dice co-op gameplay recordings informed the mode. The Windows development player now passes all 20 waves and four boss appearances with no runtime errors; the general runtime smoke suite also passes. The defense harness uses a full 5x3 board of rank-5 towers, so it confirms scheduling and victory flow rather than ordinary-player balance. The separate `Release/Windows` player remains the previous accepted release. Human-run duration/balance, fresh match UI review and Android/low-end-PC performance are still open. Research and current acceptance details: [Rift Defense gameplay review](Docs/RIFT-DICE-DEFENSE.md).
+The screen was reworked into a portrait reference layout with a deck strip, left-side enemy approach, 5x3 skill-book board, second inactive co-op board area, and compact bottom actions. A visible showcase opens through the development player with `-cookieSmoke -showRiftDefense`; the generated capture is `Logs/RiftDefensePreview/rift-defense-preview.png`. The updated build and deterministic 20-wave/four-boss stress test pass with no runtime errors. The inactive partner field makes the current solo scope clear; shared-board co-op is not implemented. This iteration follows the reference composition while retaining Echoes' own sprites; it is not a claim of exact visual or feature parity. Normal-run balance/timing, screen-size acceptance on physical devices, and low-end performance remain open. Research and next gates: [Rift Defense gameplay review](Docs/RIFT-DICE-DEFENSE.md).
 
 ## Latest UAT — revision 60, 3 October 2026
 

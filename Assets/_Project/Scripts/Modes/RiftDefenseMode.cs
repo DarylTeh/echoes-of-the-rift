@@ -18,6 +18,7 @@ public sealed class RiftDefenseMode : MonoBehaviour
     private readonly List<Enemy> enemies=new List<Enemy>(24);
     private readonly List<BookPick> deck=new List<BookPick>(5);
     private readonly List<UnityEngine.UI.Button> cells=new List<UnityEngine.UI.Button>(Rows*Columns);
+    private readonly UnityEngine.UI.Image[] towerGlows=new UnityEngine.UI.Image[Rows*Columns];
     private RectTransform root, board;
     private TMP_Text waveText, manaText, coreText, hintText, selectedText, statusText;
     private UnityEngine.UI.Button summonButton,upgradeButton,mergeButton,castButton;
@@ -48,29 +49,46 @@ public sealed class RiftDefenseMode : MonoBehaviour
         if(deck.Count==0){game.SetStatus("No skill books are available for this run.");return;}
         game.Player.GetComponent<PlayerController>().ControlsEnabled=false;
         root=GameUI.Canvas("RiftDefense");
-        var panel=GameUI.Panel(root,"RiftDefensePanel",Vector2.zero,new Vector2(1160,650));
-        GameUI.Label(panel,"RIFT DEFENSE",new Vector2(-500,284),new Vector2(250,34),26);
-        waveText=GameUI.Label(panel,"WAVE 0 / 20",new Vector2(-178,284),new Vector2(180,32),23);waveText.alignment=TextAlignmentOptions.Center;
-        coreText=GameUI.Label(panel,"CORE 100%",new Vector2(20,284),new Vector2(180,32),23);coreText.alignment=TextAlignmentOptions.Center;coreText.color=new Color32(126,238,174,255);
-        manaText=GameUI.Label(panel,"MANA 50",new Vector2(206,284),new Vector2(145,32),23);manaText.alignment=TextAlignmentOptions.Center;manaText.color=new Color32(96,213,255,255);
-        var close=GameUI.Button(panel,"×",new Vector2(526,284),new Vector2(54,48),Close);close.name="CloseRiftDefense";
-        board=GameUI.Panel(panel,"RiftDefenseBoard",new Vector2(-204,-18),new Vector2(700,468));
-        BuildBoard();
-        var side=GameUI.Panel(panel,"RiftDefenseControls",new Vector2(376,-18),new Vector2(332,468));
-        GameUI.Label(side,"RIFT DECK · 5 BOOKS",new Vector2(0,196),new Vector2(280,28),19).alignment=TextAlignmentOptions.Center;
+        root.GetComponent<Canvas>().sortingOrder=450;
+        var safeArea=root.GetComponent<UISafeArea>();if(safeArea!=null)safeArea.SetDesignResolution(new Vector2(720,1280));
+        var scaler=root.GetComponent<UnityEngine.UI.CanvasScaler>();
+        scaler.referenceResolution=new Vector2(720,1280);
+        scaler.screenMatchMode=UnityEngine.UI.CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+        scaler.matchWidthOrHeight=.5f;
+        var backdrop=GameUI.Rect("RiftDefenseBackdrop",root,Vector2.zero,Vector2.zero,Vector2.zero);
+        backdrop.anchorMin=Vector2.zero;backdrop.anchorMax=Vector2.one;backdrop.offsetMin=backdrop.offsetMax=Vector2.zero;
+        var backdropImage=backdrop.gameObject.AddComponent<UnityEngine.UI.Image>();backdropImage.color=new Color32(15,13,29,255);
+        var panel=GameUI.Panel(root,"RiftDefensePanel",Vector2.zero,new Vector2(690,1160));
+        panel.GetComponent<UnityEngine.UI.Image>().color=new Color32(33,29,52,255);
+        var header=GameUI.Panel(panel,"RiftDefenseHeader",new Vector2(0,535),new Vector2(650,88));
+        GameUI.Label(header,"RIFT",new Vector2(-250,0),new Vector2(105,34),23);
+        waveText=GameUI.Label(header,"WAVE 0 / 20",new Vector2(-90,0),new Vector2(160,34),18);waveText.alignment=TextAlignmentOptions.Center;
+        coreText=GameUI.Label(header,"CORE 100%",new Vector2(82,0),new Vector2(140,34),16);coreText.alignment=TextAlignmentOptions.Center;coreText.color=new Color32(126,238,174,255);
+        manaText=GameUI.Label(header,"MANA 50",new Vector2(215,0),new Vector2(100,34),14);manaText.alignment=TextAlignmentOptions.Center;manaText.color=new Color32(96,213,255,255);
+        var close=GameUI.Button(panel,"×",new Vector2(302,535),new Vector2(44,44),Close);close.name="CloseRiftDefense";
+        var deckPanel=GameUI.Panel(panel,"RiftDeckBar",new Vector2(0,453),new Vector2(650,116));
+        GameUI.Label(deckPanel,"SKILL BOOK DECK",new Vector2(0,43),new Vector2(300,20),13).alignment=TextAlignmentOptions.Center;
         for(int i=0;i<deck.Count;i++)
         {
-            int index=i;var card=GameUI.Button(side,"",new Vector2(-104+(i%3)*104,140-(i/3)*92),new Vector2(88,76),()=>SelectDeck(index));card.name="DefenseDeck"+i;
-            GameUI.Icon(card.transform,deck[i].Icon,Vector2.zero,new Vector2(48,48));
-            GameUI.Label(card.transform,deck[i].Spell.DisplayName,new Vector2(0,-27),new Vector2(82,18),10).alignment=TextAlignmentOptions.Center;
+            int index=i;var card=GameUI.Button(deckPanel,"",new Vector2(-240+i*120,-8),new Vector2(106,76),()=>SelectDeck(index));card.name="DefenseDeck"+i;
+            card.GetComponent<UnityEngine.UI.Image>().color=Color.Lerp(new Color32(35,31,54,255),deck[i].Color,.28f);
+            GameUI.Icon(card.transform,deck[i].Icon,new Vector2(0,7),new Vector2(42,42));
+            GameUI.Label(card.transform,deck[i].Spell.DisplayName,new Vector2(0,-24),new Vector2(98,16),9).alignment=TextAlignmentOptions.Center;
         }
-        selectedText=GameUI.Label(side,"Tap an empty cell · random book",new Vector2(0,25),new Vector2(290,28),15);selectedText.alignment=TextAlignmentOptions.Center;
-        summonButton=GameUI.Button(side,"SUMMON · 10 MANA",new Vector2(0,-24),new Vector2(272,46),SummonSelected);summonButton.name="DefenseSummon";
-        upgradeButton=GameUI.Button(side,"UPGRADE · 14 MANA",new Vector2(0,-80),new Vector2(272,42),UpgradeSelected);upgradeButton.name="DefenseUpgrade";
-        mergeButton=GameUI.Button(side,"MERGE MATCHING",new Vector2(0,-130),new Vector2(272,42),MergeSelected);mergeButton.name="DefenseMerge";
-        castButton=GameUI.Button(side,"HERO BURST · READY",new Vector2(0,-181),new Vector2(272,42),HeroBurst);castButton.name="DefenseHeroCast";
-        hintText=GameUI.Label(side,"Summon a random deck book. Merge matching books\nof the same star rank. Elite bosses every 5 waves.",new Vector2(0,-222),new Vector2(290,46),12);hintText.alignment=TextAlignmentOptions.Center;
-        statusText=GameUI.Label(panel,"20 waves · elite boss every 5 waves",new Vector2(-204,-267),new Vector2(690,26),15);statusText.alignment=TextAlignmentOptions.Center;
+        board=GameUI.Panel(panel,"RiftDefenseBoard",new Vector2(0,224),new Vector2(650,300));
+        board.GetComponent<UnityEngine.UI.Image>().color=new Color32(48,39,72,255);
+        BuildBoard();
+        var ally=GameUI.Panel(panel,"AllyBoard",new Vector2(0,-120),new Vector2(650,300));
+        ally.GetComponent<UnityEngine.UI.Image>().color=new Color32(29,27,45,255);
+        BuildAllyBoard(ally);
+        selectedText=GameUI.Label(panel,"TAP AN EMPTY CELL TO SUMMON",new Vector2(0,-324),new Vector2(610,26),14);selectedText.alignment=TextAlignmentOptions.Center;
+        summonButton=GameUI.Button(panel,"SUMMON · 10",new Vector2(-246,-393),new Vector2(150,54),SummonSelected);summonButton.name="DefenseSummon";
+        upgradeButton=GameUI.Button(panel,"UPGRADE · 14",new Vector2(-82,-393),new Vector2(150,54),UpgradeSelected);upgradeButton.name="DefenseUpgrade";
+        mergeButton=GameUI.Button(panel,"MERGE",new Vector2(82,-393),new Vector2(150,54),MergeSelected);mergeButton.name="DefenseMerge";
+        castButton=GameUI.Button(panel,"BURST · READY",new Vector2(246,-393),new Vector2(150,54),HeroBurst);castButton.name="DefenseHeroCast";
+        foreach(var button in new[]{summonButton,upgradeButton,mergeButton,castButton})button.GetComponentInChildren<TMP_Text>().fontSize=14;
+        statusText=GameUI.Label(panel,"20 WAVES · ELITE BOSS EVERY 5",new Vector2(0,-475),new Vector2(610,24),13);statusText.alignment=TextAlignmentOptions.Center;
+        hintText=GameUI.Label(panel,"MATCHING BOOKS MERGE INTO A RANDOM BOOK OF THE NEXT STAR RANK",new Vector2(0,-515),new Vector2(620,28),11);hintText.alignment=TextAlignmentOptions.Center;hintText.color=new Color32(170,164,197,255);
         mana=50;core=100;wave=0;selected=-1;waveBreak=tickTimer=castCooldown=0;bossCount=0;lastBossWave=0;completed=false;running=true;waveSpawned=false;
         Refresh();
     }
@@ -104,13 +122,26 @@ public sealed class RiftDefenseMode : MonoBehaviour
     {
         for(int lane=0;lane<Rows;lane++)
         {
-            var label=GameUI.Label(board,"CORE",new Vector2(-270,110-lane*82),new Vector2(58,22),12);label.alignment=TextAlignmentOptions.Center;label.color=new Color32(255,116,129,255);
+            var label=GameUI.Label(board,"CORE",new Vector2(267,82-lane*76),new Vector2(58,22),11);label.alignment=TextAlignmentOptions.Center;label.color=new Color32(255,116,129,255);
             for(int col=0;col<Columns;col++)
             {
                 int cell=lane*Columns+col;
-                var button=GameUI.Button(board,"",new Vector2(-190+col*72,110-lane*82),new Vector2(64,66),()=>TapCell(cell));button.name="RiftCell"+cell;
+                var glow=GameUI.Rect("TowerBorderGlow",board,Vector2.one*.5f,new Vector2(-160+col*80,82-lane*76),new Vector2(76,76));
+                towerGlows[cell]=glow.gameObject.AddComponent<UnityEngine.UI.Image>();towerGlows[cell].sprite=PixelArt.Frame();towerGlows[cell].type=UnityEngine.UI.Image.Type.Sliced;towerGlows[cell].raycastTarget=false;towerGlows[cell].enabled=false;
+                var button=GameUI.Button(board,"",new Vector2(-160+col*80,82-lane*76),new Vector2(68,68),()=>TapCell(cell));button.name="RiftCell"+cell;
                 cells.Add(button);
             }
+        }
+    }
+
+    private void BuildAllyBoard(Transform parent)
+    {
+        GameUI.Label(parent,"ALLY BOARD · CO-OP LINK NOT ACTIVE",new Vector2(0,126),new Vector2(440,20),11).alignment=TextAlignmentOptions.Center;
+        for(int lane=0;lane<Rows;lane++)
+        for(int col=0;col<Columns;col++)
+        {
+            var slot=GameUI.Rect("AllySlot",parent,Vector2.one*.5f,new Vector2(-160+col*80,66-lane*76),new Vector2(58,58));
+            var image=slot.gameObject.AddComponent<UnityEngine.UI.Image>();image.sprite=PixelArt.Frame();image.type=UnityEngine.UI.Image.Type.Sliced;image.color=new Color32(94,70,143,180);image.raycastTarget=false;
         }
     }
 
@@ -130,9 +161,9 @@ public sealed class RiftDefenseMode : MonoBehaviour
         for(int i=enemies.Count-1;i>=0;i--)
         {
             var enemy=enemies[i];enemy.Progress-=enemy.Speed*delta;
-            float x=-190+enemy.Progress*72,y=110-enemy.Lane*82;
+            float x=-200+(Columns-.5f-enemy.Progress)*80,y=82-enemy.Lane*76;
             if(enemy.View!=null)enemy.View.transform.localPosition=new Vector3(x,y,-1);
-            if(enemy.Bar!=null)enemy.Bar.transform.localPosition=new Vector3(x,y-23,-2);
+            if(enemy.Bar!=null)enemy.Bar.transform.localPosition=new Vector3(x,y-20,-2);
             if(enemy.HealthFill!=null){var fill=enemy.HealthFill.GetComponent<RectTransform>();fill.sizeDelta=new Vector2(26*Mathf.Clamp01(enemy.Health/enemy.MaxHealth),4);}
             if(enemy.Progress<-.35f){core=Mathf.Max(0,core-(enemy.Boss?22:enemy.MaxHealth>20?7:3));RemoveEnemy(enemy);Refresh();}
         }
@@ -168,10 +199,10 @@ public sealed class RiftDefenseMode : MonoBehaviour
             var enemy=new Enemy {Lane=(lane+n)%Rows,Progress=Columns-.5f,MaxHealth=hp,Health=hp,Speed=speed,Boss=boss};
             if(boss&&lastBossWave!=wave){bossCount++;lastBossWave=wave;}
             var sprite=game.Slime!=null?game.Slime:PixelArt.Icon("book");
-            var icon=GameUI.Icon(board,sprite,new Vector2(-190+enemy.Progress*72,110-enemy.Lane*82),boss?new Vector2(52,52):new Vector2(28,28));
+            var icon=GameUI.Icon(board,sprite,new Vector2(-200+(Columns-.5f-enemy.Progress)*80,82-enemy.Lane*76),boss?new Vector2(52,52):new Vector2(28,28));
             icon.name=boss?"RiftBoss_"+BossNames[Mathf.Clamp(bossType,0,BossNames.Length-1)].Replace(" ",""):"RiftEnemy"+archetype;
             icon.color=boss?(Color)(wave==MaxWaves?new Color32(255,64,139,255):new Color32(255,170,82,255)):EnemyColors[archetype];enemy.View=icon.gameObject;enemies.Add(enemy);
-            var bar=GameUI.Rect("EnemyHealthBar",board,Vector2.one*.5f,new Vector2(-190+enemy.Progress*72,87-enemy.Lane*82),new Vector2(boss?48:30,6));bar.gameObject.AddComponent<UnityEngine.UI.Image>().color=new Color32(20,18,31,255);enemy.Bar=bar.gameObject;
+            var bar=GameUI.Rect("EnemyHealthBar",board,Vector2.one*.5f,new Vector2(-200+(Columns-.5f-enemy.Progress)*80,62-enemy.Lane*76),new Vector2(boss?48:30,6));bar.gameObject.AddComponent<UnityEngine.UI.Image>().color=new Color32(20,18,31,255);enemy.Bar=bar.gameObject;
             var fillRect=GameUI.Rect("EnemyHealthFill",bar,Vector2.zero,Vector2.zero,new Vector2(boss?44:26,4));fillRect.anchorMin=new Vector2(0,0.5f);fillRect.anchorMax=new Vector2(0,0.5f);fillRect.pivot=new Vector2(0,0.5f);fillRect.anchoredPosition=new Vector2(1,0);fillRect.gameObject.AddComponent<UnityEngine.UI.Image>().color=boss?new Color32(255,69,161,255):new Color32(255,93,106,255);enemy.HealthFill=fillRect.gameObject;
         }
         statusText.text=bossWave?"ELITE WAVE · "+BossNames[Mathf.Clamp((wave/5)-1,0,BossNames.Length-1)].ToUpperInvariant():"Defend all lanes · wave "+wave;
@@ -182,7 +213,7 @@ public sealed class RiftDefenseMode : MonoBehaviour
         int lane=cell/Columns,col=cell%Columns;Enemy target=null;float best=float.MaxValue;
         foreach(var enemy in enemies)
         {
-            if(Mathf.Abs(enemy.Lane-lane)>1)continue;float dist=Mathf.Abs(enemy.Progress-col)+Mathf.Abs(enemy.Lane-lane)*1.8f;
+            if(Mathf.Abs(enemy.Lane-lane)>1)continue;float dist=Mathf.Abs((Columns-.5f-enemy.Progress)-col)+Mathf.Abs(enemy.Lane-lane)*1.8f;
             float range=3.1f+Mathf.Min(1.5f,tower.Rank*.18f);if(dist<=range&&enemy.Progress<best){best=enemy.Progress;target=enemy;}
         }
         return target;
@@ -244,7 +275,13 @@ public sealed class RiftDefenseMode : MonoBehaviour
         for(int i=0;i<towers.Length;i++)
         {
             var button=cells[i];var tower=towers[i];var text=button.GetComponentInChildren<TMP_Text>();var image=button.GetComponent<UnityEngine.UI.Image>();
-            text.text=tower==null?"+":"R"+tower.Rank;image.color=tower==null?(Color)new Color32(39,36,56,255):Color.Lerp(new Color32(39,36,56,255),RankColors[Mathf.Clamp(tower.Rank-1,0,4)],.34f);
+            text.text=tower==null?"+":"R"+tower.Rank;image.color=tower==null?(Color)new Color32(66,54,96,255):Color.Lerp(new Color32(39,36,56,255),RankColors[Mathf.Clamp(tower.Rank-1,0,4)],.34f);
+            if(tower!=null)
+            {
+                var rankColor=RankColors[Mathf.Clamp(tower.Rank-1,0,4)];float pulse=.24f+.14f*(.5f+.5f*Mathf.Sin(Time.unscaledTime*5+i*.7f));
+                towerGlows[i].enabled=true;towerGlows[i].color=new Color(rankColor.r,rankColor.g,rankColor.b,pulse);towerGlows[i].rectTransform.localScale=Vector3.one*(1.04f+pulse*.08f);
+            }
+            else if(towerGlows[i]!=null)towerGlows[i].enabled=false;
             if(tower!=null){var icon=button.transform.Find("Icon")?.GetComponent<UnityEngine.UI.Image>();if(icon==null)GameUI.Icon(button.transform,tower.Book.Icon,new Vector2(0,-7),new Vector2(38,38));else icon.sprite=tower.Book.Icon;}
         }
     }
@@ -256,6 +293,14 @@ public sealed class RiftDefenseMode : MonoBehaviour
         if(victory)game.SetStatus("Rift Defense cleared. Rewards will unlock with server-authoritative mode support.");
     }
     private void Restart(){ClearRun();if(root!=null){Destroy(root.gameObject);root=null;}Open();}
+    public void StartPreviewShowcase()
+    {
+        UnityEngine.Random.InitState(20261004);
+        Open();if(root==null)return;
+        mana=80;
+        foreach(int cell in new[]{1,3,5,9,12}){selected=cell;Summon(cell);}
+        mana=50;selected=-1;selectedText.text="TAP AN EMPTY CELL TO SUMMON";Refresh();
+    }
     public void StartSmokeTest()
     {
         UnityEngine.Random.InitState(20261004);

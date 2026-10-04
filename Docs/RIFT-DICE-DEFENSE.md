@@ -1,6 +1,6 @@
 # Rift Defense — skill-book tower mode
 
-Revision 65, 4 October 2026.
+Revision 66, 4 October 2026.
 
 ## Co-op gameplay reference study
 
@@ -43,13 +43,13 @@ The Clash of Critters ads point toward a simple, readable lane-defense fantasy: 
 
 The first version is solo, 20 waves and a compact 5x3 placement board; its duration remains unmeasured. The co-op samples informed the board size, random summon/merge loop and elite-wave rhythm, while the first implementation stays solo until its rules can be tested locally. Add the paired second board and shared run after the solo rules are stable. Do not start with PvP; random outcomes and network latency make balance and player trust harder before the core is proven.
 
-## Revision 65 implementation state
+## Revision 66 implementation state
 
-The solo client slice is wired to the North / Raids gate. It has a 5x3 board, fills a five-book trial deck from owned books and the character's current active skills, and randomly summons from that deck. Books auto-fire, enemies have overhead HP bars, and players can upgrade a selected tower, merge two identical books at the same star rank (the result is a random deck book at the next rank), or cast the hero burst. Runner, armored and swarm units vary speed and health. Waves 5, 10, 15 and 20 each introduce an elite; the final boss is Ashen Gatekeeper. Rift Mana and match state remain local and isolated from the profile. New accounts can try the mode without a purchase.
+The solo client slice is wired to the North / Raids gate. Its portrait layout has a compact book strip, a 5x3 playable board, a second visibly inactive co-op board, enemies entering from the left toward core labels on the right, and grouped summon/upgrade/merge/burst actions at the bottom. Owned books and current class skills fill the starter deck. Same-rank merges roll a random deck book at the next rank. Runner, armored and swarm units vary speed and health. Waves 5, 10, 15 and 20 each introduce an elite; the final boss is Ashen Gatekeeper. Rift Mana and match state remain local and isolated from the profile. Tier color pulses appear around occupied tower borders.
 
 This iteration was built after inspecting 20 distinct co-op match recordings, listed above. The first pass adopts their paired-board-friendly dimensions, random build decisions, merge pressure, persistent wave/economy cues and elite-wave cadence. This remains a solo run: actual two-player shared-wave synchronization, partner board, support casts and server-authoritative actions are future work. Bosses currently differ in identity/presentation and the Cinder Knight's pace, but the other three do not yet have their full planned mechanics.
 
-Validation: the Unity editor build passed (`Logs/step-10-20261004-153519.log`). The Windows development player completed its 20-wave deterministic defense test with four elite bosses, 100% core, 15 test towers, and no runtime errors; the general runtime suite also passed (`Logs/rift-defense-uat/player.log`). The smoke setup deliberately fills every cell and sets each book to rank 5 to stress wave completion; this does not prove human balance, progression, or a normal-run clear. Unsupported font symbols were replaced with plain-text mana and rank labels. Run duration, fresh visual review, mobile/low-end performance and ordinary-player balance remain unmeasured.
+Validation: the Unity editor build passed (`Logs/step-10-20261004-213203.log`). The portrait Windows development player completed its 20-wave stress test with four elite bosses, 100% core, 15 test towers, and no runtime errors (`Logs/RiftDefenseRegression/player.log`). The visible showcase launch switch is `-cookieSmoke -showRiftDefense`; its capture is `Logs/RiftDefensePreview/rift-defense-preview.png`. The smoke setup maxes every tower and does not prove human balance, progression, or a normal-run clear. Shared-board networking, normal-run duration/balance and Android/low-end performance remain unmeasured.
 
 This is not release-ready. Server-authoritative seeds, actions, reconnects and reward receipts are still required before rewards are enabled. Do not describe the 6–10-minute target as measured until a normal run has been timed on target devices.
 
