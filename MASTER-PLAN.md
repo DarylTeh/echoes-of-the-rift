@@ -1,6 +1,12 @@
 # Echoes of the Rift master plan
 
-Revision 70 - 5 October 2026. Boss attack phases and hero facing.
+Revision 71 - 5 October 2026. Directional hero views.
+
+## Current iteration - revision 71: add race-consistent directional hero art
+
+Added original transparent side-view and back-view 3×3 atlases in the same nine-race order as the front-facing Heroes atlas. The player and customizable hero now select front/down, side/left-right, or rear/up art based on dominant facing while keeping left-side mirroring, weapon aim/depth, palette controls and saved races. Race/direction mappings are covered for all 36 combinations; the existing subtle walk bob/lean continues to animate the compact sprites.
+
+Validation passed: optimized Windows build (`Logs/step-10-20261005-191617.log`), campaign/progression smoke (`Logs/Runtime/runtime-smoke.txt`), desktop/touch layout tests (350/351), and Rift Defense (20 waves, four bosses, 15 towers; `Logs/HeroDirectionUAT/rift-defense-test.txt`). The build and release executable hashes match. Full alternating walk frames remain open for a later animation pass.
 
 ## Current iteration - revision 70: animate boss attacks and face the hero
 

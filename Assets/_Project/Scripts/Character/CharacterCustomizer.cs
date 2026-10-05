@@ -76,7 +76,12 @@ public sealed class CharacterCustomizer : MonoBehaviour
     }
     private void ApplyFacing()
     {
-        if(heroSprite!=null)heroSprite.flipX=facing.x<-.1f;
+        if(heroSprite!=null)
+        {
+            int direction=Mathf.Abs(facing.x)>Mathf.Abs(facing.y)?(facing.x<0?3:1):(facing.y>0?2:0);
+            heroSprite.sprite=IllustratedArt.Hero(Appearance.Race,direction);
+            heroSprite.flipX=direction==3;
+        }
         if(weapon==null)return;
         weapon.transform.localPosition=new Vector3(facing.x*.92f,.25f+facing.y*.72f,0)*PresentationScale;
         weaponAngle=Mathf.Atan2(facing.y,facing.x)*Mathf.Rad2Deg-45;weapon.transform.localRotation=Quaternion.Euler(0,0,weaponAngle);

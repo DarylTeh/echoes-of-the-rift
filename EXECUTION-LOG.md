@@ -1,5 +1,12 @@
 # Execution log
 
+## Directional hero art — revision 71, 5 October 2026
+
+- Added transparent, race-consistent 3×3 side and rear hero atlases alongside the existing front atlas. The runtime selects side art for left/right travel and rear art for up; down retains front-facing art. Left-side mirroring, weapon aim/depth, hero palettes and saved race selections remain intact.
+- Expanded campaign smoke coverage to load and compare front/side/rear art for every race and verify all four directional inputs.
+- Validation passed: optimized Windows build `Logs/step-10-20261005-191617.log`; campaign smoke `Logs/Runtime/runtime-smoke.txt`; desktop/touch layout checks 350/351 with zero failures; Rift Defense 20 waves, four bosses, 15 towers and core health 100 (`Logs/HeroDirectionUAT/rift-defense-test.txt`). Build and handoff executable hashes match.
+- Alternating walk frames remain open; current movement still uses bob/lean with direction-specific views.
+
 ## Boss attack phases and hero facing - revision 70, 5 October 2026
 
 - Generated an original 4×4 boss attack atlas with four phases per boss: warning glyph, charge, strike and fading impact.

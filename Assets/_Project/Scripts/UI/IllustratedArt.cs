@@ -3,8 +3,8 @@ using UnityEngine;
 // Shared source atlases, runtime slices and materials. Original PNGs remain untouched.
 public static class IllustratedArt
 {
-    private static readonly Sprite[] equipment=new Sprite[16],heroes=new Sprite[9],skillCubes=new Sprite[12],monsters=new Sprite[16],dungeonTiles=new Sprite[8],utilityIcons=new Sprite[16],combatEffects=new Sprite[16],bossAttacks=new Sprite[16];
-    private static Texture2D equipmentTexture,heroTexture,expansionTexture,skillCubeTexture,monsterTexture,dungeonTilesTexture,utilityIconsTexture,combatEffectsTexture,bossAttacksTexture;
+    private static readonly Sprite[] equipment=new Sprite[16],heroes=new Sprite[9],heroSides=new Sprite[9],heroBacks=new Sprite[9],skillCubes=new Sprite[12],monsters=new Sprite[16],dungeonTiles=new Sprite[8],utilityIcons=new Sprite[16],combatEffects=new Sprite[16],bossAttacks=new Sprite[16];
+    private static Texture2D equipmentTexture,heroTexture,heroSideTexture,heroBackTexture,expansionTexture,skillCubeTexture,monsterTexture,dungeonTilesTexture,utilityIconsTexture,combatEffectsTexture,bossAttacksTexture;
     private static readonly Sprite[] expansion=new Sprite[16];
     public static Sprite Expansion(int index){if(expansionTexture==null)expansionTexture=Resources.Load<Texture2D>("Illustrated/Expansion");return expansion[index]!=null?expansion[index]:expansion[index]=Slice(expansionTexture,index,4,1);}
     private static Material uiMaterial,heroMaterial,worldMaterial;
@@ -23,6 +23,19 @@ public static class IllustratedArt
     {
         race=Mathf.Clamp(race,0,8);if(heroTexture==null)heroTexture=Resources.Load<Texture2D>("Illustrated/Heroes");
         return heroes[race]!=null?heroes[race]:heroes[race]=Slice(heroTexture,race,3,2);
+    }
+    // Direction order: down/front, right/side, up/back, left/side (flipped by the renderer).
+    public static Sprite Hero(int race,int direction)
+    {
+        race=Mathf.Clamp(race,0,8);direction=Mathf.Clamp(direction,0,3);
+        if(direction==0)return Hero(race);
+        if(direction==1||direction==3)
+        {
+            if(heroSideTexture==null)heroSideTexture=Resources.Load<Texture2D>("Illustrated/HeroSide");
+            return heroSides[race]!=null?heroSides[race]:heroSides[race]=Slice(heroSideTexture,race,3,2);
+        }
+        if(heroBackTexture==null)heroBackTexture=Resources.Load<Texture2D>("Illustrated/HeroBack");
+        return heroBacks[race]!=null?heroBacks[race]:heroBacks[race]=Slice(heroBackTexture,race,3,2);
     }
     public static Sprite Equipment(int index)
     {
@@ -151,5 +164,5 @@ public static class IllustratedArt
     }
     public static Sprite Item(ItemData item)=>item.Kind==ItemKind.SkillBook?Book(item.Spell):Weapon(item.Family)??item.iconSprite;
     public static Sprite Book(SpellData spell)=>Skill(spell);
-    public static bool Owns(Sprite sprite)=>sprite!=null&&(sprite.texture==equipmentTexture||sprite.texture==heroTexture||sprite.texture==expansionTexture||sprite.texture==skillCubeTexture||sprite.texture==monsterTexture||sprite.texture==dungeonTilesTexture||sprite.texture==utilityIconsTexture||sprite.texture==combatEffectsTexture||sprite.texture==bossAttacksTexture);
+    public static bool Owns(Sprite sprite)=>sprite!=null&&(sprite.texture==equipmentTexture||sprite.texture==heroTexture||sprite.texture==heroSideTexture||sprite.texture==heroBackTexture||sprite.texture==expansionTexture||sprite.texture==skillCubeTexture||sprite.texture==monsterTexture||sprite.texture==dungeonTilesTexture||sprite.texture==utilityIconsTexture||sprite.texture==combatEffectsTexture||sprite.texture==bossAttacksTexture);
 }

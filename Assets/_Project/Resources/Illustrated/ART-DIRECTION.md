@@ -1,10 +1,12 @@
-# Shared hero, gear, creature, utility and effect art — revision 28
+# Shared hero, gear, creature, utility and effect art — revision 29
 
 This is the current art direction. The new originals take their visual cues from the supplied MyHeroes: SEA and Random Dice references: tiny readable action-RPG heroes, square pixel clusters, jewel-color silhouettes, dark outlines, richly shaded gear, recognizable glossy skill dice and distinctive dungeon creatures. The art is newly generated and does not reuse game files.
 
 `SkillCubes.png` is a transparent 4×3 atlas. Its rows are: Flame, Crescent Slash, Verdant Mend, Starburst; Frost, Sun Ward, Thorn, Arcane Portal; Meteor, Lightning, Wind, Shield. `IllustratedArt.Skill` is the shared lookup for skill HUDs, skill-book items and Rift Defense towers. This keeps a skill's art identical wherever that skill appears. The cube's own neon particles provide the base glow; existing tier-border VFX adds rarity emphasis in item slots.
 
 `Heroes.png` is a transparent 3×3 race atlas. It keeps the nine saved race choices and consistent armor, changing the visible race trait for each. Its pixels are sampled with point filtering and the existing 5% pixel-grid quantization; skin/hair palette controls remain enabled. Player weapons remain separate, so equipped weapon changes still show in the world.
+
+`HeroSide.png` and `HeroBack.png` add transparent 3×3 atlases in the same race order. The side sheet contains right-facing profiles for horizontal travel; the renderer mirrors it for left-facing travel. The back sheet is used for upward travel; the original Heroes sheet faces down. The runtime shares the same character material and weapon offsets across all three views. The atlas import pipeline keeps point filtering and alpha; tests cover all 9×4 race/direction lookups. Current movement uses the existing bob/lean animation; alternating limb frames remain open.
 
 `Equipment.png` and `Expansion.png` are transparent 4×4 item atlases. Equipment rows: saber, ember greatsword, thorn bow, crescent scythe; crystal staff, rune hammer, horned helm, plate armor; leaf pendant, amethyst ring, wing boots, frost greaves; celestial pauldrons, cyan shield, ember gauntlets, orbiting charm. Expansion rows: spear, boomerang, pistols, crossbow; boots, leggings, pauldrons, shield; frost daggers, orb focus, war axe, wind chakram; trident, ranger bow, moon sickle, warhammer. Existing weapon-family mappings still select these shared icons throughout inventory, shop and item details.
 
@@ -18,9 +20,9 @@ This is the current art direction. The new originals take their visual cues from
 
 `BossAttacks.png` is a transparent 4×4 sequence atlas. Each row is one boss, with four left-to-right phases: warning seal, gathered charge, directional strike, and dissipating impact. `BossAttackVisual` advances those phases over the existing attack wind-up and impact, reusing a small visual pool and keeping the established damage radius, timing and telegraph ring. Boss-specific hues and glyphs distinguish thorn, sun/fire, tide and storm attacks.
 
-The existing race-specific hero sprite remains intact. `CharacterCustomizer` now faces left/right from movement, follows aim when standing, shifts the weapon to the front/back side for vertical facing, and adds a subtle walk bob/lean. This preserves saved race selection and skin/hair controls while making movement read more clearly; a full multi-direction frame sheet remains a later art decision.
+`CharacterCustomizer` selects the original front view, the matching race's side profile or the matching race's rear view from movement or aim. The left profile is mirrored; vertical facing places the weapon on the front or back layer. Saved race selection and skin/hair controls continue across views. A full alternating walk cycle remains a later art decision.
 
-Current shared-art replacement scope completed in source: hero, skill, equipment, weapons, dungeon enemies, bosses, room/floor tiles, utility symbols, common attack flashes and boss-specific attack sequences. Remaining: a full multi-direction hero frame sheet and further screen-by-screen visual polish. Retire old art only after each consumer has migrated and its build/playtest passes.
+Current shared-art replacement scope completed in source: hero front/side/rear views, skill, equipment, weapons, dungeon enemies, bosses, room/floor tiles, utility symbols, common attack flashes and boss-specific attack sequences. Remaining: alternating walk frames and further screen-by-screen visual polish. Retire old art only after each consumer has migrated and its build/playtest passes.
 
 References reviewed for the visual language: [MyHeroes Wiki on Fandom](https://myheroesofficial.fandom.com/wiki/MyHeroes_Wiki) and the [Random Dice Wiki dice catalogue](https://randomdice.wiki.gg/wiki/Dice). These are broad style references, not copied source images.
 

@@ -1,5 +1,9 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
+## Latest art UAT — revision 71, 5 October 2026
+
+The Windows build now resolves all nine races into front, side and rear views; the left side uses the horizontally mirrored side sprite. Campaign smoke verified all 36 race/direction combinations and completed movement, combat, saves and ten campaign loops without runtime errors. Desktop and touch layouts passed 350/351 checks, and Rift Defense passed 20 waves, four bosses and 15 towers with core health 100. Build log: `Logs/step-10-20261005-191617.log`; campaign screenshots/results: `Logs/Runtime`; layouts: `Logs/UILayout` and `Logs/UILayoutTouch`; defense: `Logs/HeroDirectionUAT`.
+
 ## Latest art UAT — revision 70, 5 October 2026
 
 The optimized build passed a focused test for all four boss colors and all four attack phases, including visual recycling. Campaign movement confirms left-facing sprite flip and upward-facing weapon placement; the complete campaign progression/combat/save smoke passed. Desktop and touch layouts passed 350/351 checks with zero failures, and Rift Defense passed all 20 waves, four bosses and 15 towers with core health 100. The source and tracked Windows release build succeeded and have matching executable hashes. See `Logs/BossArtUAT`, `Logs/Runtime`, `Logs/UILayout`, `Logs/UILayoutTouch`, `Logs/BossHeroUAT`, and build log `Logs/step-10-20261005-083707.log`.
@@ -144,7 +148,7 @@ Normal progression is stored in `Server/progress.sqlite`, managed by the server.
 
 Failed central reward saves offer Retry save; repeated receipts cannot duplicate the same stage reward. Rankings show actual saved profiles. The development server supports two connected players and one expedition at a time. Solo campaign requires only one connected player. Town movement is newly replicated, but larger shared hubs and independent party instances are not implemented.
 
-This remains a prototype. Revision 70 adds phased boss attack art and movement-facing for the hero; earlier revisions added the shared utility/effect atlases, dungeon creatures and dark-stone room tiles. Enemies use the world shader's 5% point-sampling pixel quantization. The optimized Windows build and 350/351 desktop/touch UI checks pass, the regular campaign smoke passes movement, progression, inventory, boss-only victory, rewards and recovery checks, and Rift Defense clears 20 waves/four bosses using 15 towers without runtime errors. Further screen polish, multi-stage effects, full visual acceptance, production networking, Android and low-end PC measurements remain open.
+This remains a prototype. Revision 71 adds race-consistent front, side and rear hero views; revision 70 added phased boss attacks. Earlier revisions added shared utility/effect atlases, dungeon creatures and dark-stone room tiles. Enemies use the world shader's 5% point-sampling pixel quantization. The optimized Windows build and 350/351 desktop/touch UI checks pass; campaign and 20-wave Rift Defense regression pass without runtime errors. Alternating walk frames, wider screen polish, full visual acceptance, production networking, Android and low-end PC measurements remain open.
 
 See Server/DEPLOYMENT.md for the client/server boundary, private database, home-hosting requirements and Oracle preparation.
 
