@@ -15,6 +15,8 @@ public sealed class CharacterCustomizer : MonoBehaviour
     public CharacterAppearanceData Appearance { get; private set; }
     public int EquipmentTier { get; private set; } = 1;
     public float PresentationScale=0.375f;
+    public bool IsWalking { get; private set; }
+    public int WalkFrame { get; private set; }
     private SpriteRenderer heroSprite;
     private Vector2 facing=Vector2.right;
     private float weaponAngle;
@@ -79,7 +81,7 @@ public sealed class CharacterCustomizer : MonoBehaviour
         if(heroSprite!=null)
         {
             int direction=Mathf.Abs(facing.x)>Mathf.Abs(facing.y)?(facing.x<0?3:1):(facing.y>0?2:0);
-            heroSprite.sprite=IllustratedArt.Hero(Appearance.Race,direction);
+            heroSprite.sprite=IllustratedArt.Hero(Appearance.Race,direction,WalkFrame);
             heroSprite.flipX=direction==3;
         }
         if(weapon==null)return;
@@ -91,7 +93,9 @@ public sealed class CharacterCustomizer : MonoBehaviour
         if(IllustratedArt.Owns(weapon.sprite))weapon.sharedMaterial=IllustratedArt.World;trail.Tier=tier;trail.Family=family;}
     private void LateUpdate()
     {
-        Vector3 delta=transform.position-previousPosition;bool walking=delta.sqrMagnitude>.00001f;previousPosition=transform.position;if(walking)SetFacing(delta);
+        Vector3 delta=transform.position-previousPosition;bool walking=delta.sqrMagnitude>.00001f;previousPosition=transform.position;IsWalking=walking;if(walking)SetFacing(delta);
+        int frame=walking?(Mathf.FloorToInt(Time.unscaledTime*8f)&1):0;
+        if(WalkFrame!=frame){WalkFrame=frame;ApplyFacing();}
         float bob=Mathf.Floor(Mathf.Sin(Time.unscaledTime*(walking?14:3))*(walking?2:1))/16;
         foreach(Transform child in transform)if(child.name.StartsWith("Pixel-"))child.localPosition=new Vector3(0,1+bob,0)*PresentationScale;
         if(heroSprite!=null)heroSprite.transform.localRotation=Quaternion.Euler(0,0,walking?Mathf.Sin(Time.unscaledTime*14)*3:0);

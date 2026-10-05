@@ -1,5 +1,12 @@
 # Execution log
 
+## Hero walk cycles — revision 72, 5 October 2026
+
+- Added three transparent 3×3 alternate-stride atlases for front, side and rear hero views. Each sheet matches the nine-race order and keeps the approved armor, scale and silhouette while shifting limbs and cape/tail.
+- `CharacterCustomizer` alternates base and stride art at eight frame changes per second only while moving, then returns to the base pose. Atlas slices are cached; existing race palettes and movement-facing remain in place.
+- Campaign smoke observed live frame alternation and loaded every race/direction/frame mapping (72 lookup combinations). Validation passed: optimized Windows build `Logs/step-10-20261005-200824.log`, full campaign smoke `Logs/Runtime/runtime-smoke.txt`, desktop/touch UI checks 350/351 with zero failures, and Rift Defense 20 waves/four bosses/15 towers/core 100 (`Logs/HeroWalkUAT/rift-defense-test.txt`). Build and handoff executable hashes match.
+- The generated walk-atlas prompt kept each 3×3 race roster and outfit fixed, changing only the alternate limb/cape/tail stride; the built-in image-generation tool produced transparent RGBA assets.
+
 ## Directional hero art — revision 71, 5 October 2026
 
 - Added transparent, race-consistent 3×3 side and rear hero atlases alongside the existing front atlas. The runtime selects side art for left/right travel and rear art for up; down retains front-facing art. Left-side mirroring, weapon aim/depth, hero palettes and saved race selections remain intact.

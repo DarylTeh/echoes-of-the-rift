@@ -80,27 +80,31 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.5f);
         if(game.Player==null) { Finish("Player not created"); yield break; }
         var keyboard=InputSystem.AddDevice<Keyboard>();
+        var customizer=game.Player.GetComponent<CharacterCustomizer>();
         Vector3 before=game.Player.transform.position;
         InputSystem.QueueStateEvent(keyboard,new KeyboardState(Key.D));
-        double movementDeadline=Time.realtimeSinceStartupAsDouble+2;
-        while(game.Player.transform.position.x<=before.x+0.1f&&Time.realtimeSinceStartupAsDouble<movementDeadline)
+        double moveStart=Time.realtimeSinceStartupAsDouble, movementDeadline=moveStart+2;
+        bool walkFrameObserved=false;
+        while((game.Player.transform.position.x<=before.x+0.1f||Time.realtimeSinceStartupAsDouble<moveStart+.4)&&Time.realtimeSinceStartupAsDouble<movementDeadline)
         {
             InputSystem.QueueStateEvent(keyboard,new KeyboardState(Key.D));
+            if(customizer.IsWalking&&customizer.WalkFrame==1)walkFrameObserved=true;
             yield return null;
+            if(customizer.IsWalking&&customizer.WalkFrame==1)walkFrameObserved=true;
         }
         InputSystem.QueueStateEvent(keyboard,new KeyboardState());
         bool moved=game.Player.transform.position.x>before.x+0.1f;
+        bool walkCycle=moved&&walkFrameObserved;
         Debug.Log($"MOVEMENT_CHECK before={before} after={game.Player.transform.position} key={keyboard.dKey.isPressed} controls={game.Player.GetComponent<PlayerController>().ControlsEnabled} velocity={game.Player.GetComponent<Rigidbody2D>().linearVelocity} body={game.Player.GetComponent<Rigidbody2D>().bodyType}");
         var controller=game.Player.GetComponent<PlayerController>();
-        var customizer=game.Player.GetComponent<CharacterCustomizer>();
         var heroRenderer=game.Player.transform.Find("Pixel-body")?.GetComponent<SpriteRenderer>();
-        customizer.SetFacing(Vector2.left);bool facesLeft=heroRenderer!=null&&heroRenderer.flipX&&heroRenderer.sprite==IllustratedArt.Hero(customizer.Appearance.Race,3);
+        customizer.SetFacing(Vector2.left);bool facesLeft=heroRenderer!=null&&heroRenderer.flipX&&heroRenderer.sprite==IllustratedArt.Hero(customizer.Appearance.Race,3,customizer.WalkFrame);
         customizer.SetFacing(Vector2.up);var equippedWeapon=game.Player.transform.Find("EquippedWeapon");
-        bool facesUp=heroRenderer!=null&&heroRenderer.sprite==IllustratedArt.Hero(customizer.Appearance.Race,2)&&equippedWeapon!=null&&equippedWeapon.localPosition.y>0;
-        customizer.SetFacing(Vector2.down);bool facesDown=heroRenderer!=null&&heroRenderer.sprite==IllustratedArt.Hero(customizer.Appearance.Race,0);
-        customizer.SetFacing(Vector2.right);bool facesRight=heroRenderer!=null&&!heroRenderer.flipX&&heroRenderer.sprite==IllustratedArt.Hero(customizer.Appearance.Race,1);
-        bool allRaceDirections=true;for(int race=0;race<9;race++)for(int direction=0;direction<4;direction++)allRaceDirections&=IllustratedArt.Hero(race,direction)!=null;
-        bool directionalFacing=facesLeft&&facesUp&&facesDown&&facesRight&&allRaceDirections;
+        bool facesUp=heroRenderer!=null&&heroRenderer.sprite==IllustratedArt.Hero(customizer.Appearance.Race,2,customizer.WalkFrame)&&equippedWeapon!=null&&equippedWeapon.localPosition.y>0;
+        customizer.SetFacing(Vector2.down);bool facesDown=heroRenderer!=null&&heroRenderer.sprite==IllustratedArt.Hero(customizer.Appearance.Race,0,customizer.WalkFrame);
+        customizer.SetFacing(Vector2.right);bool facesRight=heroRenderer!=null&&!heroRenderer.flipX&&heroRenderer.sprite==IllustratedArt.Hero(customizer.Appearance.Race,1,customizer.WalkFrame);
+        bool allRaceFrames=true;for(int race=0;race<9;race++)for(int direction=0;direction<4;direction++)for(int frame=0;frame<2;frame++)allRaceFrames&=IllustratedArt.Hero(race,direction,frame)!=null;
+        bool directionalFacing=facesLeft&&facesUp&&facesDown&&facesRight&&allRaceFrames;
         bool dodged=controller.Dodge(); float health=game.Player.Health; game.Player.Damage(10);
         bool immune=game.Player.Health==health;
         var skills=controller.Skills; bool cast=skills.TryCastActive(0,game.Player.GetComponent<CharacterStats>());
@@ -174,8 +178,8 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         game.Player.Damage(10000); yield return null;
         game.ReviveWithAdPlaceholder(); bool campaignNoRevive=!game.Player.Alive&&GameObject.Find("Revive")==null;
         var retry=GameObject.Find("Return to town")?.GetComponent<UnityEngine.UI.Button>(); bool defeat=retry!=null; retry?.onClick.Invoke();
-        bool passed=moved&&directionalFacing&&dodged&&immune&&cast&&cooldown&&bank&&expires&&loops&&rewards&&saved&&saveRecovery&&bossOnly&&bossRequired&&inventoryUI&&catalogue&&races&&tierEffects&&loot&&campaignNoRevive&&paused&&resumed&&defeat&&!failed;
-        Finish($"{(passed?"PASS":"FAIL")} movement={moved} directionalFacing={directionalFacing} fourDirections={allRaceDirections} dodge={dodged} immune={immune} cooldown={cooldown} bank={bank} iframeExpires={expires} tenRuns={loops} rewards={rewards} saved={saved} saveRecovery={saveRecovery} bossOnly={bossOnly} bossRequired={bossRequired} inventoryUI={inventoryUI} catalogue={catalogue} races={races} tierEffects={tierEffects} loot={loot} campaignNoRevive={campaignNoRevive} pause={paused} resume={resumed} defeat={defeat} runtimeErrors={failed}");
+        bool passed=moved&&walkCycle&&directionalFacing&&dodged&&immune&&cast&&cooldown&&bank&&expires&&loops&&rewards&&saved&&saveRecovery&&bossOnly&&bossRequired&&inventoryUI&&catalogue&&races&&tierEffects&&loot&&campaignNoRevive&&paused&&resumed&&defeat&&!failed;
+        Finish($"{(passed?"PASS":"FAIL")} movement={moved} walkCycle={walkCycle} directionalFacing={directionalFacing} 72RaceDirectionFrames={allRaceFrames} dodge={dodged} immune={immune} cooldown={cooldown} bank={bank} iframeExpires={expires} tenRuns={loops} rewards={rewards} saved={saved} saveRecovery={saveRecovery} bossOnly={bossOnly} bossRequired={bossRequired} inventoryUI={inventoryUI} catalogue={catalogue} races={races} tierEffects={tierEffects} loot={loot} campaignNoRevive={campaignNoRevive} pause={paused} resume={resumed} defeat={defeat} runtimeErrors={failed}");
     }
     private void Capture(string name)
     {

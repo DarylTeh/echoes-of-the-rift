@@ -1,12 +1,18 @@
 # Echoes of the Rift master plan
 
-Revision 71 - 5 October 2026. Directional hero views.
+Revision 72 - 5 October 2026. Two-frame directional hero walk cycles.
 
-## Current iteration - revision 71: add race-consistent directional hero art
+## Current iteration - revision 72: animate directional strides
+
+Added three transparent alternate-stride atlases for front, side and rear views, each preserving the nine-race order. While moving, `CharacterCustomizer` alternates between each view's two stride frames at eight frame changes per second; it returns to the stable base pose when idle. Sprite lookup caches all race/direction/frame combinations and reuses the existing world material and pixel sampling.
+
+Validation passed: optimized Windows build (`Logs/step-10-20261005-200824.log`), movement smoke observed the animated walk frame, all 72 race/direction/frame lookups loaded, campaign/progression passed, desktop/touch UI checks passed (350/351), and Rift Defense passed all 20 waves, four bosses and 15 towers. `Release/Windows` matches `Builds/Windows`. Broader attack poses and per-device frame-time testing remain open.
+
+## Previous iteration - revision 71: add race-consistent directional hero art
 
 Added original transparent side-view and back-view 3×3 atlases in the same nine-race order as the front-facing Heroes atlas. The player and customizable hero now select front/down, side/left-right, or rear/up art based on dominant facing while keeping left-side mirroring, weapon aim/depth, palette controls and saved races. Race/direction mappings are covered for all 36 combinations; the existing subtle walk bob/lean continues to animate the compact sprites.
 
-Validation passed: optimized Windows build (`Logs/step-10-20261005-191617.log`), campaign/progression smoke (`Logs/Runtime/runtime-smoke.txt`), desktop/touch layout tests (350/351), and Rift Defense (20 waves, four bosses, 15 towers; `Logs/HeroDirectionUAT/rift-defense-test.txt`). The build and release executable hashes match. Full alternating walk frames remain open for a later animation pass.
+Validation passed at revision 71: optimized Windows build, campaign/progression smoke, desktop/touch layout tests (350/351), and Rift Defense (20 waves, four bosses, 15 towers). Revision 72 now adds and validates alternating stride frames.
 
 ## Current iteration - revision 70: animate boss attacks and face the hero
 
