@@ -105,13 +105,15 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         customizer.SetFacing(Vector2.right);bool facesRight=heroRenderer!=null&&!heroRenderer.flipX&&heroRenderer.sprite==IllustratedArt.Hero(customizer.Appearance.Race,1,customizer.WalkFrame);
         bool allRaceFrames=true;for(int race=0;race<9;race++)for(int direction=0;direction<4;direction++)for(int frame=0;frame<2;frame++)allRaceFrames&=IllustratedArt.Hero(race,direction,frame)!=null;
         bool directionalFacing=facesLeft&&facesUp&&facesDown&&facesRight&&allRaceFrames;
-        bool dodged=controller.Dodge(); float health=game.Player.Health; game.Player.Damage(10);
+        bool dodged=controller.Dodge();bool dodgePose=customizer.CurrentAction==HeroActionPose.Dodge;float health=game.Player.Health;game.Player.Damage(10);
         bool immune=game.Player.Health==health;
-        var skills=controller.Skills; bool cast=skills.TryCastActive(0,game.Player.GetComponent<CharacterStats>());
+        var skills=controller.Skills;bool cast=skills.TryCastActive(0,game.Player.GetComponent<CharacterStats>());bool skillPose=customizer.CurrentAction==HeroActionPose.Skill;
         bool cooldown=!skills.TryCastActive(0,game.Player.GetComponent<CharacterStats>());
         skills.Swap(); bool bank=skills.SecondaryActive;
+        controller.SetUIAttack(true);yield return null;controller.SetUIAttack(false);bool attackPose=customizer.CurrentAction==HeroActionPose.Attack;
         yield return new WaitForEndOfFrame(); Capture("arena.png");
         yield return new WaitForSecondsRealtime(0.3f);
+        bool actionPoseResets=customizer.CurrentAction==HeroActionPose.Idle;
         game.Player.Damage(1); bool expires=game.Player.Health<health;
         InputSystem.RemoveDevice(keyboard);
         foreach(var enemy in FindObjectsByType<EnemyBrain>(FindObjectsSortMode.None))if(enemy.Pattern==null)enemy.GetComponent<Combatant>().Damage(10000);
@@ -178,8 +180,8 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         game.Player.Damage(10000); yield return null;
         game.ReviveWithAdPlaceholder(); bool campaignNoRevive=!game.Player.Alive&&GameObject.Find("Revive")==null;
         var retry=GameObject.Find("Return to town")?.GetComponent<UnityEngine.UI.Button>(); bool defeat=retry!=null; retry?.onClick.Invoke();
-        bool passed=moved&&walkCycle&&directionalFacing&&dodged&&immune&&cast&&cooldown&&bank&&expires&&loops&&rewards&&saved&&saveRecovery&&bossOnly&&bossRequired&&inventoryUI&&catalogue&&races&&tierEffects&&loot&&campaignNoRevive&&paused&&resumed&&defeat&&!failed;
-        Finish($"{(passed?"PASS":"FAIL")} movement={moved} walkCycle={walkCycle} directionalFacing={directionalFacing} 72RaceDirectionFrames={allRaceFrames} dodge={dodged} immune={immune} cooldown={cooldown} bank={bank} iframeExpires={expires} tenRuns={loops} rewards={rewards} saved={saved} saveRecovery={saveRecovery} bossOnly={bossOnly} bossRequired={bossRequired} inventoryUI={inventoryUI} catalogue={catalogue} races={races} tierEffects={tierEffects} loot={loot} campaignNoRevive={campaignNoRevive} pause={paused} resume={resumed} defeat={defeat} runtimeErrors={failed}");
+        bool passed=moved&&walkCycle&&directionalFacing&&dodgePose&&skillPose&&attackPose&&actionPoseResets&&dodged&&immune&&cast&&cooldown&&bank&&expires&&loops&&rewards&&saved&&saveRecovery&&bossOnly&&bossRequired&&inventoryUI&&catalogue&&races&&tierEffects&&loot&&campaignNoRevive&&paused&&resumed&&defeat&&!failed;
+        Finish($"{(passed?"PASS":"FAIL")} movement={moved} walkCycle={walkCycle} directionalFacing={directionalFacing} attackPose={attackPose} skillPose={skillPose} dodgePose={dodgePose} actionPoseResets={actionPoseResets} 72RaceDirectionFrames={allRaceFrames} dodge={dodged} immune={immune} cooldown={cooldown} bank={bank} iframeExpires={expires} tenRuns={loops} rewards={rewards} saved={saved} saveRecovery={saveRecovery} bossOnly={bossOnly} bossRequired={bossRequired} inventoryUI={inventoryUI} catalogue={catalogue} races={races} tierEffects={tierEffects} loot={loot} campaignNoRevive={campaignNoRevive} pause={paused} resume={resumed} defeat={defeat} runtimeErrors={failed}");
     }
     private void Capture(string name)
     {

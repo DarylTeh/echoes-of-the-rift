@@ -1,8 +1,14 @@
 # Echoes of the Rift master plan
 
-Revision 72 - 5 October 2026. Two-frame directional hero walk cycles.
+Revision 73 - 5 October 2026. Combat-triggered hero action poses.
 
-## Current iteration - revision 72: animate directional strides
+## Current iteration - revision 73: animate attacks, skills and dodges
+
+Connected lightweight attack, skill and dodge poses to the actual player combat events. Attacks lean and sweep the equipped weapon, skills use the active spell colour, and dodges stretch and tip toward the travel direction. The pose blends back to the existing directional walk/idle presentation without adding per-frame allocations or replacing the approved race art.
+
+Validation passed: optimized Windows build (`Logs/step-10-20261005-202607.log`), campaign movement/action/progression smoke (attack, skill, dodge and pose reset; all 72 race/direction/frame combinations; no runtime errors), desktop/touch UI checks (350/351), and Rift Defense (20 waves, four bosses and 15 towers). The tested player was synced to `Release/Windows`. Broader authored attack frames and physical-device frame-time testing remain open.
+
+## Previous iteration - revision 72: animate directional strides
 
 Added three transparent alternate-stride atlases for front, side and rear views, each preserving the nine-race order. While moving, `CharacterCustomizer` alternates between each view's two stride frames at eight frame changes per second; it returns to the stable base pose when idle. Sprite lookup caches all race/direction/frame combinations and reuses the existing world material and pixel sampling.
 
@@ -12,7 +18,7 @@ Validation passed: optimized Windows build (`Logs/step-10-20261005-200824.log`),
 
 Added original transparent side-view and back-view 3×3 atlases in the same nine-race order as the front-facing Heroes atlas. The player and customizable hero now select front/down, side/left-right, or rear/up art based on dominant facing while keeping left-side mirroring, weapon aim/depth, palette controls and saved races. Race/direction mappings are covered for all 36 combinations; the existing subtle walk bob/lean continues to animate the compact sprites.
 
-Validation passed at revision 71: optimized Windows build, campaign/progression smoke, desktop/touch layout tests (350/351), and Rift Defense (20 waves, four bosses, 15 towers). Revision 72 now adds and validates alternating stride frames.
+Validation passed at revision 71: optimized Windows build, campaign/progression smoke, desktop/touch layout tests (350/351), and Rift Defense (20 waves, four bosses, 15 towers). Revision 72 added and validated alternating stride frames; revision 73 layers the combat-triggered poses on top.
 
 ## Current iteration - revision 70: animate boss attacks and face the hero
 

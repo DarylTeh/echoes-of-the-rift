@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 
+public enum HeroActionPose { Idle, Attack, Skill, Dodge }
+
 public sealed class CharacterCustomizer : MonoBehaviour
 {
     public SpriteRenderer Body;
@@ -17,9 +19,14 @@ public sealed class CharacterCustomizer : MonoBehaviour
     public float PresentationScale=0.375f;
     public bool IsWalking { get; private set; }
     public int WalkFrame { get; private set; }
+    public HeroActionPose CurrentAction { get; private set; }
+    public bool IsActionAnimating=>CurrentAction!=HeroActionPose.Idle;
     private SpriteRenderer heroSprite;
     private Vector2 facing=Vector2.right;
+    private Vector2 actionDirection=Vector2.right;
     private float weaponAngle;
+    private float actionDuration,actionElapsed;
+    private Color actionColor=Color.white;
 
     public void Apply(CharacterAppearanceData data)
     {
@@ -76,6 +83,14 @@ public sealed class CharacterCustomizer : MonoBehaviour
         if(Vector2.Dot(direction,facing)>.995f)return;
         facing=direction;ApplyFacing();
     }
+    public void PlayAttackPose(Vector2 direction)=>PlayAction(HeroActionPose.Attack,direction,Color.white,.24f);
+    public void PlaySkillPose(Vector2 direction,Color color)=>PlayAction(HeroActionPose.Skill,direction,color,.38f);
+    public void PlayDodgePose(Vector2 direction)=>PlayAction(HeroActionPose.Dodge,direction,new Color32(87,227,255,255),.2f);
+    private void PlayAction(HeroActionPose pose,Vector2 direction,Color color,float duration)
+    {
+        if(direction.sqrMagnitude>.01f)actionDirection=direction.normalized;
+        CurrentAction=pose;actionColor=color;actionDuration=duration;actionElapsed=0;
+    }
     private void ApplyFacing()
     {
         if(heroSprite!=null)
@@ -96,10 +111,30 @@ public sealed class CharacterCustomizer : MonoBehaviour
         Vector3 delta=transform.position-previousPosition;bool walking=delta.sqrMagnitude>.00001f;previousPosition=transform.position;IsWalking=walking;if(walking)SetFacing(delta);
         int frame=walking?(Mathf.FloorToInt(Time.unscaledTime*8f)&1):0;
         if(WalkFrame!=frame){WalkFrame=frame;ApplyFacing();}
+        if(Time.timeScale>0&&CurrentAction!=HeroActionPose.Idle)
+        {
+            actionElapsed+=Time.deltaTime;
+            if(actionElapsed>=actionDuration)CurrentAction=HeroActionPose.Idle;
+        }
+        float actionProgress=CurrentAction==HeroActionPose.Idle?0:Mathf.Clamp01(actionElapsed/actionDuration);
+        float action=CurrentAction==HeroActionPose.Idle?0:Mathf.Sin(actionProgress*Mathf.PI);
         float bob=Mathf.Floor(Mathf.Sin(Time.unscaledTime*(walking?14:3))*(walking?2:1))/16;
         foreach(Transform child in transform)if(child.name.StartsWith("Pixel-"))child.localPosition=new Vector3(0,1+bob,0)*PresentationScale;
-        if(heroSprite!=null)heroSprite.transform.localRotation=Quaternion.Euler(0,0,walking?Mathf.Sin(Time.unscaledTime*14)*3:0);
-        if(weapon!=null)weapon.transform.localRotation=Quaternion.Euler(0,0,weaponAngle+(walking?Mathf.Sin(Time.unscaledTime*14)*6:0));
+        float lean=walking?Mathf.Sin(Time.unscaledTime*14)*3:0;
+        float poseLean=CurrentAction==HeroActionPose.Dodge?-actionDirection.x*18:CurrentAction==HeroActionPose.Attack?-actionDirection.x*8:CurrentAction==HeroActionPose.Skill?actionDirection.y*5:0;
+        if(heroSprite!=null)
+        {
+            heroSprite.transform.localRotation=Quaternion.Euler(0,0,lean+poseLean*action);
+            float stretch=CurrentAction==HeroActionPose.Dodge?0.13f:CurrentAction==HeroActionPose.Skill?0.08f:0;
+            heroSprite.transform.localScale=Vector3.Scale(Vector3.one*PresentationScale,new Vector3(1+stretch*action,1-stretch*.45f*action,1));
+            heroSprite.color=CurrentAction==HeroActionPose.Skill?Color.Lerp(Color.white,actionColor,action*.28f):CurrentAction==HeroActionPose.Dodge?Color.Lerp(Color.white,actionColor,action*.22f):Color.white;
+        }
+        if(weapon!=null)
+        {
+            weapon.transform.localPosition=new Vector3(facing.x*.92f,.25f+facing.y*.72f,0)*PresentationScale+(Vector3)(actionDirection*(action*PresentationScale*.24f));
+            float sweep=CurrentAction==HeroActionPose.Attack?(actionDirection.x<-.1f?-115:115):CurrentAction==HeroActionPose.Skill?55:CurrentAction==HeroActionPose.Dodge?-actionDirection.x*22:0;
+            weapon.transform.localRotation=Quaternion.Euler(0,0,weaponAngle+sweep*action+(walking?Mathf.Sin(Time.unscaledTime*14)*6:0));
+        }
     }
 
     public void SetEquipmentTier(int tier)

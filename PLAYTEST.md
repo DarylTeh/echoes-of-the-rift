@@ -1,6 +1,12 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
-## Latest art UAT — revision 72, 5 October 2026
+## Latest combat-presentation UAT — revision 73, 5 October 2026
+
+The optimized player now presents a weapon sweep on basic attack, a spell-colored lean on skill cast, and a travel-direction stretch on dodge. The campaign smoke asserts each trigger and confirms the temporary pose resets. The walk-cycle smoke still observes stride changes across front/side/rear art, and all 72 race/direction/frame lookups load. The full campaign progression/combat/save smoke passed with no runtime errors.
+
+Desktop and touch layouts passed 350/351 checks; Rift Defense passed all 20 waves, four bosses and 15 towers with core health 100. The Unity build succeeded at `Logs/step-10-20261005-202607.log`; `Release/Windows` was synchronized with the tested player. Physical-device animation and frame-time measurements remain open.
+
+## Previous art UAT — revision 72, 5 October 2026
 
 All three directional views now have alternating stride frames for all nine races. The campaign smoke observed a live alternate frame while the hero moved, verified all 72 race/direction/frame lookups, and completed movement, combat, saves and ten campaign loops without runtime errors. Desktop and touch layouts passed 350/351 checks; Rift Defense passed 20 waves, four bosses and 15 towers with core health 100. Build log: `Logs/step-10-20261005-200824.log`; player results: `Logs/Runtime/runtime-smoke.txt`; layout captures/results: `Logs/UILayout` and `Logs/UILayoutTouch`; defense: `Logs/HeroWalkUAT`.
 

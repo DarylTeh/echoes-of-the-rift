@@ -1,5 +1,11 @@
 # Execution log
 
+## Combat-triggered hero action poses — revision 73, 5 October 2026
+
+Connected basic attacks, skill casts and dodges to distinct lightweight presentation poses in `CharacterCustomizer`. The weapon sweeps during attacks, skills lean/tint toward their spell color, and dodges stretch and tip along travel direction. The transient visual blend returns to the current directional stride/idle pose. No extra sprite atlases or per-frame allocations were added.
+
+Validation: optimized Windows build `Logs/step-10-20261005-202607.log`; campaign smoke confirmed attack/skill/dodge triggers, automatic pose reset, movement cycles, all 72 race/direction/frame lookups, progression and save/recovery assertions with no runtime errors. Desktop and touch UI suites passed 350/351 checks. Rift Defense smoke passed all 20 waves, four bosses and 15 towers with core health 100. The Windows release was synchronized from the tested player.
+
 ## Hero walk cycles — revision 72, 5 October 2026
 
 - Added three transparent 3×3 alternate-stride atlases for front, side and rear hero views. Each sheet matches the nine-race order and keeps the approved armor, scale and silhouette while shifting limbs and cape/tail.

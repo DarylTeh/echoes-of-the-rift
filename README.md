@@ -1,8 +1,8 @@
 # Echoes of the Rift
 
-## Current build - revision 72, 5 October 2026
+## Current build - revision 73, 5 October 2026
 
-The optimized Windows player has been rebuilt from the current Unity source and copied to the tracked `Release/Windows` handoff. Revision 72 adds two-frame walk cycles for all nine races across front, side and rear views. The build and live walk-cycle/campaign checks passed, along with desktop/touch UI checks (350/351) and the 20-wave Rift Defense test. Art sheets are `HeroFrontWalk.png`, `HeroSideWalk.png` and `HeroBackWalk.png`; see `Logs/Runtime`, `Logs/UILayout`, `Logs/UILayoutTouch`, `Logs/HeroWalkUAT`, [art direction](Assets/_Project/Resources/Illustrated/ART-DIRECTION.md) and [master plan](MASTER-PLAN.md). Further action animation and screen polish remain open.
+The optimized Windows player has been rebuilt from the current Unity source and copied to the tracked `Release/Windows` handoff. Revision 73 adds attack, skill and dodge poses on top of the two-frame walk cycles for all nine races. Campaign checks verify the three action triggers and pose reset; desktop/touch UI checks passed (350/351), and Rift Defense passed all 20 waves. See `Logs/Runtime`, `Logs/UILayout`, `Logs/UILayoutTouch`, `Logs/HeroActionUAT`, [art direction](Assets/_Project/Resources/Illustrated/ART-DIRECTION.md) and [master plan](MASTER-PLAN.md). More authored combat-animation frames, screen polish and physical-device performance checks remain open.
 
 The skill HUD and active-event feed now avoid repeating stable work, improving low-end frame time and repeated event requests while preserving gameplay and server authority.
 

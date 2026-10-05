@@ -72,6 +72,7 @@ public sealed class PlayerController : MonoBehaviour
             if(equippedWeapon==null)equippedWeapon=GetComponentInChildren<WeaponTrailVFX>();
             string family=equippedWeapon!=null?equippedWeapon.Family:"sword";
             attackReady=Time.timeAsDouble+WeaponCombat.Interval(family);equippedWeapon?.Burst();
+            customizer?.PlayAttackPose(Aim);
             WeaponCombat.Fire(family,transform.position+Vector3.up*.45f,Aim,stats.AttackDamage*(Time.timeAsDouble<buffUntil?1.25f:1),health);
         }
     }
@@ -87,11 +88,12 @@ public sealed class PlayerController : MonoBehaviour
     {
         if(health.InSafeZone||!ControlsEnabled||!health.Alive||Time.timeScale==0||Time.timeAsDouble<dodgeReady)return false;
         if(ForwardInputs) { uiDodge=true; return true; }
-        GetComponentInChildren<WeaponTrailVFX>()?.Burst(); dodgeReady=Time.timeAsDouble+1; dodgeUntil=Time.timeAsDouble+0.2; dodgeDirection=movement.normalized; if(dodgeDirection==Vector2.zero)dodgeDirection=Aim; health.GrantInvulnerability(0.2f); return true;
+        GetComponentInChildren<WeaponTrailVFX>()?.Burst(); dodgeReady=Time.timeAsDouble+1; dodgeUntil=Time.timeAsDouble+0.2; dodgeDirection=movement.normalized; if(dodgeDirection==Vector2.zero)dodgeDirection=Aim;customizer?.PlayDodgePose(dodgeDirection);health.GrantInvulnerability(0.2f); return true;
     }
     private void Cast(SpellData spell)
     {
         if(health.InSafeZone)return;
+        customizer?.PlaySkillPose(Aim,spell.Color);
         CombatVisual.Pulse(transform.position+Vector3.up*.3f,.8f,spell.Color,.3f);
         GetComponentInChildren<WeaponTrailVFX>()?.Burst();
         if(spell.Effect==SpellEffect.FanShot){WeaponCombat.Fan(transform.position+Vector3.up*.45f,Aim,spell.Power*.35f,spell.Range,health,5,13,spell.Color);return;}
