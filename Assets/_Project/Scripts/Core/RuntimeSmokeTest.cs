@@ -115,6 +115,7 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         yield return new WaitForSecondsRealtime(0.3f);
         bool actionPoseResets=customizer.CurrentAction==HeroActionPose.Idle;
         game.Player.Damage(1); bool expires=game.Player.Health<health;bool hitPose=customizer.CurrentAction==HeroActionPose.Hit;
+        yield return new WaitForEndOfFrame();Capture("hit-reaction.png");
         yield return new WaitForSecondsRealtime(.24f);bool hitPoseResets=customizer.CurrentAction==HeroActionPose.Idle;
         InputSystem.RemoveDevice(keyboard);
         foreach(var enemy in FindObjectsByType<EnemyBrain>(FindObjectsSortMode.None))if(enemy.Pattern==null)enemy.GetComponent<Combatant>().Damage(10000);

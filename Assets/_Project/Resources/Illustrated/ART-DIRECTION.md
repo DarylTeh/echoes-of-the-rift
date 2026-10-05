@@ -12,7 +12,7 @@ This is the current art direction. The new originals take their visual cues from
 
 Combat uses lightweight runtime presentation poses layered over those shared sprites. Basic attacks sweep the equipped weapon; skills lean and tint toward their spell color; dodges stretch and tip toward travel direction. Poses blend back to the walk or idle base and reuse existing renderers/materials without new atlases or per-frame allocations. Authored multi-frame attack/skill/dodge sprite poses remain a future art pass.
 
-The current source also gives the hero a short hit reaction when health decreases: a knockback-direction flinch, coral tint and compact impact ring. Build/playtest validation for this addition is pending Unity license recovery; this note records source intent, not a visual acceptance result.
+The hero also has a short hit reaction when health decreases: a knockback-direction flinch, coral tint and compact impact ring. Campaign trigger/recovery checks and the in-game hit-reaction capture passed review. This runtime presentation reuses the shared hero art; authored multi-frame hit sprites remain a future art pass.
 
 `Equipment.png` and `Expansion.png` are transparent 4×4 item atlases. Equipment rows: saber, ember greatsword, thorn bow, crescent scythe; crystal staff, rune hammer, horned helm, plate armor; leaf pendant, amethyst ring, wing boots, frost greaves; celestial pauldrons, cyan shield, ember gauntlets, orbiting charm. Expansion rows: spear, boomerang, pistols, crossbow; boots, leggings, pauldrons, shield; frost daggers, orb focus, war axe, wind chakram; trident, ranger bow, moon sickle, warhammer. Existing weapon-family mappings still select these shared icons throughout inventory, shop and item details.
 

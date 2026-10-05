@@ -1,10 +1,10 @@
 # Execution log
 
-## Directional hero hit reaction — revision 74 source changes, 5 October 2026
+## Directional hero hit reaction — revision 74, 5 October 2026
 
 Added `HeroActionPose.Hit`, a brief directional squash/lean and coral tint, plus a small pooled-budget impact ring when the player's health decreases. Invulnerability, damage amounts and safe-zone combat rules are unchanged. `RuntimeSmokeTest` now asserts the hit trigger and recovery.
 
-Validation is blocked before player export: `Tools/Compile-Step.ps1 -Step 10 -Method BuildPipelineAutomation.BuildWindows` exited 198. `Logs/step-10-20261005-203709.log` records `Access token is unavailable` and no matching license entitlement. The tracked revision 73 release remains untouched and is the last verified player. Rebuild, campaign smoke, desktop/touch UI and Rift Defense checks are required after restoring Unity licensing. This source-only iteration is committed locally; GitHub push requires Git Credential Manager authentication.
+Validation: optimized Windows build `Logs/step-10-20261005-210636.log`; campaign smoke passed hit trigger/recovery, movement, combat, progression and saves without runtime errors; desktop and touch suites passed 350/351; Rift Defense passed 20 waves, four bosses and 15 towers at core health 100. The hit-reaction screenshot `Logs/Runtime/hit-reaction.png` was visually reviewed. The tracked release was synced from the built player. An earlier sandboxed attempt exited 198; rerunning the build through the user's Windows credential context succeeded.
 
 ## Combat-triggered hero action poses — revision 73, 5 October 2026
 

@@ -1,14 +1,14 @@
 # Echoes of the Rift master plan
 
-Revision 74 - 5 October 2026. Directional hero hit reaction (source; build validation pending).
+Revision 74 - 5 October 2026. Directional hero hit reaction.
 
-## Current source iteration - revision 74: add a readable hero hit reaction
+## Current iteration - revision 74: add a readable hero hit reaction
 
 When the player loses health, the hero now briefly squashes and leans in the knockback direction, flashes a restrained coral tint, and emits a small impact ring. The reaction blends back to the current idle/walk pose. It only runs after health actually decreases, so safe-zone blocking and invulnerability behavior are unchanged. The campaign smoke now asserts both the hit trigger and pose recovery.
 
-Validation is pending: Unity batch build exited 198 because its licensing client reported no access token and no matching entitlement (`Logs/step-10-20261005-203709.log`). The revision 73 Windows player remains the last verified build; no release files were replaced. After Unity licensing is restored, rebuild and run campaign, desktop/touch UI and Rift Defense checks. GitHub push is also pending because Git Credential Manager returned `SEC_E_NO_CREDENTIALS` on the prior iteration.
+Validation passed: optimized Unity Windows build (`Logs/step-10-20261005-210636.log`); campaign smoke including hit trigger/recovery and no runtime errors (`Logs/Runtime/runtime-smoke.txt`); desktop/touch UI (350/351); Rift Defense (20 waves, four bosses, 15 towers, core 100). The hit-reaction capture was visually reviewed at `Logs/Runtime/hit-reaction.png`. `Release/Windows` was synchronized with the tested build. Physical-device animation and frame-time acceptance remain open.
 
-## Current iteration - revision 73: animate attacks, skills and dodges
+## Previous iteration - revision 73: animate attacks, skills and dodges
 
 Connected lightweight attack, skill and dodge poses to the actual player combat events. Attacks lean and sweep the equipped weapon, skills use the active spell colour, and dodges stretch and tip toward the travel direction. The pose blends back to the existing directional walk/idle presentation without adding per-frame allocations or replacing the approved race art.
 
