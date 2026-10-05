@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-public enum HeroActionPose { Idle, Attack, Skill, Dodge }
+public enum HeroActionPose { Idle, Attack, Skill, Dodge, Hit }
 
 public sealed class CharacterCustomizer : MonoBehaviour
 {
@@ -86,6 +86,7 @@ public sealed class CharacterCustomizer : MonoBehaviour
     public void PlayAttackPose(Vector2 direction)=>PlayAction(HeroActionPose.Attack,direction,Color.white,.24f);
     public void PlaySkillPose(Vector2 direction,Color color)=>PlayAction(HeroActionPose.Skill,direction,color,.38f);
     public void PlayDodgePose(Vector2 direction)=>PlayAction(HeroActionPose.Dodge,direction,new Color32(87,227,255,255),.2f);
+    public void PlayHitPose(Vector2 direction)=>PlayAction(HeroActionPose.Hit,direction,new Color32(255,93,132,255),.2f);
     private void PlayAction(HeroActionPose pose,Vector2 direction,Color color,float duration)
     {
         if(direction.sqrMagnitude>.01f)actionDirection=direction.normalized;
@@ -121,13 +122,13 @@ public sealed class CharacterCustomizer : MonoBehaviour
         float bob=Mathf.Floor(Mathf.Sin(Time.unscaledTime*(walking?14:3))*(walking?2:1))/16;
         foreach(Transform child in transform)if(child.name.StartsWith("Pixel-"))child.localPosition=new Vector3(0,1+bob,0)*PresentationScale;
         float lean=walking?Mathf.Sin(Time.unscaledTime*14)*3:0;
-        float poseLean=CurrentAction==HeroActionPose.Dodge?-actionDirection.x*18:CurrentAction==HeroActionPose.Attack?-actionDirection.x*8:CurrentAction==HeroActionPose.Skill?actionDirection.y*5:0;
+        float poseLean=CurrentAction==HeroActionPose.Dodge?-actionDirection.x*18:CurrentAction==HeroActionPose.Hit?actionDirection.x*24:CurrentAction==HeroActionPose.Attack?-actionDirection.x*8:CurrentAction==HeroActionPose.Skill?actionDirection.y*5:0;
         if(heroSprite!=null)
         {
             heroSprite.transform.localRotation=Quaternion.Euler(0,0,lean+poseLean*action);
-            float stretch=CurrentAction==HeroActionPose.Dodge?0.13f:CurrentAction==HeroActionPose.Skill?0.08f:0;
+            float stretch=CurrentAction==HeroActionPose.Dodge?0.13f:CurrentAction==HeroActionPose.Skill?0.08f:CurrentAction==HeroActionPose.Hit?-.1f:0;
             heroSprite.transform.localScale=Vector3.Scale(Vector3.one*PresentationScale,new Vector3(1+stretch*action,1-stretch*.45f*action,1));
-            heroSprite.color=CurrentAction==HeroActionPose.Skill?Color.Lerp(Color.white,actionColor,action*.28f):CurrentAction==HeroActionPose.Dodge?Color.Lerp(Color.white,actionColor,action*.22f):Color.white;
+            heroSprite.color=CurrentAction==HeroActionPose.Skill?Color.Lerp(Color.white,actionColor,action*.28f):CurrentAction==HeroActionPose.Dodge?Color.Lerp(Color.white,actionColor,action*.22f):CurrentAction==HeroActionPose.Hit?Color.Lerp(Color.white,actionColor,action*.32f):Color.white;
         }
         if(weapon!=null)
         {

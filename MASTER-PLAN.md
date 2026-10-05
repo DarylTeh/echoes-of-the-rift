@@ -1,6 +1,12 @@
 # Echoes of the Rift master plan
 
-Revision 73 - 5 October 2026. Combat-triggered hero action poses.
+Revision 74 - 5 October 2026. Directional hero hit reaction (source; build validation pending).
+
+## Current source iteration - revision 74: add a readable hero hit reaction
+
+When the player loses health, the hero now briefly squashes and leans in the knockback direction, flashes a restrained coral tint, and emits a small impact ring. The reaction blends back to the current idle/walk pose. It only runs after health actually decreases, so safe-zone blocking and invulnerability behavior are unchanged. The campaign smoke now asserts both the hit trigger and pose recovery.
+
+Validation is pending: Unity batch build exited 198 because its licensing client reported no access token and no matching entitlement (`Logs/step-10-20261005-203709.log`). The revision 73 Windows player remains the last verified build; no release files were replaced. After Unity licensing is restored, rebuild and run campaign, desktop/touch UI and Rift Defense checks. GitHub push is also pending because Git Credential Manager returned `SEC_E_NO_CREDENTIALS` on the prior iteration.
 
 ## Current iteration - revision 73: animate attacks, skills and dodges
 

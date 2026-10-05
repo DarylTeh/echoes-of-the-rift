@@ -23,11 +23,12 @@ public sealed class PlayerController : MonoBehaviour
     private Vector2 dodgeDirection,movement;
     private PlayerInputFrame remote;
     private bool uiDodge,uiSwap,uiAttack;
+    private float lastHealth;
     public void SetUIAttack(bool held)=>uiAttack=held;
     private int uiSkill;
     private void Awake()
     {
-        body=GetComponent<Rigidbody2D>(); health=GetComponent<Combatant>(); stats=GetComponent<CharacterStats>();customizer=GetComponent<CharacterCustomizer>();
+        body=GetComponent<Rigidbody2D>(); health=GetComponent<Combatant>(); stats=GetComponent<CharacterStats>();customizer=GetComponent<CharacterCustomizer>();lastHealth=health.Health;health.Changed+=OnHealthChanged;
         body.gravityScale=0; body.freezeRotation=true; body.interpolation=RigidbodyInterpolation2D.Interpolate;
         move=new InputAction("Move",InputActionType.Value); move.AddCompositeBinding("2DVector").With("Up","<Keyboard>/w").With("Down","<Keyboard>/s").With("Left","<Keyboard>/a").With("Right","<Keyboard>/d"); move.AddBinding("<Gamepad>/leftStick");
         aimStick=new InputAction("AimStick",InputActionType.Value,"<Gamepad>/rightStick"); pointer=new InputAction("AimPointer",InputActionType.Value,"<Mouse>/position");
@@ -107,8 +108,21 @@ public sealed class PlayerController : MonoBehaviour
         else if(spell.Effect==SpellEffect.Bolt)Projectile.Spawn(transform.position+Vector3.up*0.45f,Aim,spell.Power,spell.Range,health,spell.Color);
         else { foreach(var target in FindObjectsByType<Combatant>(FindObjectsSortMode.None))if(!target.IsPlayer&&Vector2.Distance(transform.position,target.transform.position)<=spell.Range)target.Damage(spell.Power); CombatVisual.Pulse(transform.position,spell.Range,spell.Color,0.25f); }
     }
+    private void OnHealthChanged()
+    {
+        float current=health.Health;
+        if(current<lastHealth)
+        {
+            Vector2 push=-Aim;
+            if(push.sqrMagnitude<.01f)push=Vector2.left;
+            customizer?.PlayHitPose(push);
+            CombatVisual.Pulse(transform.position+Vector3.up*.3f,.55f,new Color32(255,93,132,255),.18f);
+        }
+        lastHealth=current;
+    }
     private void OnDestroy()
     {
+        if(health!=null)health.Changed-=OnHealthChanged;
         if(Skills!=null)Skills.Cast-=Cast;
         foreach(var action in new[] {move,aimStick,pointer,attack,dodge,swap})action?.Dispose(); if(casts!=null)foreach(var action in casts)action.Dispose();
     }

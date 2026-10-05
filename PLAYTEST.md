@@ -1,5 +1,9 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
+## Source-only combat change — revision 74, 5 October 2026
+
+A short hero hit reaction is implemented and the campaign smoke now checks its trigger and reset. This source has not been built or played: the Unity batch build exited 198 because the licensing client has no access token or matching entitlement (`Logs/step-10-20261005-203709.log`). Revision 73's tested player remains in `Release/Windows`. Do not treat the prior test results below as validation of revision 74; rebuild and rerun the gameplay/UI/defense suite after licensing is restored.
+
 ## Latest combat-presentation UAT — revision 73, 5 October 2026
 
 The optimized player now presents a weapon sweep on basic attack, a spell-colored lean on skill cast, and a travel-direction stretch on dodge. The campaign smoke asserts each trigger and confirms the temporary pose resets. The walk-cycle smoke still observes stride changes across front/side/rear art, and all 72 race/direction/frame lookups load. The full campaign progression/combat/save smoke passed with no runtime errors.

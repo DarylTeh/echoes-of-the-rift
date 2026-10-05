@@ -1,5 +1,11 @@
 # Execution log
 
+## Directional hero hit reaction — revision 74 source changes, 5 October 2026
+
+Added `HeroActionPose.Hit`, a brief directional squash/lean and coral tint, plus a small pooled-budget impact ring when the player's health decreases. Invulnerability, damage amounts and safe-zone combat rules are unchanged. `RuntimeSmokeTest` now asserts the hit trigger and recovery.
+
+Validation is blocked before player export: `Tools/Compile-Step.ps1 -Step 10 -Method BuildPipelineAutomation.BuildWindows` exited 198. `Logs/step-10-20261005-203709.log` records `Access token is unavailable` and no matching license entitlement. The tracked revision 73 release remains untouched and is the last verified player. Rebuild, campaign smoke, desktop/touch UI and Rift Defense checks are required after restoring Unity licensing. This source-only iteration is committed locally; GitHub push requires Git Credential Manager authentication.
+
 ## Combat-triggered hero action poses — revision 73, 5 October 2026
 
 Connected basic attacks, skill casts and dodges to distinct lightweight presentation poses in `CharacterCustomizer`. The weapon sweeps during attacks, skills lean/tint toward their spell color, and dodges stretch and tip along travel direction. The transient visual blend returns to the current directional stride/idle pose. No extra sprite atlases or per-frame allocations were added.
