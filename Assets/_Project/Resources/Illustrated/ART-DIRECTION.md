@@ -1,4 +1,4 @@
-# Shared hero, gear, creature, utility and effect art — revision 26
+# Shared hero, gear, creature, utility and effect art — revision 28
 
 This is the current art direction. The new originals take their visual cues from the supplied MyHeroes: SEA and Random Dice references: tiny readable action-RPG heroes, square pixel clusters, jewel-color silhouettes, dark outlines, richly shaded gear, recognizable glossy skill dice and distinctive dungeon creatures. The art is newly generated and does not reuse game files.
 
@@ -16,7 +16,11 @@ This is the current art direction. The new originals take their visual cues from
 
 `CombatEffects.png` is a transparent 4×4 atlas of four blade arcs, elemental impacts, rune circles and defensive/boss bursts. The shared `CombatVisual` selects a matching effect by attack type and color, animates one short alpha/scale flash, and reuses the existing bounded burst pool. Long boss telegraph rings remain clear outlines. Spell bolts share the rune symbol and 5% world sampling.
 
-Current shared-art replacement scope completed in source: hero, skill, equipment, weapons, dungeon enemies, bosses, room/floor tiles, utility symbols and common attack flashes. Remaining: richer distinct boss attack sequences, animated directional heroes, and further screen-by-screen visual polish. Retire old art only after each consumer has migrated and its build/playtest passes.
+`BossAttacks.png` is a transparent 4×4 sequence atlas. Each row is one boss, with four left-to-right phases: warning seal, gathered charge, directional strike, and dissipating impact. `BossAttackVisual` advances those phases over the existing attack wind-up and impact, reusing a small visual pool and keeping the established damage radius, timing and telegraph ring. Boss-specific hues and glyphs distinguish thorn, sun/fire, tide and storm attacks.
+
+The existing race-specific hero sprite remains intact. `CharacterCustomizer` now faces left/right from movement, follows aim when standing, shifts the weapon to the front/back side for vertical facing, and adds a subtle walk bob/lean. This preserves saved race selection and skin/hair controls while making movement read more clearly; a full multi-direction frame sheet remains a later art decision.
+
+Current shared-art replacement scope completed in source: hero, skill, equipment, weapons, dungeon enemies, bosses, room/floor tiles, utility symbols, common attack flashes and boss-specific attack sequences. Remaining: a full multi-direction hero frame sheet and further screen-by-screen visual polish. Retire old art only after each consumer has migrated and its build/playtest passes.
 
 References reviewed for the visual language: [MyHeroes Wiki on Fandom](https://myheroesofficial.fandom.com/wiki/MyHeroes_Wiki) and the [Random Dice Wiki dice catalogue](https://randomdice.wiki.gg/wiki/Dice). These are broad style references, not copied source images.
 

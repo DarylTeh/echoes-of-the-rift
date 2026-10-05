@@ -39,6 +39,7 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         creator.Preview.Apply(new CharacterAppearanceData { SkinIndex=2,HairStyle=2,HairColor=1,ClassId="wayfarer",PassiveSkillId="steadfast" });
         game.Begin(creator.Preview.Appearance);
         var arguments=Environment.GetCommandLineArgs();
+        if(Array.IndexOf(arguments,"-bossArtTest")>=0){yield return TestBossArt();yield break;}
         if(Array.IndexOf(arguments,"-showRiftDefense")>=0)
         {
             game.Defense.StartPreviewShowcase();
@@ -91,6 +92,12 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         bool moved=game.Player.transform.position.x>before.x+0.1f;
         Debug.Log($"MOVEMENT_CHECK before={before} after={game.Player.transform.position} key={keyboard.dKey.isPressed} controls={game.Player.GetComponent<PlayerController>().ControlsEnabled} velocity={game.Player.GetComponent<Rigidbody2D>().linearVelocity} body={game.Player.GetComponent<Rigidbody2D>().bodyType}");
         var controller=game.Player.GetComponent<PlayerController>();
+        var customizer=game.Player.GetComponent<CharacterCustomizer>();
+        customizer.SetFacing(Vector2.left);var heroRenderer=game.Player.transform.Find("Pixel-body")?.GetComponent<SpriteRenderer>();
+        bool facesLeft=heroRenderer!=null&&heroRenderer.flipX;
+        customizer.SetFacing(Vector2.up);var equippedWeapon=game.Player.transform.Find("EquippedWeapon");
+        bool facesUp=equippedWeapon!=null&&equippedWeapon.localPosition.y>0;
+        customizer.SetFacing(Vector2.right);bool directionalFacing=facesLeft&&facesUp;
         bool dodged=controller.Dodge(); float health=game.Player.Health; game.Player.Damage(10);
         bool immune=game.Player.Health==health;
         var skills=controller.Skills; bool cast=skills.TryCastActive(0,game.Player.GetComponent<CharacterStats>());
@@ -164,8 +171,8 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         game.Player.Damage(10000); yield return null;
         game.ReviveWithAdPlaceholder(); bool campaignNoRevive=!game.Player.Alive&&GameObject.Find("Revive")==null;
         var retry=GameObject.Find("Return to town")?.GetComponent<UnityEngine.UI.Button>(); bool defeat=retry!=null; retry?.onClick.Invoke();
-        bool passed=moved&&dodged&&immune&&cast&&cooldown&&bank&&expires&&loops&&rewards&&saved&&saveRecovery&&bossOnly&&bossRequired&&inventoryUI&&catalogue&&races&&tierEffects&&loot&&campaignNoRevive&&paused&&resumed&&defeat&&!failed;
-        Finish($"{(passed?"PASS":"FAIL")} movement={moved} dodge={dodged} immune={immune} cooldown={cooldown} bank={bank} iframeExpires={expires} tenRuns={loops} rewards={rewards} saved={saved} saveRecovery={saveRecovery} bossOnly={bossOnly} bossRequired={bossRequired} inventoryUI={inventoryUI} catalogue={catalogue} races={races} tierEffects={tierEffects} loot={loot} campaignNoRevive={campaignNoRevive} pause={paused} resume={resumed} defeat={defeat} runtimeErrors={failed}");
+        bool passed=moved&&directionalFacing&&dodged&&immune&&cast&&cooldown&&bank&&expires&&loops&&rewards&&saved&&saveRecovery&&bossOnly&&bossRequired&&inventoryUI&&catalogue&&races&&tierEffects&&loot&&campaignNoRevive&&paused&&resumed&&defeat&&!failed;
+        Finish($"{(passed?"PASS":"FAIL")} movement={moved} directionalFacing={directionalFacing} dodge={dodged} immune={immune} cooldown={cooldown} bank={bank} iframeExpires={expires} tenRuns={loops} rewards={rewards} saved={saved} saveRecovery={saveRecovery} bossOnly={bossOnly} bossRequired={bossRequired} inventoryUI={inventoryUI} catalogue={catalogue} races={races} tierEffects={tierEffects} loot={loot} campaignNoRevive={campaignNoRevive} pause={paused} resume={resumed} defeat={defeat} runtimeErrors={failed}");
     }
     private void Capture(string name)
     {

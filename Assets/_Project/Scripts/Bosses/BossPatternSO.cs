@@ -13,5 +13,6 @@ public struct BossAttack
 public sealed class BossPatternSO : ScriptableObject
 {
     public string Id;
+    [HideInInspector] public int VisualIndex=-1;
     public BossAttack[] Attacks;
 }

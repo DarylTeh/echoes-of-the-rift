@@ -1,5 +1,14 @@
 # Execution log
 
+## Boss attack phases and hero facing - revision 70, 5 October 2026
+
+- Generated an original 4×4 boss attack atlas with four phases per boss: warning glyph, charge, strike and fading impact.
+- Added `BossAttackVisual` to animate and reuse attack sprites through each boss wind-up and impact. Existing damage timing/radius and outline telegraphs remain authoritative and visible; boss hues identify thorn, sun/fire, tide and storm patterns.
+- Updated the existing player/NPC `CharacterCustomizer` to mirror toward left/right travel, use aim while idle, place the weapon in front/behind for vertical travel, and add subtle walking bob/lean. Race sprites, palette controls and equipment art stay unchanged.
+- Added focused `-bossArtTest` coverage: all 16 atlas cells load, warning/charge/strike/fade phase changes occur in order, and pooled visuals recycle. Screenshots are in `Logs/BossArtUAT`.
+- Added directional-facing assertions to the normal campaign smoke; left flip and upward weapon depth passed.
+- Validation passed: optimized Windows build `Logs/step-10-20261005-083707.log`; campaign smoke `Logs/Runtime/runtime-smoke.txt`; desktop/touch UI layout checks 350/351, zero failures; Rift Defense 20 waves, four bosses, all 15 towers and core health 100 (`Logs/BossHeroUAT/rift-defense-test.txt`). The Windows build and `Release/Windows` executable SHA-256 values match.
+
 ## Shared utility icons and combat flashes - revision 69, 5 October 2026
 
 - Generated an original 4×4 utility icon atlas and 4×4 combat effects atlas; added both to the Unity point-filtered resource import pipeline.

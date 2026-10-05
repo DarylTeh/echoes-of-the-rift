@@ -13,6 +13,7 @@ public sealed class PlayerController : MonoBehaviour
     public event Action<PlayerInputFrame> InputSubmitted;
     private Rigidbody2D body;
     private Combatant health;
+    private CharacterCustomizer customizer;
     private WeaponTrailVFX equippedWeapon;
     private CharacterStats stats;
     private InputAction move,aimStick,pointer,attack,dodge,swap;
@@ -26,7 +27,7 @@ public sealed class PlayerController : MonoBehaviour
     private int uiSkill;
     private void Awake()
     {
-        body=GetComponent<Rigidbody2D>(); health=GetComponent<Combatant>(); stats=GetComponent<CharacterStats>();
+        body=GetComponent<Rigidbody2D>(); health=GetComponent<Combatant>(); stats=GetComponent<CharacterStats>();customizer=GetComponent<CharacterCustomizer>();
         body.gravityScale=0; body.freezeRotation=true; body.interpolation=RigidbodyInterpolation2D.Interpolate;
         move=new InputAction("Move",InputActionType.Value); move.AddCompositeBinding("2DVector").With("Up","<Keyboard>/w").With("Down","<Keyboard>/s").With("Left","<Keyboard>/a").With("Right","<Keyboard>/d"); move.AddBinding("<Gamepad>/leftStick");
         aimStick=new InputAction("AimStick",InputActionType.Value,"<Gamepad>/rightStick"); pointer=new InputAction("AimPointer",InputActionType.Value,"<Mouse>/position");
@@ -64,7 +65,7 @@ public sealed class PlayerController : MonoBehaviour
         }
         if(health.InSafeZone){frame.Attack=frame.Dodge=frame.Swap=false;frame.Skill=0;}
         if(ForwardInputs) { InputSubmitted?.Invoke(frame); return; }
-        movement=frame.Move; if(frame.Aim.sqrMagnitude>0.01f)Aim=frame.Aim;
+        movement=frame.Move; if(frame.Aim.sqrMagnitude>0.01f)Aim=frame.Aim;customizer?.SetFacing(movement.sqrMagnitude>.04f?movement:Aim);
         if(frame.Dodge)Dodge(); if(frame.Swap)Skills.Swap(); if(frame.Skill>0)Skills.TryCastActive(frame.Skill-1,stats);
         if(frame.Attack&&Time.timeAsDouble>=attackReady)
         {

@@ -1,6 +1,12 @@
 # Echoes of the Rift master plan
 
-Revision 69 - 5 October 2026. Shared utility symbols and impact effects.
+Revision 70 - 5 October 2026. Boss attack phases and hero facing.
+
+## Current iteration - revision 70: animate boss attacks and face the hero
+
+Added a four-row boss attack sequence atlas with four phases per boss: warning glyph, charge, strike and dissipating burst. Campaign bosses now show their own hue and attack sprite sequence during wind-up and impact; hit radius, timing and the readable telegraph ring remain unchanged. Attack visuals use a small reuse pool. The hero now turns toward left/right movement and current aim while idle; vertical facing adjusts weapon depth/position. Walk bob and a small lean make movement easier to read without replacing the approved race sprites or appearance controls.
+
+Validation passed: optimized Windows build (`Logs/step-10-20261005-083707.log`), focused four-boss/four-phase sprite UAT (`Logs/BossArtUAT/runtime-smoke.txt`), campaign progression/combat (`Logs/Runtime/runtime-smoke.txt`), desktop/touch UI suites (350/351 checks), and Rift Defense (20 waves, four bosses, 15 towers; `Logs/BossHeroUAT/rift-defense-test.txt`). Hero facing passed for left and upward directions. Full directional sprite frames and further screen polish remain open.
 
 ## Current iteration - revision 69: unify utility symbols and combat flashes
 

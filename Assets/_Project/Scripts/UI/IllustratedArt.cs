@@ -3,8 +3,8 @@ using UnityEngine;
 // Shared source atlases, runtime slices and materials. Original PNGs remain untouched.
 public static class IllustratedArt
 {
-    private static readonly Sprite[] equipment=new Sprite[16],heroes=new Sprite[9],skillCubes=new Sprite[12],monsters=new Sprite[16],dungeonTiles=new Sprite[8],utilityIcons=new Sprite[16],combatEffects=new Sprite[16];
-    private static Texture2D equipmentTexture,heroTexture,expansionTexture,skillCubeTexture,monsterTexture,dungeonTilesTexture,utilityIconsTexture,combatEffectsTexture;
+    private static readonly Sprite[] equipment=new Sprite[16],heroes=new Sprite[9],skillCubes=new Sprite[12],monsters=new Sprite[16],dungeonTiles=new Sprite[8],utilityIcons=new Sprite[16],combatEffects=new Sprite[16],bossAttacks=new Sprite[16];
+    private static Texture2D equipmentTexture,heroTexture,expansionTexture,skillCubeTexture,monsterTexture,dungeonTilesTexture,utilityIconsTexture,combatEffectsTexture,bossAttacksTexture;
     private static readonly Sprite[] expansion=new Sprite[16];
     public static Sprite Expansion(int index){if(expansionTexture==null)expansionTexture=Resources.Load<Texture2D>("Illustrated/Expansion");return expansion[index]!=null?expansion[index]:expansion[index]=Slice(expansionTexture,index,4,1);}
     private static Material uiMaterial,heroMaterial,worldMaterial;
@@ -93,6 +93,12 @@ public static class IllustratedArt
         if(saturation<.18f)index=10;
         return combatEffects[index]!=null?combatEffects[index]:combatEffects[index]=Slice(combatEffectsTexture,index,4,4,2);
     }
+    public static Sprite BossAttack(int boss,int phase)
+    {
+        int index=Mathf.Clamp(boss,0,3)*4+Mathf.Clamp(phase,0,3);
+        if(bossAttacksTexture==null)bossAttacksTexture=Resources.Load<Texture2D>("Illustrated/BossAttacks");
+        return bossAttacks[index]!=null?bossAttacks[index]:bossAttacks[index]=Slice(bossAttacksTexture,index,4,4,2);
+    }
     public static Sprite Weapon(string family)
     {
         switch(family)
@@ -145,5 +151,5 @@ public static class IllustratedArt
     }
     public static Sprite Item(ItemData item)=>item.Kind==ItemKind.SkillBook?Book(item.Spell):Weapon(item.Family)??item.iconSprite;
     public static Sprite Book(SpellData spell)=>Skill(spell);
-    public static bool Owns(Sprite sprite)=>sprite!=null&&(sprite.texture==equipmentTexture||sprite.texture==heroTexture||sprite.texture==expansionTexture||sprite.texture==skillCubeTexture||sprite.texture==monsterTexture||sprite.texture==dungeonTilesTexture||sprite.texture==utilityIconsTexture||sprite.texture==combatEffectsTexture);
+    public static bool Owns(Sprite sprite)=>sprite!=null&&(sprite.texture==equipmentTexture||sprite.texture==heroTexture||sprite.texture==expansionTexture||sprite.texture==skillCubeTexture||sprite.texture==monsterTexture||sprite.texture==dungeonTilesTexture||sprite.texture==utilityIconsTexture||sprite.texture==combatEffectsTexture||sprite.texture==bossAttacksTexture);
 }

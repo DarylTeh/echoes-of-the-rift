@@ -4,7 +4,7 @@ public static class IllustratedArtSetup
 {
  public static void BuildCLI()
  {
-  foreach(string name in new[]{"Equipment","Heroes","Expansion","Monsters","DungeonTiles","UtilityIcons","CombatEffects"})
+  foreach(string name in new[]{"Equipment","Heroes","Expansion","Monsters","DungeonTiles","UtilityIcons","CombatEffects","BossAttacks"})
   {
    string path="Assets/_Project/Resources/Illustrated/"+name+".png";
    AssetDatabase.ImportAsset(path);

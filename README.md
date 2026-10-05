@@ -1,8 +1,8 @@
 # Echoes of the Rift
 
-## Current build - revision 69, 5 October 2026
+## Current build - revision 70, 5 October 2026
 
-The optimized Windows player has been rebuilt from the current Unity source and copied to the tracked `Release/Windows` handoff. Revision 69 adds shared currency and navigation symbols plus colorful pooled combat flashes. Revision 68 added shared creature art and dark-stone campaign tiles. The optimized build, campaign smoke, desktop/touch UI checks (350/351), and 20-wave/four-boss defense test passed; see `Logs/UtilityCombatUAT`, [art direction](Assets/_Project/Resources/Illustrated/ART-DIRECTION.md), [UAT notes](Docs/UAT-2026-10-03-MyHeroes.md) and [master plan](MASTER-PLAN.md). Further screen polish, boss attack sequences, final visual acceptance and 90% MyHeroes parity remain open.
+The optimized Windows player has been rebuilt from the current Unity source and copied to the tracked `Release/Windows` handoff. Revision 70 adds four-phase boss attack visuals and movement-facing for heroes. The optimized build, all 16 boss animation sprites/phases, campaign movement/progression, desktop/touch UI checks (350/351), and 20-wave/four-boss defense test passed; see `Logs/BossArtUAT`, `Logs/BossHeroUAT`, [art direction](Assets/_Project/Resources/Illustrated/ART-DIRECTION.md), [UAT notes](Docs/UAT-2026-10-03-MyHeroes.md) and [master plan](MASTER-PLAN.md). Full directional hero sprite frames, further screen polish and final visual acceptance remain open.
 
 The skill HUD and active-event feed now avoid repeating stable work, improving low-end frame time and repeated event requests while preserving gameplay and server authority.
 
