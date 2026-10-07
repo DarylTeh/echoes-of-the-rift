@@ -2,7 +2,7 @@
 
 ## Latest animation/frame-pacing UAT — revision 77, 7 October 2026
 
-The source now has continuous hero bob, smoother eased weapon attack phases, and cached per-character render transforms. It includes a 10-second combat frame-pacing test with a 60 FPS target and p50/p95/over-budget reporting (Tools/Test-FramePacing.ps1). This code has not been rebuilt or run: Unity batch export returned exit 198 because the editor entitlement is unavailable. The current executable therefore does not include these changes, and 60 FPS is not yet verified. Run the benchmark on the optimized PC build and Android devices after rebuilding.
+The Windows Development and optimized players include continuous hero bob, eased weapon attack phases, cached per-character render transforms and the 10-second combat frame-pacing test (`Tools/Test-FramePacing.ps1`). Both builds passed on this PC: average 60.0 FPS, p50/p95 16.67 ms, 0.0% above the 17.17 ms threshold over 600 samples. Full campaign/combat runtime smoke passed on both builds. Desktop UI passed 350 checks, touch UI passed 351 checks, and connection-failure recovery passed with reconnect visible, unsafe sign-out hidden and no runtime errors. `Release/Windows` is synced from `Builds/Windows`. Android, low-end PC and sustained/thermal frame pacing remain unverified; the result is not a cross-device guarantee.
 
 
 

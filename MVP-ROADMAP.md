@@ -4,7 +4,7 @@ Revision 77, 7 October 2026. This is the current checklist; historical build not
 
 ## Current iteration - revision 77, 7 October 2026
 
-Hero movement now has continuous motion and cached sprite transforms; weapon attacks use eased anticipation, strike and recovery phases. The game targets 60 FPS. A 10-second combat pacing test reports average, p50/p95 and over-budget frames, but is not run yet because Unity export is blocked by entitlement. No cross-device 60 FPS claim until device measurements pass.
+Hero movement now has continuous motion and cached sprite transforms; weapon attacks use eased anticipation, strike and recovery phases. The game targets 60 FPS. Development and optimized Windows players passed the 10-second combat pacing test on this PC at 60.0 average FPS, 16.67 ms p50/p95, and 0.0% over 17.17 ms (600 samples). Full runtime smoke also passed on both. Desktop/touch UI and connection recovery passed. Android, low-end PC and sustained/thermal tests remain open; do not generalize the PC result to those devices.
 
 ## Previous iteration - revision 76, 7 October 2026
 
