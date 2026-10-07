@@ -1,8 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 80 - 8 October 2026. Set a strict MyHeroes: SEA UI and art baseline.
+Revision 81 - 8 October 2026. Replace the flat town with an original pixel-art guild hall.
 
-## Current iteration - revision 80: strict reference audit
+## Current iteration - revision 81: enrich the town scene
+
+Replaced the flat green/brick crossroad floor with a full-screen original pixel-art guild hall background: ruby gathering carpet, violet stone, bright crystal lamps, banners and detailed side counters. Repositioned specialists beside those counters and moved the campaign/raid/trial/world-boss destinations to the room edges, retaining the scrolling camera and safe-zone behavior. Gate labels now stay clear of the fixed activity rail and right-side utilities. The previous tilemap remains as an automatic fallback if the art resource is unavailable.
+
+Validation: Unity Windows player built successfully (`Logs/build-StandaloneWindows64-1791412712509.log`). New 1280x720 town capture reviewed at `Logs/TownArtIteration/rift-haven.png`. Full local gameplay smoke passed, including merchant/gate interaction, camera scroll, combat, pause/results, 10 campaign loops, save recovery, inventory, and no runtime errors (`Logs/TownArtIteration/runtime-smoke.txt`). Multi-resolution UI layout checks passed 350/350 with zero failures (`Logs/TownArtIteration/layout-failures.txt`). The town looks materially richer; MyHeroes layout/art parity is still low and the old 35/100 whole-game baseline has not been rescored. `Release/Windows` could not be replaced because its game/server processes are still running (PIDs 25704 and 26700); the tested player is in ignored `Builds/Windows`. Do not terminate those sessions automatically.
+
+Next: refine the shared item frame/icon/font treatment, then redesign the town navigation rail and combat HUD against the reference screens. Keep the user’s protected sign-out location and test mobile landscape separately.
+
+## Previous iteration - revision 80: strict reference audit
 
 Re-audited the current screen captures, source-built page inventory, and the MyHeroes: SEA reference screenshots/wiki evidence. The current game does **not** meet the requested 90% similarity. Strict qualitative baseline: 35/100 across layout and hierarchy (35% weight), navigation and interaction (25%), visual design and art (30%), and coverage of major comparable surfaces (10%). This is a design-review score, not a pixel-difference measurement. The backpack paperdoll/grid is the closest match; town, item inspection, shop and social/progression surfaces remain major gaps. Current Echoes art is original and does not use MyHeroes sprites or icons.
 

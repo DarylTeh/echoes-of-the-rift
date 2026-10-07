@@ -19,7 +19,9 @@ public sealed partial class TownHubManager : MonoBehaviour
     private readonly TMP_Text[] merchantLabels=new TMP_Text[5];
     private static readonly string[] MerchantIcons={"hammer","bow","staff","amulet","book"};
     public static readonly string[] Names={"Hephaestus","Artemis","Helios","Asclepius","Athena","North / Raids","South / Campaign","East / DPS trial","West / World boss"};
-    public static readonly Vector2[] Positions={new Vector2(-4,1.4f),new Vector2(-2,2),new Vector2(2,2),new Vector2(4,1.4f),new Vector2(4,-2),new Vector2(0,3.5f),new Vector2(0,-3.4f),new Vector2(7,0),new Vector2(-7,0)};
+    // Specialists sit beside the visible left/right counters in the new guild hall;
+    // the campaign, raid, trial and world-boss exits frame the room edges.
+    public static readonly Vector2[] Positions={new Vector2(-10,0),new Vector2(-10,2.5f),new Vector2(10,0),new Vector2(10,2.5f),new Vector2(0,5.4f),new Vector2(0,7.5f),new Vector2(0,-7.5f),new Vector2(14,0),new Vector2(-14,0)};
     private readonly System.Collections.Generic.List<RectTransform> signs=new System.Collections.Generic.List<RectTransform>();
     public void Open()
     {
@@ -68,7 +70,11 @@ public sealed partial class TownHubManager : MonoBehaviour
             Vector2 half=signs[i].sizeDelta*root.GetComponent<Canvas>().scaleFactor*.5f+Vector2.one*8;
             screen.x=Mathf.Clamp(screen.x,safe.xMin+half.x,safe.xMax-half.x);
             screen.y=Mathf.Clamp(screen.y,safe.yMin+half.y,safe.yMax-half.y);
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(root,screen,null,out var local);local.y=Mathf.Min(local.y,i<5?300:242);signs[i].anchoredPosition=local;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(root,screen,null,out var local);
+            local.y=Mathf.Min(local.y,i<5?300:242);
+            // Keep gate labels clear of the fixed left activity rail and right bag/minimap.
+            if(i>=5)local.x=Mathf.Clamp(local.x,-405,405);
+            signs[i].anchoredPosition=local;
         }
         if(!HasDialog){
             bool canInteract=nearest>=0;

@@ -4,24 +4,33 @@ using UnityEngine.Tilemaps;
 // Original runtime tilemap assembled on a fixed pixel grid; no reference-game assets.
 public static class TownScenery
 {
-    private static Sprite grass,path,water,gate;
+    private static Sprite grass,path,water,gate,lobbyBackdrop;
     public static GameObject Build(GameObject prefab,Vector2[] positions)
     {
         var root=new GameObject("RiftHavenWorld",typeof(Grid));
-        var floor=new GameObject("HavenTilemap",typeof(Tilemap),typeof(TilemapRenderer));floor.transform.SetParent(root.transform,false);floor.transform.localPosition=new Vector3(-.5f,-.5f,0);
-        var map=floor.GetComponent<Tilemap>();floor.GetComponent<TilemapRenderer>().sortingOrder=-20;
-        if(grass==null)CreateTiles();
-        var grassTile=ScriptableObject.CreateInstance<Tile>();grassTile.sprite=grass;
-        var pathTile=ScriptableObject.CreateInstance<Tile>();pathTile.sprite=path;
-        var waterTile=ScriptableObject.CreateInstance<Tile>();waterTile.sprite=water;
-        var cleanup=root.AddComponent<TownTileCleanup>();cleanup.Tiles=new[]{grassTile,pathTile,waterTile};
-        for(int y=-9;y<=9;y++)for(int x=-16;x<=16;x++)map.SetTile(new Vector3Int(x,y,0),Mathf.Abs(x)<=1||Mathf.Abs(y)<=1?pathTile:grassTile);
-        for(int x=-1;x<=1;x++)for(int y=-1;y<=1;y++)if(x!=0||y!=0)map.SetTile(new Vector3Int(x,y,0),waterTile);
-        SpriteObject(root,"RiftObelisk",PixelArt.Icon("skill",4,4),new Vector2(0,.3f),1.2f,new Color32(159,148,255,255),-1);
+        var texture=Resources.Load<Texture2D>("Illustrated/HavenLobbyBackdrop");
+        if(texture!=null)
+        {
+            texture.filterMode=FilterMode.Point;texture.wrapMode=TextureWrapMode.Clamp;
+            if(lobbyBackdrop==null)lobbyBackdrop=Sprite.Create(texture,new Rect(0,0,texture.width,texture.height),Vector2.one*.5f,texture.width/32f,0,SpriteMeshType.FullRect);
+            SpriteObject(root,"HavenLobbyBackdrop",lobbyBackdrop,Vector2.zero,1,Color.white,-20);
+        }
+        else
+        {
+            var floor=new GameObject("HavenTilemap",typeof(Tilemap),typeof(TilemapRenderer));floor.transform.SetParent(root.transform,false);floor.transform.localPosition=new Vector3(-.5f,-.5f,0);
+            var map=floor.GetComponent<Tilemap>();floor.GetComponent<TilemapRenderer>().sortingOrder=-20;
+            if(grass==null)CreateTiles();
+            var grassTile=ScriptableObject.CreateInstance<Tile>();grassTile.sprite=grass;
+            var pathTile=ScriptableObject.CreateInstance<Tile>();pathTile.sprite=path;
+            var waterTile=ScriptableObject.CreateInstance<Tile>();waterTile.sprite=water;
+            var cleanup=root.AddComponent<TownTileCleanup>();cleanup.Tiles=new[]{grassTile,pathTile,waterTile};
+            for(int y=-9;y<=9;y++)for(int x=-16;x<=16;x++)map.SetTile(new Vector3Int(x,y,0),Mathf.Abs(x)<=1||Mathf.Abs(y)<=1?pathTile:grassTile);
+            for(int x=-1;x<=1;x++)for(int y=-1;y<=1;y++)if(x!=0||y!=0)map.SetTile(new Vector3Int(x,y,0),waterTile);
+            SpriteObject(root,"RiftObelisk",PixelArt.Icon("skill",4,4),new Vector2(0,.3f),1.2f,new Color32(159,148,255,255),-1);
+        }
         for(int i=0;i<5;i++)
         {
-            // Small stalls frame the specialist, leaving the crossroads clear.
-            SpriteObject(root,"Stall-"+TownHubManager.Names[i],PixelArt.Frame(),positions[i]+Vector2.up*.55f,1.4f,Color.HSVToRGB(.08f+i*.15f,.35f,.75f),-5);
+            if(texture==null)SpriteObject(root,"Stall-"+TownHubManager.Names[i],PixelArt.Frame(),positions[i]+Vector2.up*.55f,1.4f,Color.HSVToRGB(.08f+i*.15f,.35f,.75f),-5);
             var npc=Object.Instantiate(prefab,root.transform);npc.name=TownHubManager.Names[i];npc.transform.position=positions[i];npc.transform.localScale=Vector3.one;
             var appearance=new CharacterAppearanceData{Race=i,HairStyle=i%3,CustomColors=true,SkinRGB=new Color32(221,177,135,255),HairRGB=Color.HSVToRGB(.08f+i*.16f,.5f,.8f),EyeRGB=new Color32(151,230,217,255)};
             var custom=npc.GetComponent<CharacterCustomizer>();custom.PresentationScale=.375f;custom.Apply(appearance);npc.AddComponent<OverheadVitals>();custom.SetWeapon(new[]{"hammer","bow","staff","amulet","book"}[i],1);

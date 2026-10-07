@@ -26,6 +26,10 @@ This pass reviews the current Echoes build against the supplied MyHeroes: SEA/Du
 | Pause, results, revive and reward recovery | 12% | The code has functional state-specific actions, but the captured result/revive pages are incomplete and visually bare. Current pass did not capture every branch, so these ratings are provisional. |
 | Connection lost / startup unavailable | 10% | Retry/reconnect is present and avoids a dangerous sign-out action. The error card is generic and does not match the reference's surrounding visual language. |
 
+### Town art iteration update — revision 81
+
+The table above preserves the revision 80 audit baseline. Revision 81 adds an original detailed pixel-art guild hall, relocates the specialists to side counters, and places the campaign/raid/trial exits around the room edge. On the same qualitative scale, the town is now provisionally **42/100**: the room composition, vivid floor and counters are closer to the crowded fantasy-lobby feel, but the 2D hero/NPC sprites, game-specific activity rail, icons, minimap and overall UI skin remain visibly different. Whole-game score remains 35/100 until all pages receive a comparable re-review. The 1280x720 implementation capture is `Logs/TownArtIteration/rift-haven.png`; town/campaign interactions and scrolling passed in `Logs/TownArtIteration/runtime-smoke.txt`.
+
 ### Important reference surfaces still missing or materially incomplete
 
 The reference material establishes a lobby quest entry with Adventure/Diary/Goals tabs and reward milestones; a multi-tab Friends page; a Guild entry and guild-specific activities; richer profile/avatar/archive pages; dedicated storage/material/transmute/soul-card pages; saved-profile/loadout management; and a shop with distinct offer sections and preview/reward states. Echoes has not demonstrated equivalent complete pages and interaction flows for these surfaces. Do not count an icon, placeholder, server model or drawer label as a finished page.
