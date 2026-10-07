@@ -29,6 +29,7 @@ public sealed partial class InventoryModal : MonoBehaviour
     private static readonly string[] Sorts=EnglishUI.Sorting;
     private float previousScale=1;
     private GameObject preview;
+    private bool transactionPending;
     private Camera previewCamera;
     private RenderTexture previewTexture;
     private void Update(){if(Game.Player!=null&&Keyboard.current?.iKey.wasPressedThisFrame==true){if(IsOpen)Close();else Open();}}
@@ -67,7 +68,15 @@ public sealed partial class InventoryModal : MonoBehaviour
         if(grid==null)return;title.text=shopping?(merchant??"MERCHANT"):"BACKPACK";LayoutCollection();
         inventoryGold.text=EnglishUI.Compact(Game.Forge.State.Coins);inventoryGems.text=EnglishUI.Compact(Game.Forge.State.Gems);
         foreach(Transform child in grid)Destroy(child.gameObject);
-        outlines.Clear();visible.Clear();int count=0;foreach(var item in Game.Forge.State.Items)if(item.Count>0){visible.Add(item);count+=item.Count;}
+        outlines.Clear();visible.Clear();
+        foreach(var item in Game.Forge.State.Items)
+        {
+            if(item==null||item.Count<1)continue;
+            // Equipped weapons live on the hero paperdoll. Hiding their stack
+            // here avoids presenting the same weapon in both panels.
+            if(IsEquippedWeapon(item))continue;
+            visible.Add(new ItemStack{ItemId=item.ItemId,Tier=item.Tier,EnhancementLevel=item.EffectiveEnhancement,Count=item.Count});
+        }
         if(shopping){visible.Clear();foreach(var item in Game.Items)visible.Add(new ItemStack{ItemId=item.Id,Tier=item.itemTier,Count=Game.Forge.State.Count(item.Id,item.itemTier)});}
         visible.RemoveAll(stack=>{var item=Array.Find(Game.Items,x=>x.Id==stack.ItemId);return item==null||(shopping&&merchant!=null&&!TownHubManager.Sells(merchant,item))||(filter==4?item.Kind!=ItemKind.SkillBook:filter>0&&(item.Kind!=ItemKind.Gear||(int)item.Slot!=filter-1));});
         visible.Sort((a,b)=>{int comparison=sorting==1?b.EffectiveEnhancement.CompareTo(a.EffectiveEnhancement):sorting==2?b.Count.CompareTo(a.Count):0;if(comparison!=0)return comparison;var left=Array.Find(Game.Items,x=>x.Id==a.ItemId);var right=Array.Find(Game.Items,x=>x.Id==b.ItemId);comparison=string.CompareOrdinal(left.DisplayName,right.DisplayName);return comparison!=0?comparison:b.EffectiveEnhancement.CompareTo(a.EffectiveEnhancement);});
@@ -82,7 +91,7 @@ public sealed partial class InventoryModal : MonoBehaviour
         for(int n=0;n<capacity;n++)
         {
             int index=page*capacity+n;Vector2 pos=shopping?new Vector2(-330+n*330,0):new Vector2(-224+n%5*112,158-n/5*98);
-            var slot=GameUI.Panel(grid,"ItemSlot",pos,shopping?new Vector2(310,366):new Vector2(104,96));
+            var slot=GameUI.Panel(grid,index<visible.Count?"ItemSlot_"+visible[index].ItemId:"ItemSlot",pos,shopping?new Vector2(310,366):new Vector2(104,96));
             slot.GetComponent<UnityEngine.UI.Image>().sprite=PixelArt.Frame(true);
             if(index>=visible.Count)continue;
             var stack=visible[index];var item=Array.Find(Game.Items,x=>x.Id==stack.ItemId);if(item==null)continue;
@@ -92,20 +101,25 @@ public sealed partial class InventoryModal : MonoBehaviour
             var stackLabel=GameUI.Label(slot,shopping?$"{ProgressionRules.StarRating(item.rarity)}  {ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)} / Owned {EnglishUI.Compact(stack.Count)}":EnglishUI.Stack(item,stack.EffectiveEnhancement,stack.Count),new Vector2(0,shopping?-93:-33),new Vector2(shopping?266:100,24),shopping?18:14);if(shopping)stackLabel.alignment=TextAlignmentOptions.Center;
             var outline=slot.gameObject.AddComponent<UnityEngine.UI.Outline>();outline.effectColor=GameUI.Cream;outline.effectDistance=new Vector2(3,-3);outline.enabled=false;outlines[stack.ItemId+"/"+stack.Tier+"/"+stack.EffectiveEnhancement]=outline;
             var button=slot.gameObject.AddComponent<UnityEngine.UI.Button>();button.onClick.AddListener(()=>{showLore=false;Inspect(stack);});
-            int equippedSlot=Array.IndexOf(Game.Forge.State.EquippedIds,stack.ItemId);
-            if(!shopping&&equippedSlot>=0&&Game.Forge.State.EquippedTiers[equippedSlot]==stack.Tier&&Game.Forge.State.EquippedEnhancementLevels[equippedSlot]==stack.EffectiveEnhancement)GameUI.Label(slot,EnglishScreens.E,new Vector2(-30,31),new Vector2(24,26),18).color=GameUI.Gold;
         }
         if(IsInspecting&&selected!=null)Inspect(selected);else if(IsInspecting)CloseInspector();RefreshPaperdoll();UpdatePreview();if(previewCamera!=null)previewCamera.Render();
     }
     public void SetBrowse(int category,int order){CloseInspector();CloseSort();filter=Mathf.Clamp(category,0,4);sorting=Mathf.Clamp(order,0,2);page=0;selected=null;Refresh();}
     public int VisibleCount=>visible.Count;
+    public bool CollectionContains(string itemId,int tier)=>visible.Exists(x=>x.ItemId==itemId&&x.Tier==tier);
+    private bool IsEquippedWeapon(ItemStack stack)
+    {
+        int slot=(int)EquipmentSlot.Weapon;var state=Game.Forge.State;
+        return slot<state.EquippedIds.Length&&state.EquippedIds[slot]==stack.ItemId&&state.EquippedTiers[slot]==stack.Tier&&state.EquippedEnhancementLevels[slot]==stack.EffectiveEnhancement;
+    }
     public bool VisibleCategoryMatches(int category)=>visible.TrueForAll(stack=>{var item=Array.Find(Game.Items,x=>x.Id==stack.ItemId);return category==4?item.Kind==ItemKind.SkillBook:item.Kind==ItemKind.Gear&&(int)item.Slot==category-1;});
     private void Inspect(ItemStack stack)
     {
         selected=stack;var item=Array.Find(Game.Items,x=>x.Id==stack.ItemId);if(item==null)return;
         selectedSpell=null;actionButton.gameObject.SetActive(true);fuseButton.gameObject.SetActive(true);
         OpenInspector();
-        actionButton.GetComponentInChildren<TMP_Text>().text=shopping?EnglishUI.Buy:item.Kind==ItemKind.SkillBook?EnglishUI.EquipBook:EnglishUI.Equip;
+        bool alreadyEquipped=item.Kind==ItemKind.Gear&&Game.Forge.State.EquippedIds[(int)item.Slot]==stack.ItemId&&Game.Forge.State.EquippedTiers[(int)item.Slot]==stack.Tier&&Game.Forge.State.EquippedEnhancementLevels[(int)item.Slot]==stack.EffectiveEnhancement;
+        actionButton.GetComponentInChildren<TMP_Text>().text=shopping?EnglishUI.Buy:alreadyEquipped?"Equipped":item.Kind==ItemKind.SkillBook?EnglishUI.EquipBook:EnglishUI.Equip;
         selectedIcon.enabled=true;selectedIcon.sprite=IllustratedArt.Item(item);selectedIcon.material=IllustratedArt.Owns(selectedIcon.sprite)?IllustratedArt.UI:null;selectedBorder.Tier=stack.EffectiveEnhancement;
         foreach(var pair in outlines)pair.Value.enabled=pair.Key==stack.ItemId+"/"+stack.Tier+"/"+stack.EffectiveEnhancement;
         int slot=(int)item.Slot,owned=Game.Forge.State.Count(stack.ItemId,stack.Tier,stack.EffectiveEnhancement);
@@ -116,10 +130,44 @@ public sealed partial class InventoryModal : MonoBehaviour
         upgradeDetails.text=shopping?EnglishUI.Price(15*stack.Tier*stack.Tier):EnglishUI.Upgrade(item,stack.EffectiveEnhancement,owned)+(item.Kind==ItemKind.Gear&&item.Slot==EquipmentSlot.Weapon?"\n"+EnglishUI.VisualMilestone(stack.EffectiveEnhancement):"");
         fuseButton.interactable=!shopping&&stack.Tier<5&&owned>=2&&Game.Forge.State.Coins>=10*stack.Tier;
         loreButton.GetComponentInChildren<TMP_Text>().text=showLore?EnglishUI.Stats:EnglishUI.Lore;
-        actionButton.interactable=shopping?Game.Forge.State.Coins>=15*stack.Tier*stack.Tier:owned>0;
+        actionButton.interactable=shopping?Game.Forge.State.Coins>=15*stack.Tier*stack.Tier:owned>0&&!alreadyEquipped;
     }
 
-    private void Equip(){if(selected==null)return;try{if(shopping){if(Game.Forge.ServerTransaction!=null)Game.Forge.ServerTransaction("purchase",selected.ItemId,selected.Tier);else{int cost=15*selected.Tier*selected.Tier;if(Game.Forge.State.Coins<cost){description.text=EnglishScreens.NotEnoughGold;return;}var next=Game.Forge.State.Copy();next.Coins-=cost;next.Add(selected.ItemId,selected.Tier);ProfileStore.Save(next,Game.Forge.SavePath);Game.Forge.Configure(next);Refresh();}return;}if(!(Array.Find(Game.Items,x=>x.Id==selected.ItemId)?.Kind==ItemKind.SkillBook?Game.Forge.EquipSkill(selected.ItemId):Game.Forge.Equip(selected.ItemId,selected.Tier)))description.text=EnglishScreens.ThisItemCannotBeEquippedInA;else Refresh();}catch(Exception e){description.text=EnglishScreens.SaveFailed+e.Message;}}
+    private void Equip()
+    {
+        if(selected==null||transactionPending)return;
+        try
+        {
+            if(shopping)
+            {
+                if(Game.Forge.ServerTransaction!=null){Game.Forge.ServerTransaction("purchase",selected.ItemId,selected.Tier);description.text="Sending purchase to server…";return;}
+                int cost=15*selected.Tier*selected.Tier;if(Game.Forge.State.Coins<cost){description.text=EnglishScreens.NotEnoughGold;return;}
+                var next=Game.Forge.State.Copy();next.Coins-=cost;next.Add(selected.ItemId,selected.Tier);ProfileStore.Save(next,Game.Forge.SavePath);Game.Forge.Configure(next);Refresh();return;
+            }
+            var item=Array.Find(Game.Items,x=>x.Id==selected.ItemId);
+            if(Game.Forge.ServerTransaction!=null)
+            {
+                string action=item?.Kind==ItemKind.SkillBook?"skill":"equip";var before=Game.Forge.State;transactionPending=true;
+                actionButton.interactable=false;actionButton.GetComponentInChildren<TMP_Text>().text="Saving…";description.text="Saving equipment to your account…";
+                Game.Forge.ServerTransaction(action,selected.ItemId,selected.Tier);StartCoroutine(ConfirmServerEquip(before,selected.ItemId,selected.Tier,item));return;
+            }
+            if(!(item?.Kind==ItemKind.SkillBook?Game.Forge.EquipSkill(selected.ItemId):Game.Forge.Equip(selected.ItemId,selected.Tier)))description.text=EnglishScreens.ThisItemCannotBeEquippedInA;
+            else Refresh();
+        }
+        catch(Exception e){transactionPending=false;description.text=EnglishScreens.SaveFailed+e.Message;if(actionButton!=null)actionButton.interactable=true;}
+    }
+    private System.Collections.IEnumerator ConfirmServerEquip(InventoryState before,string itemId,int tier,ItemData item)
+    {
+        float elapsed=0;
+        while(elapsed<8f&&ReferenceEquals(Game.Forge.State,before)){yield return new WaitForSecondsRealtime(.1f);elapsed+=.1f;}
+        transactionPending=false;
+        bool confirmed=!ReferenceEquals(Game.Forge.State,before)&&(item?.Kind==ItemKind.SkillBook
+            ?Array.Exists(Game.Forge.State.SkillIds,x=>x==item.Spell?.Id)
+            :Game.Forge.State.EquippedIds[(int)item.Slot]==itemId&&Game.Forge.State.EquippedTiers[(int)item.Slot]==tier);
+        if(confirmed)yield break;
+        if(actionButton!=null){actionButton.interactable=true;actionButton.GetComponentInChildren<TMP_Text>().text=EnglishUI.Equip;}
+        if(description!=null&&description.gameObject.activeInHierarchy)description.text="The server did not confirm this change. Please check your connection and try again.";
+    }
     private void Fuse(){if(selected==null)return;try{Game.Forge.TryFuse(selected.ItemId,selected.Tier,out string message);Refresh();description.text=message;}catch(Exception e){description.text=EnglishScreens.SaveFailed+e.Message;}}
     public void Close()
     {

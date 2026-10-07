@@ -1,8 +1,18 @@
 # Echoes of the Rift master plan
 
-Revision 78 - 8 October 2026. Reduce enemy lookup work and audit repository/performance practices.
+Revision 79 - 8 October 2026. Center the entry screen and make inventory equipment clear.
 
-## Current iteration - revision 78: reduce combat lookup work
+## Current iteration - revision 79: readable centered UI and working equipment presentation
+
+Centered the splash title, hero mark and entry action on the display, with the account panel centered over the same composition. General UI labels now use the bundled crisp TextMesh Pro face for legibility; the title retains the pixel font. The backpack continues the two-panel paperdoll-and-grid layout, but the equipped weapon's stack is removed from the right collection and represented only in the left hero panel. Equipped slots now show a clear badge, and selecting already-equipped gear reads `Equipped` and is disabled. Server-backed gear changes show a saving state and a retry message if the server does not confirm them. The equipped weapon is positioned at the hero's hand in both world and paperdoll presentation.
+
+Validation: Unity Windows build succeeded (`Logs/build-StandaloneWindows64-1791411915261.log`); the new build's full UI layout suite passed 350 checks with zero failures or runtime errors (`Logs/UILayoutBuild/runtime-smoke.txt`). The 1280x720 inventory screenshot was visually reviewed at `Logs/UILayoutBuild/inventory-1280x720.png`; the weapon is visibly held and absent from the item grid. `Builds/Windows` contains the tested player. `Release/Windows` remains on the prior build because the running client and dedicated server currently use that folder; sync after those sessions are closed. Remote push remains subject to GitHub credentials.
+
+Next: review the revised entry and item-inspector screens on a fresh launch, then synchronize the tested player to Release and push the revision. Android and low-end PC UI/performance remain unmeasured.
+
+## Previous iteration - revision 78: reduce combat lookup work
+
+## Previous iteration - revision 78: reduce combat lookup work
 
 Enemy AI now shares and rate-limits player-target reacquisition, avoiding a full scene search every rendered frame when a player is down or missing. It also compares squared distances in chase checks and caches its collider reference. These changes do not alter enemy speed, attack range, damage, targeting priority, animation or particle budgets.
 

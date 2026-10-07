@@ -39,9 +39,13 @@ public static class GameUI
     public static TMP_Text Label(Transform parent, string text, Vector2 position, Vector2 size, float fontSize=24)
     {
         var label=Rect("Label",parent,new Vector2(0.5f,0.5f),position,size).gameObject.AddComponent<TextMeshProUGUI>();
-        label.font=Resources.Load<TMP_FontAsset>("Pixel/PixelFont");
+        // Tiny5 is kept for pixel art and legacy headings, but its 5px forms are
+        // too dense for inventory descriptions and account controls. Use the
+        // bundled, crisp TMP face for UI copy and retain a safe pixel fallback.
+        label.font=Resources.Load<TMP_FontAsset>("Fonts & Materials/LiberationSans SDF")
+            ?? Resources.Load<TMP_FontAsset>("Pixel/PixelFont");
         label.richText=false; label.enableAutoSizing=false;
-        label.text=text; label.fontSize=fontSize; label.color=Cream; label.raycastTarget=false;
+        label.text=text; label.fontSize=fontSize; label.fontStyle=FontStyles.Bold; label.color=Cream; label.raycastTarget=false;
         label.alignment=TextAlignmentOptions.MidlineLeft;
         return label;
     }

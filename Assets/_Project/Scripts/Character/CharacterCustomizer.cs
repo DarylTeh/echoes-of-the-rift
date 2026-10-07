@@ -68,9 +68,9 @@ public sealed class CharacterCustomizer : MonoBehaviour
             weapon=new GameObject("EquippedWeapon").AddComponent<SpriteRenderer>();weapon.transform.SetParent(transform,false);weapon.sortingOrder=12;
             trail=weapon.gameObject.AddComponent<WeaponTrailVFX>();
         }
-        // Keep the visible weapon beside the tiny hero sprite; centring the full icon
-        // on the face made the new compact race sprites unreadable.
-        weapon.gameObject.layer=gameObject.layer;weapon.transform.localScale=Vector3.one*(PresentationScale*.86f);
+        // Place the weapon at the hero's hand, relative to the body sprite pivot.
+        // This keeps it visibly held in both the world view and paperdoll preview.
+        weapon.gameObject.layer=gameObject.layer;weapon.transform.localScale=Vector3.one*(PresentationScale*.78f);
         SetWeapon("sword",EquipmentTier);
         previousPosition=transform.position;ApplyFacing();
     }
@@ -105,7 +105,7 @@ public sealed class CharacterCustomizer : MonoBehaviour
             heroSprite.flipX=direction==3;
         }
         if(weapon==null)return;
-        weapon.transform.localPosition=new Vector3(facing.x*.92f,.25f+facing.y*.72f,0)*PresentationScale;
+        weapon.transform.localPosition=new Vector3(facing.x*.34f,.84f+facing.y*.14f,0)*PresentationScale;
         weaponAngle=Mathf.Atan2(facing.y,facing.x)*Mathf.Rad2Deg-45;weapon.transform.localRotation=Quaternion.Euler(0,0,weaponAngle);
         weapon.sortingOrder=facing.y>.35f?2:12;
     }
@@ -150,7 +150,7 @@ public sealed class CharacterCustomizer : MonoBehaviour
             }
             else if(CurrentAction==HeroActionPose.Dodge){sweep=-actionDirection.x*28;reach=.12f*action;}
             else if(CurrentAction==HeroActionPose.Hit){sweep=actionDirection.x*18;reach=-.1f*action;}
-            weapon.transform.localPosition=new Vector3(facing.x*.92f,.25f+facing.y*.72f,0)*PresentationScale+(Vector3)(actionDirection*(PresentationScale*reach));
+            weapon.transform.localPosition=new Vector3(facing.x*.34f,.84f+facing.y*.14f,0)*PresentationScale+(Vector3)(actionDirection*(PresentationScale*reach));
             weapon.transform.localRotation=Quaternion.Euler(0,0,weaponAngle+sweep+(walking?Mathf.Sin(Time.unscaledTime*14)*7:0));
         }
     }

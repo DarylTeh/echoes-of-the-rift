@@ -29,12 +29,12 @@ public sealed class SplashScreenUI : MonoBehaviour
         FindFirstObjectByType<CharacterCreatorUI>().Root.gameObject.SetActive(false);
         Root=GameUI.Canvas("SplashScreen");Root.GetComponent<Canvas>().sortingOrder=600;Root.gameObject.AddComponent<CanvasGroup>();
         var shade=GameUI.Rect("SplashBackground",Root,Vector2.one*.5f,Vector2.zero,new Vector2(3000,2000));shade.gameObject.AddComponent<UnityEngine.UI.Image>().color=new Color32(13,19,32,255);
-        GameUI.Icon(Root,PixelArt.Icon("sword",0,5),new Vector2(-370,40),new Vector2(192,192));
-        GameUI.Label(Root,EnglishAccount.EchoesOfTheRift,new Vector2(-330,245),new Vector2(560,80),36).color=GameUI.Gold;
-        GameUI.Label(Root,EnglishAccount.LightYourPathForgeYourLegend,new Vector2(-335,167),new Vector2(545,64),24);
-        enter=GameUI.Button(Root,EnglishAccount.ClickTapToEnter,new Vector2(-340,-180),new Vector2(480,64),Enter);
+        GameUI.Icon(Root,PixelArt.Icon("sword",0,5),new Vector2(0,65),new Vector2(176,176));
+        var title=GameUI.Label(Root,EnglishAccount.EchoesOfTheRift,new Vector2(0,270),new Vector2(760,66),40);title.alignment=TextAlignmentOptions.Center;title.font=Resources.Load<TMP_FontAsset>("Pixel/PixelFont")??title.font;title.color=GameUI.Gold;
+        var subtitle=GameUI.Label(Root,EnglishAccount.LightYourPathForgeYourLegend,new Vector2(0,208),new Vector2(720,48),26);subtitle.alignment=TextAlignmentOptions.Center;
+        enter=GameUI.Button(Root,EnglishAccount.ClickTapToEnter,new Vector2(0,-238),new Vector2(520,70),Enter);
         prompt=enter.GetComponentInChildren<TMP_Text>();
-        form=GameUI.Panel(Root,"AccountPanel",new Vector2(292,0),new Vector2(620,640));
+        form=GameUI.Panel(Root,"AccountPanel",Vector2.zero,new Vector2(620,640));
         GameUI.Label(form,EnglishAccount.YourAdventure,new Vector2(0,270),new Vector2(520,48),32).color=GameUI.Gold;
         Username=Field(form,EnglishAccount.Username,205,false);Password=Field(form,EnglishAccount.Password5Characters,115,true);Recovery=Field(form,EnglishAccount.RecoveryCode,25,false);Recovery.gameObject.SetActive(false);
         message=GameUI.Label(form,EnglishAccount.ChooseCreateOrSignIn,new Vector2(0,-74),new Vector2(520,132),22);

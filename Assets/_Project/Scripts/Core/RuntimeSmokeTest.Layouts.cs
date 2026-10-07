@@ -120,7 +120,7 @@ public sealed partial class RuntimeSmokeTest
         yield return SetLayoutSize(LayoutSizes[0]);
         // Use only this smoke test's disposable save for actual UI transactions.
         var beforeTransactions=game.Forge.State.Copy();var transactionFixture=beforeTransactions.Copy();transactionFixture.Coins=1000;
-        var tradeItem=Array.Find(game.Items,x=>x.Kind==ItemKind.Gear&&x.itemTier==1);
+        var tradeItem=Array.Find(game.Items,x=>x.Kind==ItemKind.Gear&&x.Slot!=EquipmentSlot.Weapon&&x.itemTier==1&&x.Id!=game.Forge.State.EquippedIds[(int)x.Slot]);
         transactionFixture.Add(tradeItem.Id,1,Mathf.Max(2,tradeItem.DuplicatesPerFuse));game.Forge.Configure(transactionFixture);inventory.Refresh();
         int tradeCount=game.Forge.State.Count(tradeItem.Id,1);
         inventory.SendMessage("Inspect",new ItemStack{ItemId=tradeItem.Id,Tier=1,Count=tradeCount});
@@ -129,10 +129,20 @@ public sealed partial class RuntimeSmokeTest
         inventory.Close();yield return null;inventory.Open();inventory.SendMessage("Inspect",new ItemStack{ItemId=tradeItem.Id,Tier=1,Count=tradeCount+1});
         GameObject.Find(EnglishUI.Equip).GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
         if(game.Forge.State.EquippedIds[(int)tradeItem.Slot]!=tradeItem.Id)layoutFailures.Add("Item popup Equip failed");
+        if(!inventory.PaperdollShowsEquipped(tradeItem.Slot))layoutFailures.Add("Equipped gear was not shown on the hero paperdoll");
         int tierTwoBefore=game.Forge.State.Count(tradeItem.Id,2);
         GameObject.Find(EnglishUI.Fuse).GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
         if(game.Forge.State.Count(tradeItem.Id,2)!=tierTwoBefore+1||game.Forge.State.Coins!=985-Mathf.Max(0,tradeItem.BaseFuseCost))layoutFailures.Add("Item popup Upgrade failed");
         layoutChecks.Add("Actual popup Buy, Equip and Upgrade commit to disposable save");
+        var weaponItem=Array.Find(game.Items,x=>x.Kind==ItemKind.Gear&&x.Slot==EquipmentSlot.Weapon&&x.itemTier==1&&x.Id!=game.Forge.State.EquippedIds[(int)EquipmentSlot.Weapon]);
+        if(weaponItem!=null)
+        {
+            var weaponFixture=game.Forge.State.Copy();weaponFixture.Add(weaponItem.Id,1);game.Forge.Configure(weaponFixture);inventory.Refresh();
+            inventory.SendMessage("Inspect",new ItemStack{ItemId=weaponItem.Id,Tier=1,Count=1});GameObject.Find(EnglishUI.Equip).GetComponent<UnityEngine.UI.Button>().onClick.Invoke();
+            var heldWeapon=game.Player.transform.Find("EquippedWeapon");var customizer=game.Player.GetComponent<CharacterCustomizer>();
+            if(game.Forge.State.EquippedIds[(int)EquipmentSlot.Weapon]!=weaponItem.Id||inventory.CollectionContains(weaponItem.Id,1)||!inventory.PaperdollShowsEquipped(EquipmentSlot.Weapon))layoutFailures.Add("Equipped weapon was not moved from collection to hero paperdoll");
+            if(heldWeapon==null||heldWeapon.GetComponent<SpriteRenderer>().sprite==null||heldWeapon.localPosition.y<customizer.PresentationScale*.6f)layoutFailures.Add("Equipped weapon was not visibly held at the hero's hand");
+        }
         game.Forge.Configure(beforeTransactions);ProfileStore.Save(beforeTransactions,game.Forge.SavePath);inventory.Close();yield return null;inventory.Open();
         // Burst pressure must not grow the cosmetic pool after its first fill.
         for(int i=0;i<2000;i++)CosmeticTrailPool.Emit(CombatVisual.Square,Color.cyan,new Vector3(9000,9000),Quaternion.identity,Vector3.one,0,1);

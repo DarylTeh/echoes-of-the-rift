@@ -14,6 +14,11 @@ public sealed partial class InventoryModal
     private SpellData selectedSpell;
     public bool IsInspecting=>inspector!=null&&inspector.gameObject.activeSelf;
     public int CurrentPage=>page;
+    public bool PaperdollShowsEquipped(EquipmentSlot slot)
+    {
+        var icon=paperdollSlots!=null?paperdollSlots.Find("Equipped"+slot+"/Icon")?.GetComponent<UnityEngine.UI.Image>():null;
+        return icon!=null&&icon.sprite!=null;
+    }
 
     private RectTransform FullScreenShade(string name,float opacity)
     {
@@ -96,7 +101,8 @@ public sealed partial class InventoryModal
             var item=Array.Find(Game.Items,x=>x.Id==state.EquippedIds[i]);int tier=state.EquippedTiers[i];int enhancement=state.EquippedEnhancementLevels!=null&&i<state.EquippedEnhancementLevels.Length?state.EquippedEnhancementLevels[i]:tier;
             var slot=GameUI.Panel(paperdollSlots,"Equipped"+(EquipmentSlot)i,positions[i],new Vector2(94,94));
             slot.GetComponent<UnityEngine.UI.Image>().sprite=PixelArt.Frame(true);slot.GetComponent<UnityEngine.UI.Image>().pixelsPerUnitMultiplier=1.8f;
-            var caption=GameUI.Label(paperdollSlots,((EquipmentSlot)i).ToString(),positions[i]+new Vector2(0,-60),new Vector2(110,24),18);caption.alignment=TextAlignmentOptions.Center;
+            var caption=GameUI.Label(paperdollSlots,item!=null?((EquipmentSlot)i).ToString():"Empty "+(EquipmentSlot)i,positions[i]+new Vector2(0,-60),new Vector2(112,24),14);caption.alignment=TextAlignmentOptions.Center;
+            if(item!=null){var equippedLabel=GameUI.Label(paperdollSlots,"EQUIPPED",positions[i]+new Vector2(0,-79),new Vector2(94,18),11);equippedLabel.alignment=TextAlignmentOptions.Center;equippedLabel.color=new Color32(147,226,155,255);}
             if(item==null)continue;
             attack+=item.FlatDamage*enhancement;health+=item.FlatHealth*enhancement;
             slot.gameObject.AddComponent<ItemBorderVFX>().Tier=enhancement;
