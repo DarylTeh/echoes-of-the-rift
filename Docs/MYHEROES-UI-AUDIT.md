@@ -1,5 +1,52 @@
 # MyHeroes: SEA UI reference audit
 
+## Strict full-screen audit — 8 October 2026
+
+This pass reviews the current Echoes build against the supplied MyHeroes: SEA/Dungeon Raid screenshots, the existing gameplay-reference notes, and the accessible wiki pages. It covers the implemented UI surfaces found in the Unity scripts and available captures. The implementation still falls well short of the requested 90% resemblance.
+
+### Baseline
+
+**35/100 qualitative similarity** across comparable game surfaces. This is a design-review score, not an automated pixel comparison. The score uses four criteria: layout and hierarchy 35%, navigation and interaction 25%, visual design and art 30%, and coverage of major reference surfaces 10%. The largest penalty is the art system: Echoes has its own small pixel sprites and icons, but they do not have the reference's character proportions, detail density, icon language, item frames, colorful rarity treatment, or finished visual polish. Functional overlap alone does not count as visual similarity.
+
+| Surface | Similarity | Strict assessment |
+|---|---:|---|
+| Title/splash and account entry | N/A (no direct in-game equivalent) | Current entry is a sparse dark title/account flow. It is readable, but not evidence of MyHeroes lobby style. Account create/sign-in/recovery and server-error states are game-specific. |
+| Character creator | 15% | Basic character preview and choices exist; composition and asset treatment do not resemble the dense framed hero/profile screens. |
+| Town / lobby | 32% | It has a top-left hero/vitals block, upper-right currency, utility rail and NPC/gate destinations. The current room reads as a sparse brick cross with scattered cards/labels; it lacks the lively, layered city scene, dense character silhouettes, quest/diary/friends/guild access and bright contextual markers. |
+| Campaign combat HUD | 56% | Corner hierarchy, boss bar, objective block, currency, bag and lower-right skill/attack controls are directionally similar. Current screenshots still show large plain panels, simplified minimap, different control geometry and iconography, weak effect/UI integration, and no MyHeroes sprite language. Desktop captures omit touch-stick presentation. |
+| Backpack / equipment | 59% | The two-column paperdoll plus five-column collection grid, categories, clear equipped state and weapon in the hero's hand are the strongest structural match. The preview is too plain/small, slot system is sparse, border and tile treatment are generic, grid metadata is cramped, and it lacks the reference's fuller equipment/profile/status composition. |
+| Item inspection | 34% | It is a separate overlay, but has excessive dead space and a narrow action stack that competes with the inventory behind it. It lacks the reference's dense weapon identity/stat hierarchy, class placement, rarity/star treatment, colored multi-line effect description, lore/source texture and socket presentation where applicable. |
+| Shop / merchant | 32% | Filter tabs, cards and wallet are present. Current cards are oversized and sparse; they do not follow the reference's multi-section Best Buys/D.Shop/Restock shell, category rail, stock/discount hierarchy, purchase preview and reward reveal flow. |
+| Skill loadout / skill collection | 20% | A six-icon stance strip and in-combat skill buttons exist, but there is no complete reference-like owned/equipped skill-book page with a clear loadout region, dense collection, class/quality filters and supported upgrade states. |
+| Settings | 25% | Controls and Accounts tabs exist, and sign-out is protected behind Accounts with a confirmation. It is functional but generic and visually separate from the reference's framed, icon-rich game UI. The safer sign-out placement should remain. |
+| Events | 18% | A server-timed event list/detail drawer exists and displays eligibility/progress/countdown. It is a basic text list, not the illustrated event/quest cards, reward track, tabs, claim states and destination flow expected from the references. |
+| Reward inbox | 20% | Server-backed pending rewards and collect/retry states exist. It is a plain list with no rich item-card/reward preview or polished receipt/reveal treatment. |
+| Rankings | 14% | A ranking list and hero preview work, but most of the panel is empty, with little row information or category/filter navigation. |
+| Rift Defense | 10% | This is a distinct custom tower-defense mode, not a MyHeroes: SEA screen. Its board, deck and action layout are legible; it should use the shared Echoes visual system, not pretend to be a MyHeroes screen. |
+| Pause, results, revive and reward recovery | 12% | The code has functional state-specific actions, but the captured result/revive pages are incomplete and visually bare. Current pass did not capture every branch, so these ratings are provisional. |
+| Connection lost / startup unavailable | 10% | Retry/reconnect is present and avoids a dangerous sign-out action. The error card is generic and does not match the reference's surrounding visual language. |
+
+### Important reference surfaces still missing or materially incomplete
+
+The reference material establishes a lobby quest entry with Adventure/Diary/Goals tabs and reward milestones; a multi-tab Friends page; a Guild entry and guild-specific activities; richer profile/avatar/archive pages; dedicated storage/material/transmute/soul-card pages; saved-profile/loadout management; and a shop with distinct offer sections and preview/reward states. Echoes has not demonstrated equivalent complete pages and interaction flows for these surfaces. Do not count an icon, placeholder, server model or drawer label as a finished page.
+
+MyHeroes references also show compact player identity and wallet placement, a busy but readable hub, paperdoll beside a dense item grid, rarity-framed item icons, a raised item-detail view, and combat HUD controls anchored around the screen edges. Echoes currently approximates some of those placements; its sprite set, buttons, panels, font treatment, content density and screen-to-screen consistency remain visibly different.
+
+### Work order to close the gap
+
+1. Create a single art/UI kit: original detailed chibi character set, original item/skill icons, icon silhouettes and rarity frame tiers, beveled dark panels, readable compact pixel typography, wallet chips, tabs and red close controls. Match reference *density and conventions* while retaining original assets and signature shapes.
+2. Rebuild the town as a navigable, populated lobby with a clear left activity rail, right utility rail, compact top identity/wallet and clickable character/NPC/portal destinations. Remove floating labels that collide with the world.
+3. Recompose combat around clear corner anchors: top-left identity/vitals, top boss bar, left objective/kill info, right minimap/utility, bottom-left mobile movement and bottom-right circular skills/attack. Test touch and keyboard separately.
+4. Refine backpack, equipped slots, skill loadout and item inspector. Increase paperdoll prominence, improve grid density and selection states, move inspect actions into a clean dedicated column, and provide only supported stats/effects.
+5. Build the missing quest, profile, social and shop page flows as real navigable pages, then restyle events, inbox, settings, rankings and results with the same kit.
+6. Capture all states at 1280x720 and mobile landscape, verify interaction/return paths, and rescore against the same rubric. Only report progress when evidence supports it.
+
+### Evidence and confidence for this pass
+
+Visually reviewed current layout captures: `Logs/UILayoutBuild/town-1280x720.png`, `combat-hud-1280x720.png`, `inventory-1280x720.png`, `item-inspector-1280x720.png`, `merchant-1280x720.png`, and `settings-1280x720.png`. Also reviewed available title, registration, settings/accounts, rankings, connection-loss, Rift Defense and combat captures in `Logs/Dedicated/Register`, `Logs/ConnectionFailure`, `Logs/RiftDefensePreview`, and `Logs/RuntimeRevision78Release`. The layout suite reports 350 checks passed, 0 layout failures and 0 runtime errors (`Logs/UILayoutBuild/runtime-smoke.txt`). Some secondary screenshots come from the previous release capture set, so their pixel appearance may lag revision 79. Event/inbox were source-reviewed, not separately screen-captured during this pass; results/revive variants remain unverified visually. Confidence is high for the six current layout captures, moderate for other previously captured surfaces and low for uncaptured states.
+
+The accessible [Quests UI wiki](https://myheroesofficial.fandom.com/wiki/Quests_%28UI%29) establishes the Adventure, Diary and Goals tabs; [Friends UI](https://myheroesofficial.fandom.com/wiki/Friends_%28UI%29) documents friends, requests, search, recent co-ops and friend shops; [Guilds UI](https://myheroesofficial.fandom.com/wiki/Guilds_%28UI%29) describes the city-side guild entry and guild activities. The official [My Heroes: Dungeon Raid site](https://heroes.r2game.com/) describes the game as a classic pixel-style barrage RPG. These sources support high-level layout observations, not access to proprietary source art or every regional/version-specific screen.
+
 28 September 2026. Implementation checklist for master-plan revision 30.
 
 Revision 30 note: item presentation now uses a fixed five-star rarity row plus a separate enhancement number, keeping the compact comparison language used by the reference collection screens without making stars represent an unbounded level.

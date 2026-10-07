@@ -1,16 +1,22 @@
 # Echoes of the Rift master plan
 
-Revision 79 - 8 October 2026. Center the entry screen and make inventory equipment clear.
+Revision 80 - 8 October 2026. Set a strict MyHeroes: SEA UI and art baseline.
 
-## Current iteration - revision 79: readable centered UI and working equipment presentation
+## Current iteration - revision 80: strict reference audit
+
+Re-audited the current screen captures, source-built page inventory, and the MyHeroes: SEA reference screenshots/wiki evidence. The current game does **not** meet the requested 90% similarity. Strict qualitative baseline: 35/100 across layout and hierarchy (35% weight), navigation and interaction (25%), visual design and art (30%), and coverage of major comparable surfaces (10%). This is a design-review score, not a pixel-difference measurement. The backpack paperdoll/grid is the closest match; town, item inspection, shop and social/progression surfaces remain major gaps. Current Echoes art is original and does not use MyHeroes sprites or icons.
+
+The audit is recorded in `Docs/MYHEROES-UI-AUDIT.md`, with screen-by-screen ratings, evidence limits, missing/reference surfaces, and a prioritized redesign sequence. The next work should establish a common reference-led visual system first, then redesign town/navigation and combat HUD, then backpack/item detail/shop and the secondary pages. Use original Echoes assets with comparable pixel density and presentation conventions; do not present copied MyHeroes artwork as ours. Keep controls readable and sign-out behind Settings > Accounts with confirmation.
+
+Validation: visually inspected the latest 1280x720 layout captures for town, combat HUD, backpack, item inspector, merchant and settings, plus account startup/create-account/settings, ranking, connection-loss and Rift Defense captures. The latest layout suite reports 350 checks passed, zero layout failures and zero runtime errors (`Logs/UILayoutBuild/runtime-smoke.txt`). Event/inbox drawers were source-reviewed but were not separately captured in this pass; pause, reward/result and revive variants also lack current screenshot evidence. Android and physical low-end PC remain unverified.
+
+## Previous iteration - revision 79: readable centered UI and working equipment presentation
 
 Centered the splash title, hero mark and entry action on the display, with the account panel centered over the same composition. General UI labels now use the bundled crisp TextMesh Pro face for legibility; the title retains the pixel font. The backpack continues the two-panel paperdoll-and-grid layout, but the equipped weapon's stack is removed from the right collection and represented only in the left hero panel. Equipped slots now show a clear badge, and selecting already-equipped gear reads `Equipped` and is disabled. Server-backed gear changes show a saving state and a retry message if the server does not confirm them. The equipped weapon is positioned at the hero's hand in both world and paperdoll presentation.
 
 Validation: Unity Windows build succeeded (`Logs/build-StandaloneWindows64-1791411915261.log`); the new build's full UI layout suite passed 350 checks with zero failures or runtime errors (`Logs/UILayoutBuild/runtime-smoke.txt`). The 1280x720 inventory screenshot was visually reviewed at `Logs/UILayoutBuild/inventory-1280x720.png`; the weapon is visibly held and absent from the item grid. `Builds/Windows` contains the tested player. `Release/Windows` remains on the prior build because the running client and dedicated server currently use that folder; sync after those sessions are closed. Remote push remains subject to GitHub credentials.
 
 Next: review the revised entry and item-inspector screens on a fresh launch, then synchronize the tested player to Release and push the revision. Android and low-end PC UI/performance remain unmeasured.
-
-## Previous iteration - revision 78: reduce combat lookup work
 
 ## Previous iteration - revision 78: reduce combat lookup work
 
