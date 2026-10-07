@@ -1,5 +1,14 @@
 # Execution log
 
+## Combat lookup optimization and repository audit — revision 78, 8 October 2026
+
+- Enemy target reacquisition now performs a shared, rate-limited scene query only when no live player target is available. This prevents each enemy from independently scanning the scene every frame after a player goes down. Chase-range checks use squared distance, and the enemy collider is cached for the death callback.
+- Audited particle/combat presentation: existing world trails use a fixed pool (64 mobile / 128 desktop), short combat flashes use a quality-scaled cap, and saturation drops cosmetic decoration only. Preserved these limits; no visually costly effect was removed.
+- Fresh optimized Windows export succeeded. Frame-pacing test on `Builds/Windows/EchoesOfTheRift.exe`: 601 samples, 60.0 FPS average, 16.67 ms p50/p95 and 0.0% above 17.17 ms. Full movement, combat, campaign, loot, save recovery, pause and defeat regression passed with no runtime errors.
+- Art review uses the existing My Heroes/Random Dice video and Clash of Critters gameplay records for observable principles: bold silhouettes, element-coded effects, stable HUD anchors, readable enemy lanes, and brief emphasis effects. These recordings do not establish how their engines implement particle or animation systems. Future Echoes sprites remain original; use broad pixel-art qualities without duplicating proprietary exact palettes or designs.
+- Local Git audit found `main` three commits ahead of `origin/main` at the start of this pass, with no other local branch. `git gc` compacted the object store from about 276.9 MiB loose-plus-packed to 157.7 MiB packed. Removed the stale `Release/Windows/D3D12/d3d12SDKLayers.dll`, which the current Unity export does not produce; the remaining 169 release files now match the build output exactly. Generated Library/build/log folders, local backups and account/database state are ignored and were preserved. Avoid deleting user recovery data or rewriting remote history as part of routine cleanup.
+- `Release/Windows` is synced from `Builds/Windows`; all 169 files match. The release player passed a fresh 600-sample frame test, full campaign/combat/save smoke, desktop UI (350 checks), touch UI (351 checks) and connection-recovery UAT. Physical Android and low-end PC profiling still required. Local Git compaction is complete. `git push origin main` was attempted, but this Windows environment returned `SEC_E_NO_CREDENTIALS`; no remote ref was changed, so GitHub remains behind the local tested commits.
+
 ## Rift Defense tower border feedback — revision 75, 7 October 2026
 
 - Added a brief neon border flare and outward pulse to summoned, upgraded and merged skill-book towers. A merge animates both the consumed and receiving cell borders; tower icons stay still, and the normal rank-tier glow remains visible.

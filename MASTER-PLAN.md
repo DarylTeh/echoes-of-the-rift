@@ -1,8 +1,19 @@
 # Echoes of the Rift master plan
 
-Revision 77 - 7 October 2026. Improve combat animation timing and add frame-pacing measurement.
+Revision 78 - 8 October 2026. Reduce enemy lookup work and audit repository/performance practices.
 
-## Current iteration - revision 77: smooth combat motion and 60 FPS target
+## Current iteration - revision 78: reduce combat lookup work
+
+Enemy AI now shares and rate-limits player-target reacquisition, avoiding a full scene search every rendered frame when a player is down or missing. It also compares squared distances in chase checks and caches its collider reference. These changes do not alter enemy speed, attack range, damage, targeting priority, animation or particle budgets.
+
+Validation on the fresh optimized Windows export: the 10-second combat sample passed at 60.0 average FPS, 16.67 ms p50/p95, and 0% over 17.17 ms across 601 samples. Full campaign/combat/save smoke passed with no runtime errors. `Release/Windows` is synced from the tested build; frame pacing and desktop/touch/connection UI checks passed. Android/low-end hardware remain unmeasured.
+
+Repository review: only `main` is checked out, and it contains three local commits ahead of `origin/main`. Unity-generated `Library`, playtest `Logs`, duplicate `Builds`, local `Backups`, machine-specific `UserSettings` and server credentials/database remain ignored local files; preserve them unless separately reviewed because some are useful for editor import, development UAT, recovery or private saved data. The distributable stays under tracked `Release/Windows`. Do not rewrite shared remote history to shrink the clone without a migration plan.
+
+Art direction: use the reference games for readable mobile combat, compact chibi silhouettes, dense but separated effects, clear hit flashes and tier-scaled borders. Do not copy their exact sprite designs, signature palette or proprietary frame art. Keep Echoes' original iconography, color ramps, pixel clusters and silhouettes. Treat reference videos as observations of player-facing results; they do not reveal those games' internal animation or particle implementation.
+
+## Previous iteration - revision 77: smooth combat motion and 60 FPS target
+
 
 The runtime already caps the game at 60 FPS with VSync disabled. Hero movement now uses continuous subpixel bob and cached sprite-part transforms instead of scanning/name-checking children every rendered frame. Weapon attacks have a readable wind-up, eased strike arc and follow-through; skill, dodge and hit motion retain smooth interpolation. Added a repeatable 10-second combat frame-pacing test and launcher that reports average FPS, median/p95 frame time and frames over 17.17 ms (16.67 ms plus measurement tolerance). The acceptance target is an average of at least 59 FPS with no more than 5% frames over budget on the test machine.
 

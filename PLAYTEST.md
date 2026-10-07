@@ -1,6 +1,12 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
-## Latest animation/frame-pacing UAT — revision 77, 7 October 2026
+## Latest performance and cleanup UAT — revision 78, 8 October 2026
+
+Optimized enemy target reacquisition to use a shared quarter-second retry when the current player is invalid; replaced two per-frame square-root distance checks with squared-distance comparisons and cached the collider used on death. Optimized Windows export passed the 10-second combat pacing test: 601 samples, 60.0 average FPS, 16.67 ms p50/p95, 0.0% over 17.17 ms, no runtime errors. Full campaign/combat/progression/save smoke passed on the same fresh build. `Logs/RuntimeRevision78/runtime-smoke.txt` and `Logs/FramePacing/frame-pacing.txt` record the results. This was measured on the current PC only. Android, low-end PC, thermal and long-session stress checks remain open.
+
+The reviewed Unity artifacts are ignored by Git; tracked release binaries are under `Release/Windows`. No stale local branch was found; local `main` had three commits ahead of the remote before this iteration. Release/remote synchronization and remote credential availability are tracked in `EXECUTION-LOG.md`.
+
+## Previous animation/frame-pacing UAT — revision 77, 7 October 2026
 
 The Windows Development and optimized players include continuous hero bob, eased weapon attack phases, cached per-character render transforms and the 10-second combat frame-pacing test (`Tools/Test-FramePacing.ps1`). Both builds passed on this PC: average 60.0 FPS, p50/p95 16.67 ms, 0.0% above the 17.17 ms threshold over 600 samples. Full campaign/combat runtime smoke passed on both builds. Desktop UI passed 350 checks, touch UI passed 351 checks, and connection-failure recovery passed with reconnect visible, unsafe sign-out hidden and no runtime errors. `Release/Windows` is synced from `Builds/Windows`. Android, low-end PC and sustained/thermal frame pacing remain unverified; the result is not a cross-device guarantee.
 
