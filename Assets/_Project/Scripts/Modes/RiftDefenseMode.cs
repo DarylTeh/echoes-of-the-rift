@@ -18,6 +18,8 @@ public sealed class RiftDefenseMode : MonoBehaviour
     private readonly List<BookPick> deck=new List<BookPick>(5);
     private readonly List<UnityEngine.UI.Button> cells=new List<UnityEngine.UI.Button>(Rows*Columns);
     private readonly UnityEngine.UI.Image[] towerGlows=new UnityEngine.UI.Image[Rows*Columns];
+    private readonly float[] towerFeedbackStarted=new float[Rows*Columns];
+    private readonly Color[] towerFeedbackColors=new Color[Rows*Columns];
     private RectTransform root, board;
     private TMP_Text waveText, manaText, coreText, hintText, selectedText, statusText;
     private UnityEngine.UI.Button summonButton,upgradeButton,mergeButton,castButton;
@@ -25,6 +27,8 @@ public sealed class RiftDefenseMode : MonoBehaviour
     private int mana=50, core=100, wave, selected=-1, bossCount, lastBossWave;
     private float waveBreak, tickTimer, castCooldown;
     private bool running, completed, testFast, waveSpawned;
+    private bool mergeFeedbackObserved;
+    private bool defenseMergeCheck;
     private Coroutine smoke;
     public int WavesCleared=>wave;
     public int CoreHealth=>core;
@@ -146,7 +150,7 @@ public sealed class RiftDefenseMode : MonoBehaviour
 
     private void Update()
     {
-        if(!running)return;
+        if(!running){UpdateTowerFeedback();return;}
         float delta=Time.deltaTime*(testFast?18f:1f);tickTimer+=delta;waveBreak=Mathf.Max(0,waveBreak-delta);castCooldown=Mathf.Max(0,castCooldown-delta);
         if(waveBreak<=0)
         {
@@ -176,6 +180,7 @@ public sealed class RiftDefenseMode : MonoBehaviour
         }
         if(core<=0){Finish(false);return;}
         if(tickTimer>=.12f){tickTimer=0;Refresh();}
+        UpdateTowerFeedback();
     }
 
     private void SpawnEnemy()
@@ -225,6 +230,32 @@ public sealed class RiftDefenseMode : MonoBehaviour
     }
     private void RemoveEnemy(Enemy enemy){if(enemy.View!=null)Destroy(enemy.View);if(enemy.Bar!=null)Destroy(enemy.Bar);enemies.Remove(enemy);}
 
+    private void PlayTowerBorderFeedback(int cell,Color color)
+    {
+        if(cell<0||cell>=towerGlows.Length)return;
+        towerFeedbackStarted[cell]=Time.unscaledTime;
+        towerFeedbackColors[cell]=color;
+        var glow=towerGlows[cell];
+        if(glow!=null)glow.enabled=true;
+    }
+
+    private void UpdateTowerFeedback()
+    {
+        if(root==null)return;
+        float now=Time.unscaledTime;
+        for(int i=0;i<towerGlows.Length;i++)
+        {
+            float elapsed=now-towerFeedbackStarted[i];
+            if(towerFeedbackStarted[i]<=0||elapsed<0||elapsed>=.42f)continue;
+            float progress=elapsed/.42f;
+            float strength=(1-progress)*(1-progress);
+            var color=towerFeedbackColors[i];
+            towerGlows[i].enabled=true;
+            towerGlows[i].color=new Color(color.r,color.g,color.b,Mathf.Lerp(.92f,.28f,progress));
+            towerGlows[i].rectTransform.localScale=Vector3.one*(1.07f+.2f*Mathf.Sin(progress*Mathf.PI)*strength);
+        }
+    }
+
     private void TapCell(int cell)
     {
         if(!running)return;
@@ -239,13 +270,14 @@ public sealed class RiftDefenseMode : MonoBehaviour
     {
         if(cell<0||cell>=towers.Length||towers[cell]!=null||mana<SummonCost)return;
         mana-=(int)SummonCost;var book=deck[UnityEngine.Random.Range(0,deck.Count)];towers[cell]=new Tower{Book=book};selected=cell;
+        PlayTowerBorderFeedback(cell,RankColors[0]);
         selectedText.text=book.Spell.DisplayName+" · rank 1";
     }
     private void UpgradeSelected()
     {
         if(selected<0||towers[selected]==null){selectedText.text="Select a tower first";return;}
         var tower=towers[selected];if(tower.Rank>=5){selectedText.text="This tower is at max rank";return;}if(mana<UpgradeCost){selectedText.text="Need 14 Rift Mana";return;}
-        mana-=(int)UpgradeCost;tower.Rank++;selectedText.text="Upgraded to rank "+tower.Rank;
+        mana-=(int)UpgradeCost;tower.Rank++;PlayTowerBorderFeedback(selected,RankColors[Mathf.Clamp(tower.Rank-1,0,4)]);selectedText.text="Upgraded to rank "+tower.Rank;
     }
     private void MergeSelected()
     {
@@ -256,7 +288,10 @@ public sealed class RiftDefenseMode : MonoBehaviour
     {
         int rank=towers[selected].Rank;if(rank>=5){selectedText.text="Maximum merge rank reached";return;}
         if(rank!=towers[other].Rank){selectedText.text="Merge matching star ranks";return;}
-        towers[other]=new Tower{Book=deck[UnityEngine.Random.Range(0,deck.Count)],Rank=rank+1};towers[selected]=null;selected=other;selectedText.text="Fusion roll · rank "+towers[other].Rank+" "+towers[other].Book.Spell.DisplayName;
+        towers[other]=new Tower{Book=deck[UnityEngine.Random.Range(0,deck.Count)],Rank=rank+1};towers[selected]=null;
+        PlayTowerBorderFeedback(selected,RankColors[Mathf.Clamp(rank,0,4)]);PlayTowerBorderFeedback(other,RankColors[Mathf.Clamp(rank,0,4)]);
+        selected=other;selectedText.text="Fusion roll · rank "+towers[other].Rank+" "+towers[other].Book.Spell.DisplayName;
+        if(testFast&&rank==1&&towers[other].Rank==2)mergeFeedbackObserved=true;
     }
     private void HeroBurst()
     {
@@ -305,9 +340,12 @@ public sealed class RiftDefenseMode : MonoBehaviour
     {
         UnityEngine.Random.InitState(20261004);
         testFast=true;Open();if(root==null)return;mana=80;
-        // Deterministic stress setup: fill and max-rank every cell to exercise
-        // all 20 waves, four bosses, target selection, and victory handling.
+        mergeFeedbackObserved=false;
+        // Deterministic stress setup exercises the real merge action before
+        // filling and max-ranking the remaining cells for the wave stress run.
         for(int cell=0;cell<towers.Length;cell++){mana=80;selected=cell;Summon(cell);}
+        towers[0].Book=deck[0];towers[1].Book=deck[0];selected=0;Merge(1);
+        defenseMergeCheck=towers[0]==null&&towers[1]!=null&&towers[1].Rank==2&&mergeFeedbackObserved&&towerFeedbackStarted[0]>0&&towerFeedbackStarted[1]>0;
         for(int cell=0;cell<towers.Length;cell++)while(towers[cell]!=null&&towers[cell].Rank<5){mana=80;selected=cell;UpgradeSelected();}
         mana=80;Refresh();
         smoke=StartCoroutine(SmokeWatch());
@@ -315,13 +353,13 @@ public sealed class RiftDefenseMode : MonoBehaviour
     private IEnumerator SmokeWatch()
     {
         float deadline=Time.realtimeSinceStartup+50;while(running&&Time.realtimeSinceStartup<deadline)yield return null;
-        bool passed=completed&&wave==MaxWaves&&bossCount==4&&core>0&&TowerCount>0&&mana>=0;
+        bool passed=completed&&wave==MaxWaves&&bossCount==4&&core>0&&TowerCount>0&&mana>=0&&defenseMergeCheck;
         var args=Environment.GetCommandLineArgs();int outputIndex=Array.IndexOf(args,"-cookieOutput");
         string outputDirectory=outputIndex>=0&&outputIndex+1<args.Length?args[outputIndex+1]:Application.persistentDataPath;
         if(string.IsNullOrWhiteSpace(outputDirectory))outputDirectory=System.IO.Path.GetTempPath();
         System.IO.Directory.CreateDirectory(outputDirectory);
-        System.IO.File.WriteAllText(System.IO.Path.Combine(outputDirectory,"rift-defense-test.txt"),(passed?"PASS":"FAIL")+" waves="+wave+" boss="+bossCount+" core="+core+" towers="+TowerCount+" mana="+mana);
-        Debug.Log("RIFT_DEFENSE_CHECK "+(passed?"PASS":"FAIL")+" waves="+wave+" bosses="+bossCount+" core="+core+" towers="+TowerCount+" mana="+mana);
+        System.IO.File.WriteAllText(System.IO.Path.Combine(outputDirectory,"rift-defense-test.txt"),(passed?"PASS":"FAIL")+" waves="+wave+" boss="+bossCount+" core="+core+" towers="+TowerCount+" mana="+mana+" mergeFeedback="+defenseMergeCheck);
+        Debug.Log("RIFT_DEFENSE_CHECK "+(passed?"PASS":"FAIL")+" waves="+wave+" bosses="+bossCount+" core="+core+" towers="+TowerCount+" mana="+mana+" mergeFeedback="+defenseMergeCheck);
         testFast=false;if(root!=null)Destroy(root.gameObject);root=null;
     }
     private void ClearRun()

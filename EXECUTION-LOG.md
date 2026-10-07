@@ -1,5 +1,13 @@
 # Execution log
 
+## Rift Defense tower border feedback — revision 75, 7 October 2026
+
+- Added a brief neon border flare and outward pulse to summoned, upgraded and merged skill-book towers. A merge animates both the consumed and receiving cell borders; tower icons stay still, and the normal rank-tier glow remains visible.
+- Kept animation work bounded to the 15 board borders and allocation-free per frame. No economy, tower power, merge outcome, rewards or server contract changed.
+- Extended the deterministic mode smoke: two same-book rank-1 towers merge into rank 2 and assert feedback before the complete 20-wave run.
+- Validation: Unity compile `Logs/step-10-20261007-212637.log`; optimized Windows export `Logs/step-10-20261007-212655.log`; Rift Defense `Logs/RiftDefenseFeedback/rift-defense-test.txt` PASS, 20 waves/four bosses/core 100/14 towers/mergeFeedback true; campaign smoke `Logs/Runtime/runtime-smoke.txt` PASS; desktop and touch layout tests PASS at 350 and 351 checks. Release/build executable hashes match (`AF88B840E599661AC63FC10AE27AC77DD97CD46B44DF8A7CE60EB0DCFACFC99E`).
+- Next per master plan: record a normal-run duration and balance trace, then implement the currently inactive partner board with server-synchronized co-op. Physical Android and low-end PC frame-time/input validation remain release gates.
+
 ## Directional hero hit reaction — revision 74, 5 October 2026
 
 Added `HeroActionPose.Hit`, a brief directional squash/lean and coral tint, plus a small pooled-budget impact ring when the player's health decreases. Invulnerability, damage amounts and safe-zone combat rules are unchanged. `RuntimeSmokeTest` now asserts the hit trigger and recovery.

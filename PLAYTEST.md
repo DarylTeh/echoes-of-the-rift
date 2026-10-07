@@ -1,6 +1,12 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
-## Latest combat-presentation UAT — revision 74, 5 October 2026
+## Latest Rift Defense UAT — revision 75, 7 October 2026
+
+Summons, rank-ups and merges now have a brief neon pulse on their skill-book cell borders. A deterministic test merged two rank-1 towers, verified the resulting rank-2 tower and both-cell border feedback, then cleared all 20 waves and four bosses with core health 100 and no runtime errors (`Logs/RiftDefenseFeedback/rift-defense-test.txt`).
+
+Unity compile/build passed (`Logs/step-10-20261007-212637.log`, `Logs/step-10-20261007-212655.log`); desktop/touch UI passed 350/351 checks, and campaign movement/combat/progression/save regression passed. `Release/Windows` matches the tested build at SHA-256 `AF88B840E599661AC63FC10AE27AC77DD97CD46B44DF8A7CE60EB0DCFACFC99E`. Physical Android/low-end PC performance and normal-run balance testing remain open.
+
+## Previous combat-presentation UAT — revision 74, 5 October 2026
 
 When the hero loses health, the new build shows a short knockback-direction flinch, coral flash and compact impact ring. Campaign smoke asserted both the hit trigger and pose recovery, alongside movement, combat, progression and save checks with no runtime errors. The hit-reaction capture at `Logs/Runtime/hit-reaction.png` was visually reviewed.
 

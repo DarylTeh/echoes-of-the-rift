@@ -1,8 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 74 - 5 October 2026. Directional hero hit reaction.
+Revision 75 - 7 October 2026. Rift Defense merge feedback.
 
-## Current iteration - revision 74: add a readable hero hit reaction
+## Current iteration - revision 75: make Rift Defense merges read clearly
+
+Summoning, upgrading and merging skill-book towers now produce a brief neon flare and outward pulse on their borders. Merge feedback highlights both the consumed cell and the new higher-rank tower; it does not animate the item art or change costs, random-book selection, damage, ranks or rewards. The border animation is bounded, updates without per-frame allocations and remains smooth across the board refresh.
+
+Validation passed: Unity compile (`Logs/step-10-20261007-212637.log`) and optimized Windows build (`Logs/step-10-20261007-212655.log`); deterministic Rift Defense test completed 20 waves/four bosses with core 100 and asserted successful rank-1 merge plus border feedback (`Logs/RiftDefenseFeedback/rift-defense-test.txt`); desktop/touch UI passed 350/351 checks; campaign movement/combat/progression/save regression passed without runtime errors (`Logs/Runtime/runtime-smoke.txt`). `Release/Windows` matches `Builds/Windows` at executable SHA-256 `AF88B840E599661AC63FC10AE27AC77DD97CD46B44DF8A7CE60EB0DCFACFC99E`.
+
+Next: gather a normal-run timing and balance trace, then replace the inactive partner board with server-synchronized co-op. Physical Android/low-end PC performance and input remain unverified. Do not claim exact Random Dice or My Heroes parity; this is original Echoes art and implementation.
+
+## Previous iteration - revision 74: add a readable hero hit reaction
 
 When the player loses health, the hero now briefly squashes and leans in the knockback direction, flashes a restrained coral tint, and emits a small impact ring. The reaction blends back to the current idle/walk pose. It only runs after health actually decreases, so safe-zone blocking and invulnerability behavior are unchanged. The campaign smoke now asserts both the hit trigger and pose recovery.
 
@@ -26,7 +34,7 @@ Added original transparent side-view and back-view 3×3 atlases in the same nine
 
 Validation passed at revision 71: optimized Windows build, campaign/progression smoke, desktop/touch layout tests (350/351), and Rift Defense (20 waves, four bosses, 15 towers). Revision 72 added and validated alternating stride frames; revision 73 layers the combat-triggered poses on top.
 
-## Current iteration - revision 70: animate boss attacks and face the hero
+## Previous iteration - revision 70: animate boss attacks and face the hero
 
 Added a four-row boss attack sequence atlas with four phases per boss: warning glyph, charge, strike and dissipating burst. Campaign bosses now show their own hue and attack sprite sequence during wind-up and impact; hit radius, timing and the readable telegraph ring remain unchanged. Attack visuals use a small reuse pool. The hero now turns toward left/right movement and current aim while idle; vertical facing adjusts weapon depth/position. Walk bob and a small lean make movement easier to read without replacing the approved race sprites or appearance controls.
 
