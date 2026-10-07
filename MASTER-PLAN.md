@@ -1,6 +1,14 @@
 # Echoes of the Rift master plan
 
-Revision 85 - 8 October 2026. Clear the campaign combat lane.
+Revision 86 - 8 October 2026. Tighten the mobile landscape combat controls.
+
+## Current iteration - revision 86: compact touch combat cluster
+
+Rearranged the mobile landscape action controls into a compact two-row cluster within right-thumb reach: stance swap, three numbered skills, dodge and the larger basic-attack control. Touch mode now uses numeric skill labels plus SWAP/DODGE captions instead of desktop-only Q/E/R, Tab and Space prompts. Desktop keyboard positions and labels remain unchanged. Movement remains on the lower-left stick, leaving the center lane open.
+
+Validation: Unity Windows build succeeded. The simulated touch-layout suite passed 351 checks and desktop passed 350, with zero layout failures or runtime errors. Both 1280x720 captures were visually reviewed at `Logs/TouchControlIteration/combat-hud-1280x720.png` and `Logs/TouchControlIteration/Desktop/combat-hud-1280x720.png`. This is scripted landscape touch validation, not physical Android-device acceptance. The tested build is being synced into tracked `Release/Windows`; no game client or project server was left running.
+
+Next: continue through the remaining page flows using the same reference-based review, starting with account entry/loading and then town, inventory, shop, settings and results. The game remains below the requested 90% MyHeroes match; original art and the larger screen-flow gaps still need focused work.
 
 ## Current iteration - revision 85: remove redundant stage banners during combat
 
@@ -8,7 +16,7 @@ Removed the large stage-name banner from the middle of the expedition view. Stag
 
 Validation: Unity Windows build succeeded. The four-resolution runtime layout suite passed 350 checks with zero failures/runtime errors, including boss health tracking, minimap bounds, stage progression and the campaign/town regression. The revised 1280x720 combat HUD was visually reviewed at `Logs/CombatHUDIteration/combat-hud-1280x720.png`. The player was synced to tracked `Release/Windows`; key gameplay resource hashes match the tested build. Physical phone and low-end PC checks remain open; this focused combat pass does not rescore the whole game.
 
-Next: review touch skill spacing and labels on mobile landscape, then continue through the remaining page flows with the same corner-based hierarchy. Preserve the current account/sign-out safeguards.
+Previous next-step note: the touch skill spacing and labels are now revised in revision 86. Continue through the remaining page flows with the same corner-based hierarchy. Preserve the current account/sign-out safeguards.
 
 ## Previous iteration - revision 84: compact the town activity rail
 

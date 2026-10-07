@@ -48,7 +48,11 @@ public sealed class SkillWheelHUD : MonoBehaviour
         manaText=GameUI.Label(status,"",new Vector2(0,-9),new Vector2(208,24),18);
         stanceText=GameUI.Label(root,"",new Vector2(477,-92),new Vector2(258,26),18);
         lastSecondary=!Skills.SecondaryActive;stanceText.text=Skills.SecondaryActive?EnglishUI.MoonStance:EnglishUI.EmberStance;
-        Vector2[] positions={new Vector2(389,-159),new Vector2(376,-268),new Vector2(487,-157)};
+        // Keep touch actions in a compact two-row cluster so right-thumb travel is short.
+        // Desktop retains the wider keyboard-oriented arrangement used by the HUD.
+        Vector2[] positions=FixedTouchStick.EnabledForDevice
+            ?new[]{new Vector2(316,-260),new Vector2(414,-260),new Vector2(414,-162)}
+            :new[]{new Vector2(389,-159),new Vector2(376,-268),new Vector2(487,-157)};
         for(int i=0;i<3;i++)
         {
             int slot=i;var button=GameUI.Button(root,"",positions[i],new Vector2(88,88),()=>Player.RequestSkill(slot));
@@ -60,15 +64,15 @@ public sealed class SkillWheelHUD : MonoBehaviour
             cooldowns[i].type=UnityEngine.UI.Image.Type.Filled;cooldowns[i].fillMethod=UnityEngine.UI.Image.FillMethod.Radial360;cooldowns[i].fillOrigin=2;cooldowns[i].color=new Color(0.03f,0.02f,.09f,.7f);
             labels[i]=GameUI.Label(button.transform,"",new Vector2(0,-26),new Vector2(72,24),18);labels[i].alignment=TextAlignmentOptions.Center;
         }
-        var swap=GameUI.Button(root,EnglishScreens.Tab,new Vector2(580,-155),new Vector2(64,64),Player.RequestSwap);GameUI.Icon(swap.transform,PixelArt.Icon("swap"),new Vector2(0,9),new Vector2(42,42));
-        var dodge=GameUI.Button(root,EnglishScreens.Space,new Vector2(273,-282),new Vector2(88,72),()=>Player.Dodge());GameUI.Icon(dodge.transform,PixelArt.Icon("dodge"),new Vector2(0,9),new Vector2(42,42));
-        foreach(var button in new[]{swap,dodge}){var caption=button.GetComponentInChildren<TMP_Text>();caption.rectTransform.anchoredPosition=new Vector2(0,-22);caption.rectTransform.sizeDelta=new Vector2(button==swap?56:80,20);caption.fontSize=16;}
+        var swap=GameUI.Button(root,FixedTouchStick.EnabledForDevice?"SWAP":EnglishScreens.Tab,new Vector2(316,-162),new Vector2(88,88),Player.RequestSwap);GameUI.Icon(swap.transform,PixelArt.Icon("swap"),new Vector2(0,7),new Vector2(42,42));
+        var dodge=GameUI.Button(root,FixedTouchStick.EnabledForDevice?"DODGE":EnglishScreens.Space,FixedTouchStick.EnabledForDevice?new Vector2(512,-162):new Vector2(273,-282),new Vector2(88,88),()=>Player.Dodge());GameUI.Icon(dodge.transform,PixelArt.Icon("dodge"),new Vector2(0,7),new Vector2(42,42));
+        foreach(var button in new[]{swap,dodge}){var caption=button.GetComponentInChildren<TMP_Text>();caption.rectTransform.anchoredPosition=new Vector2(0,-27);caption.rectTransform.sizeDelta=new Vector2(80,20);caption.fontSize=FixedTouchStick.EnabledForDevice?14:16;}
         combatControls.Add(swap.gameObject);combatControls.Add(dodge.gameObject);combatControls.Add(stanceText.gameObject);
         var bag=GameUI.Button(root,"",new Vector2(576,240),new Vector2(64,64),()=>FindAnyObjectByType<InventoryModal>().Open());
         bag.name="BackpackButton";GameUI.Pin((RectTransform)bag.transform,Vector2.one,new Vector2(-64,-120));
         GameUI.Icon(bag.transform,PixelArt.Icon("bag"),new Vector2(0,6),new Vector2(40,40));
         GameUI.Label(bag.transform,"Bag [I]",new Vector2(0,-23),new Vector2(64,20),16).alignment=TextAlignmentOptions.Center;
-        var attack=GameUI.Button(root,"",new Vector2(523,-267),new Vector2(128,128),()=>{});
+        var attack=GameUI.Button(root,"",FixedTouchStick.EnabledForDevice?new Vector2(512,-260):new Vector2(523,-267),new Vector2(128,128),()=>{});
         attack.name="AttackControl";attack.GetComponent<UnityEngine.UI.Image>().sprite=PixelArt.Orb();attack.GetComponent<UnityEngine.UI.Image>().type=UnityEngine.UI.Image.Type.Simple;
         attackIcon=GameUI.Icon(attack.transform,null,Vector2.zero,new Vector2(82,82));
         combatControls.Add(attack.gameObject);
@@ -122,7 +126,7 @@ public sealed class SkillWheelHUD : MonoBehaviour
         if(Mathf.Abs(shownManaRatio-manaRatio)>.001f){shownManaRatio=manaRatio;mp.rectTransform.sizeDelta=new Vector2(200*manaRatio,6);}
         if(weapon!=null&&shownWeaponFamily!=weapon.Family){shownWeaponFamily=weapon.Family;attackIcon.sprite=IllustratedArt.Weapon(weapon.Family);attackIcon.material=IllustratedArt.Owns(attackIcon.sprite)?IllustratedArt.UI:null;}
         if(lastSecondary!=Skills.SecondaryActive){lastSecondary=Skills.SecondaryActive;stanceText.text=Skills.SecondaryActive?EnglishUI.MoonStance:EnglishUI.EmberStance;}
-        for(int i=0;i<3;i++){int index=i+(Skills.SecondaryActive?3:0);var spell=Skills.GetSpell(index);float remaining=Skills.Remaining(index);if(shownSpells[i]!=spell){shownSpells[i]=spell;icons[i].sprite=IllustratedArt.Skill(spell)??spell?.skillIcon;icons[i].material=IllustratedArt.Owns(icons[i].sprite)?IllustratedArt.UI:null;}int tenths=remaining>0?Mathf.CeilToInt(remaining*10):0;if(shownCooldownTenths[i]!=tenths){shownCooldownTenths[i]=tenths;labels[i].text=tenths>0?(tenths/10f).ToString("0.0"):Keys[i];}cooldowns[i].fillAmount=spell==null?0:Mathf.Clamp01(remaining/Mathf.Max(.01f,stats.CooldownDuration(spell.Cooldown)));}
+        for(int i=0;i<3;i++){int index=i+(Skills.SecondaryActive?3:0);var spell=Skills.GetSpell(index);float remaining=Skills.Remaining(index);if(shownSpells[i]!=spell){shownSpells[i]=spell;icons[i].sprite=IllustratedArt.Skill(spell)??spell?.skillIcon;icons[i].material=IllustratedArt.Owns(icons[i].sprite)?IllustratedArt.UI:null;}int tenths=remaining>0?Mathf.CeilToInt(remaining*10):0;if(shownCooldownTenths[i]!=tenths){shownCooldownTenths[i]=tenths;labels[i].text=tenths>0?(tenths/10f).ToString("0.0"):FixedTouchStick.EnabledForDevice?(i+1).ToString():Keys[i];}cooldowns[i].fillAmount=spell==null?0:Mathf.Clamp01(remaining/Mathf.Max(.01f,stats.CooldownDuration(spell.Cooldown)));}
         bool town=game.Hub.IsOpen;int stage=game.Dungeon.StageIndex;foreach(var control in combatControls)control.SetActive(!town);quest.gameObject.SetActive(!town&&questExpanded);if(lastTown!=town||lastStage!=stage){lastTown=town;lastStage=stage;objective.text=EnglishUI.Objective(town,stage+1);}
     }
     private void OnDestroy(){if(root!=null)Destroy(root.gameObject);}

@@ -1,5 +1,9 @@
 # My Heroes reference UAT — 3 October 2026
 
+## Follow-up — 8 October 2026, mobile landscape combat controls
+
+Grouped touch-mode stance swap, three numbered skills, dodge and the primary attack into a compact two-row right-thumb cluster; desktop keeps the Q/E/R, Tab and Space keyboard hints and existing arrangement. The lower-left movement stick and open center lane remain unobstructed. The optimized Windows build passed 351 simulated touch-layout checks and 350 desktop checks with zero layout failures or runtime errors. Both 1280×720 captures were visually reviewed: `Logs/TouchControlIteration/combat-hud-1280x720.png` and `Logs/TouchControlIteration/Desktop/combat-hud-1280x720.png`. These scripted checks do not certify physical Android usability. The overall presentation remains below the requested 90% MyHeroes similarity.
+
 ## Follow-up — 8 October 2026, item inspection
 
 Rebuilt the raised item popup as a centered card with a rarity/enhancement ribbon, selected icon, readable name/stats, separate effect/comparison and upgrade areas, and an integrated action rail. Reviewed captures at 1280×720, 1024×768, 1920×1080 and 1600×900 after correcting a title/icon collision and heading alignment. The packaged Windows player passed the 350-check UI suite with zero layout failures or runtime errors; the existing test fixture exercises purchase and equip actions. This improves the item-detail hierarchy but does not establish the requested 90% whole-game match. The item still uses original Echoes art and only displays fields supported by the current game data. Evidence: `Logs/ItemInspectorIteration/item-inspector-1280x720.png`, `runtime-smoke.txt`, and `layout-failures.txt`.
