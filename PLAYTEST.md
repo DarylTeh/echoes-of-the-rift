@@ -1,6 +1,12 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
-## Latest landscape UAT — revision 76, 7 October 2026
+## Latest animation/frame-pacing UAT — revision 77, 7 October 2026
+
+The source now has continuous hero bob, smoother eased weapon attack phases, and cached per-character render transforms. It includes a 10-second combat frame-pacing test with a 60 FPS target and p50/p95/over-budget reporting (Tools/Test-FramePacing.ps1). This code has not been rebuilt or run: Unity batch export returned exit 198 because the editor entitlement is unavailable. The current executable therefore does not include these changes, and 60 FPS is not yet verified. Run the benchmark on the optimized PC build and Android devices after rebuilding.
+
+
+
+## Previous landscape UAT — revision 76, 7 October 2026
 
 Main game mobile orientation is Landscape Right with portrait rotation disabled. Rift Defense is now arranged for landscape, with the 5x3 board on the left and its skill deck/actions on the right; the live 1280x720 preview was visually reviewed. UAT passed: 20 waves, four bosses, core 100, four aspect ratios; desktop/touch UI 350/351 checks; account registration and campaign; and missing-server recovery with no unsafe sign-out. Logs: Logs/LandscapeRiftDefenseFinal/rift-defense-test.txt, Logs/LandscapeRiftDefenseFinal/runtime-smoke.txt, Logs/UILayout/runtime-smoke.txt, Logs/UILayoutTouch/runtime-smoke.txt, Logs/Dedicated/Register/runtime-smoke.txt, and Logs/ConnectionFailure/runtime-smoke.txt.
 

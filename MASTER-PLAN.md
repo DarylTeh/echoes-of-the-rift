@@ -1,8 +1,14 @@
 # Echoes of the Rift master plan
 
-Revision 76 - 7 October 2026. Lock the main game to landscape and reflow Rift Defense.
+Revision 77 - 7 October 2026. Improve combat animation timing and add frame-pacing measurement.
 
-## Current iteration - revision 76: landscape main game and Rift Defense
+## Current iteration - revision 77: smooth combat motion and 60 FPS target
+
+The runtime already caps the game at 60 FPS with VSync disabled. Hero movement now uses continuous subpixel bob and cached sprite-part transforms instead of scanning/name-checking children every rendered frame. Weapon attacks have a readable wind-up, eased strike arc and follow-through; skill, dodge and hit motion retain smooth interpolation. Added a repeatable 10-second combat frame-pacing test and launcher that reports average FPS, median/p95 frame time and frames over 16.67 ms. The acceptance target is an average of at least 59 FPS with no more than 5% frames over budget on the test machine.
+
+Source/test validation is pending: Unity batch export could not run because the editor reported no active entitlement (`Logs/step-10-20261007-214906.log`). Therefore the new animation changes are not in the shipped executable and no 60 FPS measurement is claimed. After license access returns, build and run `Tools/Test-FramePacing.ps1` on the target PC and Android hardware; tune until the actual results pass. Do not promise 60 FPS on untested devices or claim exact copies of My Heroes/Random Dice animation assets.
+
+## Previous iteration - revision 76: landscape main game and Rift Defense
 
 Echoes of the Rift's main game flow is landscape: Unity now starts at Landscape Right, permits left/right landscape rotation, and disables portrait rotation. Rift Defense was the only portrait-oriented experience; its 5x3 board is now the left-side focal area with the skill-book deck and summon/upgrade/merge/burst actions grouped on the right. The unused second-board placeholder is replaced with a clear solo/co-op status note. Resolution scaling and safe-area checks cover 1280x720, 1024x768, 1920x1080 and 1600x900.
 

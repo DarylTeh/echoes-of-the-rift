@@ -39,6 +39,7 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         creator.Preview.Apply(new CharacterAppearanceData { SkinIndex=2,HairStyle=2,HairColor=1,ClassId="wayfarer",PassiveSkillId="steadfast" });
         game.Begin(creator.Preview.Appearance);
         var arguments=Environment.GetCommandLineArgs();
+        if(Array.IndexOf(arguments,"-framePacingTest")>=0){yield return TestFramePacing(game);yield break;}
         if(Array.IndexOf(arguments,"-bossArtTest")>=0){yield return TestBossArt();yield break;}
         if(Array.IndexOf(arguments,"-showRiftDefense")>=0)
         {
