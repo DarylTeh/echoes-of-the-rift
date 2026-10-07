@@ -1,8 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 75 - 7 October 2026. Rift Defense merge feedback.
+Revision 76 - 7 October 2026. Lock the main game to landscape and reflow Rift Defense.
 
-## Current iteration - revision 75: make Rift Defense merges read clearly
+## Current iteration - revision 76: landscape main game and Rift Defense
+
+Echoes of the Rift's main game flow is landscape: Unity now starts at Landscape Right, permits left/right landscape rotation, and disables portrait rotation. Rift Defense was the only portrait-oriented experience; its 5x3 board is now the left-side focal area with the skill-book deck and summon/upgrade/merge/burst actions grouped on the right. The unused second-board placeholder is replaced with a clear solo/co-op status note. Resolution scaling and safe-area checks cover 1280x720, 1024x768, 1920x1080 and 1600x900.
+
+Town service NPCs, activity/gamemode gates and campaign entry are exercised by the landscape flow smoke. The wide Rift Defense screen was visually reviewed at 1280x720. Verified on the optimized Windows release: Rift Defense 20 waves/four bosses/core 100, four landscape layouts, desktop/touch UI 350/351 checks, local account registration and campaign progression, and missing-server recovery without exposing sign-out. `Release/Windows` and `Builds/Windows` match at executable SHA-256 `AF88B840E599661AC63FC10AE27AC77DD97CD46B44DF8A7CE60EB0DCFACFC99E`.
+
+The dedicated account campaign passes. Dedicated two-client fixture testing is still pending: it requires a Development player because the optimized release intentionally disables test-only legacy login; the attempted batch export was blocked by Unity reporting no active editor entitlement (`Logs/step-10-20261007-214906.log`). This does not affect the shipping account-ticket path. Physical Android rotation/touch/performance and low-end PC frame-time acceptance remain open. Next: test the landscape player on real target devices, then trace Rift Defense balance and timing before implementing synchronized co-op boards.
+
+## Previous iteration - revision 75: make Rift Defense merges read clearly
 
 Summoning, upgrading and merging skill-book towers now produce a brief neon flare and outward pulse on their borders. Merge feedback highlights both the consumed cell and the new higher-rank tower; it does not animate the item art or change costs, random-book selection, damage, ranks or rewards. The border animation is bounded, updates without per-frame allocations and remains smooth across the board refresh.
 

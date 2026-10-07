@@ -12,7 +12,8 @@ public sealed partial class RuntimeSmokeTest
     private static readonly Vector2Int[] LayoutSizes={new Vector2Int(1280,720),new Vector2Int(1024,768),new Vector2Int(1920,1080),new Vector2Int(1600,900)};
     private IEnumerator SetLayoutSize(Vector2Int size)
     {
-        Screen.SetResolution(size.x,size.y,FullScreenMode.Windowed);
+        if(size.x<=size.y)layoutFailures.Add("Requested test resolution is not landscape: "+size);
+        if(Screen.width!=size.x||Screen.height!=size.y)Screen.SetResolution(size.x,size.y,FullScreenMode.Windowed);
         yield return new WaitForSecondsRealtime(.4f);yield return new WaitForEndOfFrame();
     }
     private void AuditLayout(Transform root,string context)

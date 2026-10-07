@@ -1,11 +1,11 @@
-param([switch]$Test,[switch]$Pair,[switch]$Account,[switch]$RegistrationOnly,[string]$ControlDirectory,[int]$OwnerProcessId=0)
+param([switch]$Test,[switch]$Pair,[switch]$Account,[switch]$RegistrationOnly,[string]$ControlDirectory,[int]$OwnerProcessId=0,[string]$Executable)
 if($Account){$Test=$true}
 if($Pair){$Test=$true}
 $ErrorActionPreference='Stop'
 $projectRoot=Split-Path -Parent $PSScriptRoot
 $serverRoot=Join-Path $projectRoot 'Server'
-$exe=Join-Path $projectRoot 'Release/Windows/EchoesOfTheRift.exe'
-if(-not(Test-Path -LiteralPath $exe)){$exe=Join-Path $projectRoot 'Builds/Windows/EchoesOfTheRift.exe'}
+if($Executable){$exe=$Executable;if(-not(Test-Path -LiteralPath $exe)){throw "Game executable not found: $exe"}}
+else{$exe=Join-Path $projectRoot 'Release/Windows/EchoesOfTheRift.exe';if(-not(Test-Path -LiteralPath $exe)){$exe=Join-Path $projectRoot 'Builds/Windows/EchoesOfTheRift.exe'};if(-not(Test-Path -LiteralPath $exe)){throw "Game executable not found: $exe"}}
 $output=if($Pair){Join-Path $projectRoot 'Logs/DedicatedPair'}else{Join-Path $projectRoot 'Logs/Dedicated'}
 New-Item -ItemType Directory -Force $output | Out-Null
 $oldKey=$env:COOKIE_SERVER_KEY

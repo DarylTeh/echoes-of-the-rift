@@ -1,6 +1,12 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
-## Latest Rift Defense UAT — revision 75, 7 October 2026
+## Latest landscape UAT — revision 76, 7 October 2026
+
+Main game mobile orientation is Landscape Right with portrait rotation disabled. Rift Defense is now arranged for landscape, with the 5x3 board on the left and its skill deck/actions on the right; the live 1280x720 preview was visually reviewed. UAT passed: 20 waves, four bosses, core 100, four aspect ratios; desktop/touch UI 350/351 checks; account registration and campaign; and missing-server recovery with no unsafe sign-out. Logs: Logs/LandscapeRiftDefenseFinal/rift-defense-test.txt, Logs/LandscapeRiftDefenseFinal/runtime-smoke.txt, Logs/UILayout/runtime-smoke.txt, Logs/UILayoutTouch/runtime-smoke.txt, Logs/Dedicated/Register/runtime-smoke.txt, and Logs/ConnectionFailure/runtime-smoke.txt.
+
+The optimized Windows release was compiled/exported and matches the build executable at SHA-256 AF88B840E599661AC63FC10AE27AC77DD97CD46B44DF8A7CE60EB0DCFACFC99E. Dedicated account campaign passed; session resume was skipped because Windows protected-session storage was unavailable. Dedicated pair test needs a Development player: the optimized release intentionally disables legacy test fixtures, and the Unity editor batch export is blocked by unavailable entitlement. Physical Android rotation/touch/performance and low-end PC timing remain unverified.
+
+## Previous Rift Defense UAT — revision 75, 7 October 2026
 
 Summons, rank-ups and merges now have a brief neon pulse on their skill-book cell borders. A deterministic test merged two rank-1 towers, verified the resulting rank-2 tower and both-cell border feedback, then cleared all 20 waves and four bosses with core health 100 and no runtime errors (`Logs/RiftDefenseFeedback/rift-defense-test.txt`).
 

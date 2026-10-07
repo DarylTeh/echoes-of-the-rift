@@ -16,7 +16,21 @@ public static class ProjectValidation
 
     public static void CompileCLI()
     {
+        bool landscape=PlayerSettings.defaultInterfaceOrientation==UIOrientation.LandscapeLeft||PlayerSettings.defaultInterfaceOrientation==UIOrientation.LandscapeRight;
+        if(!landscape||PlayerSettings.allowedAutorotateToPortrait||PlayerSettings.allowedAutorotateToPortraitUpsideDown)
+            throw new InvalidOperationException("Mobile orientation must stay landscape; portrait rotation is disabled.");
         Debug.Log("COMPILE_OK: Pipeline=" + DetectPipeline());
+    }
+
+    public static void ConfigureLandscapeOrientationCLI()
+    {
+        PlayerSettings.defaultInterfaceOrientation=UIOrientation.LandscapeRight;
+        PlayerSettings.allowedAutorotateToPortrait=false;
+        PlayerSettings.allowedAutorotateToPortraitUpsideDown=false;
+        PlayerSettings.allowedAutorotateToLandscapeLeft=true;
+        PlayerSettings.allowedAutorotateToLandscapeRight=true;
+        AssetDatabase.SaveAssets();
+        Debug.Log("LANDSCAPE_ORIENTATION_OK: "+PlayerSettings.defaultInterfaceOrientation);
     }
 
     public static void ExportSmokeCLI()

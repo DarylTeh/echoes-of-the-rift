@@ -27,9 +27,25 @@ public sealed partial class RuntimeSmokeTest
         }
         else
         {
-            game.Player.transform.position=TownHubManager.Positions[4];game.Hub.Interact(4);yield return null;
-            var inventory=game.GetComponent<InventoryModal>();safe&=inventory.IsOpen&&inventory.VisibleCount==System.Array.FindAll(game.Items,x=>x.Kind==ItemKind.SkillBook).Length&&inventory.VisibleCategoryMatches(4);inventory.Close();
-            game.Player.transform.position=TownHubManager.Positions[7];game.Hub.Interact(7);safe&=game.Hub.HasDialog;game.Hub.CloseDialog();
+            var inventory=game.GetComponent<InventoryModal>();bool npcs=true;
+            for(int merchant=0;merchant<5;merchant++)
+            {
+                game.Player.transform.position=TownHubManager.Positions[merchant];game.Hub.Interact(merchant);yield return null;
+                int expected=System.Array.FindAll(game.Items,item=>TownHubManager.Sells(TownHubManager.Names[merchant],item)).Length;
+                npcs&=inventory.IsOpen&&inventory.VisibleCount==expected;
+                if(merchant==4)safe&=inventory.IsOpen&&inventory.VisibleCategoryMatches(4);
+                inventory.Close();yield return null;
+            }
+            bool maps=true;
+            foreach(int gate in new[]{5,7,8})
+            {
+                game.Player.transform.position=TownHubManager.Positions[gate];game.Hub.Interact(gate);yield return null;
+                bool dialog=game.Hub.HasDialog&&GameObject.Find("GateDialog")!=null;
+                if(gate==5)dialog&=GameObject.Find("RiftDefenseLaunch")!=null;
+                maps&=dialog;game.Hub.CloseDialog();
+            }
+            if(!npcs||!maps)failed=true;
+            Debug.Log($"TOWN_SERVICE_CHECK merchantNPCs={npcs} raidDpsWorldBossGates={maps}");
         }
         var eventsButton=GameObject.Find("EventsButton")?.GetComponent<UnityEngine.UI.Button>();
         bool activityRail=GameObject.Find("TownActivityRail")!=null&&GameObject.Find("CampaignButton")!=null&&GameObject.Find("TownContextAction")!=null;
@@ -42,7 +58,15 @@ public sealed partial class RuntimeSmokeTest
         bool inboxDrawer=GameObject.Find("InboxDrawer")!=null&&GameObject.Find("CloseInboxButton")!=null;
         if(!inboxDrawer)failed=true;game.Hub.CloseDialog();
         yield return new WaitForEndOfFrame();Capture("rift-haven.png");
+        bool campaignGate=true;
+        if(!game.Session.UsesDedicated)
+        {
+            game.Player.transform.position=TownHubManager.Positions[6];game.Hub.Interact(6);
+            campaignGate=GameObject.Find("TownHub")==null&&!game.Player.InSafeZone;
+            if(!campaignGate)failed=true;
+            Debug.Log("CAMPAIGN_GATE_CHECK landscapeEntry="+campaignGate);
+        }
         if(!moved||!safe)failed=true;
-        Debug.Log($"TOWN_CHECK movement={moved} safeZone={safe} localSafe={game.Player.InSafeZone} localHealth={game.Player.Health}/{health} localMana={game.Player.GetComponent<SkillStanceSwapper>().Mana}/{mana} townRpc={game.Session.World.TownSafetyVerified} activityRail={activityRail} eventDrawer={eventDrawer} inboxDrawer={inboxDrawer} server={game.Session.UsesDedicated}");
+        Debug.Log($"TOWN_CHECK movement={moved} safeZone={safe} localSafe={game.Player.InSafeZone} localHealth={game.Player.Health}/{health} localMana={game.Player.GetComponent<SkillStanceSwapper>().Mana}/{mana} townRpc={game.Session.World.TownSafetyVerified} campaignGate={campaignGate} activityRail={activityRail} eventDrawer={eventDrawer} inboxDrawer={inboxDrawer} server={game.Session.UsesDedicated}");
     }
 }

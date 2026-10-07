@@ -49,6 +49,27 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         if(Array.IndexOf(arguments,"-riftDefenseTest")>=0)
         {
             string defenseResult=Path.Combine(output,"rift-defense-test.txt");if(File.Exists(defenseResult))File.Delete(defenseResult);
+            game.Defense.StartPreviewShowcase();
+            foreach(var size in LayoutSizes)
+            {
+                yield return SetLayoutSize(size);
+                var defense=GameObject.Find("RiftDefense");
+                if(defense==null)layoutFailures.Add("Rift Defense overlay disappeared at "+size);
+                else
+                {
+                    AuditLayout(defense.transform,"Rift Defense "+size);
+                    var rect=GameObject.Find("RiftDefensePanel")?.GetComponent<RectTransform>();
+                    if(rect==null)layoutFailures.Add("Rift Defense panel is missing at "+size);
+                    else
+                    {
+                        var corners=new Vector3[4];rect.GetWorldCorners(corners);Rect safe=UISafeArea.TestArea??Screen.safeArea;
+                        if(corners[0].x<safe.xMin-2||corners[0].y<safe.yMin-2||corners[2].x>safe.xMax+2||corners[2].y>safe.yMax+2)layoutFailures.Add("Rift Defense panel exceeds landscape safe area at "+size);
+                    }
+                    yield return NativeCapture("rift-defense-"+Screen.width+"x"+Screen.height+".png");
+                }
+            }
+            yield return SetLayoutSize(LayoutSizes[0]);
+            game.Defense.Close();
             game.Defense.StartSmokeTest();
             double deadline=Time.realtimeSinceStartupAsDouble+55;
             while(Time.realtimeSinceStartupAsDouble<deadline&&runtimeErrors.Count==0)
@@ -57,7 +78,10 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
                 yield return null;
             }
             string result=File.Exists(defenseResult)?File.ReadAllText(defenseResult):"FAIL smoke test timed out";
-            Finish(result+" runtimeErrors="+failed);yield break;
+            File.WriteAllLines(Path.Combine(output,"rift-defense-layout-checks.txt"),layoutChecks);
+            File.WriteAllLines(Path.Combine(output,"rift-defense-layout-failures.txt"),layoutFailures);
+            if(layoutFailures.Count>0)result="FAIL landscape layout failures="+layoutFailures.Count+"; "+result;
+            Finish(result+" landscapeLayouts="+layoutChecks.Count+" runtimeErrors="+failed);yield break;
         }
         if(Array.IndexOf(arguments,"-uiLayoutTest")>=0){yield return TestInventoryLayouts(game);yield break;}
         if(Array.IndexOf(arguments,"-cookieCoopHost")>=0||Array.IndexOf(arguments,"-cookieCoopClient")>=0)

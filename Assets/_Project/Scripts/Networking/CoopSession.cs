@@ -31,8 +31,20 @@ public sealed class CoopSession : MonoBehaviour
         string config=Path.Combine(Application.streamingAssetsPath,"server.json");if(File.Exists(config)){var endpoint=JsonUtility.FromJson<Endpoint>(File.ReadAllText(config));if(!string.IsNullOrWhiteSpace(endpoint?.address))Address=endpoint.address;}
         if(UsesDedicated&&!DedicatedServer&&!AccountClient.Enabled)
         {
-            string path=Path.Combine(Application.persistentDataPath,Array.IndexOf(Environment.GetCommandLineArgs(),"-dedicatedClientTest")>=0?(Array.IndexOf(Environment.GetCommandLineArgs(),"-pairLeader")>=0?"test-leader-identity.json":Array.IndexOf(Environment.GetCommandLineArgs(),"-dedicatedPair")>=0?"test-peer-identity.json":"test-connection-identity.json"):"connection-identity.json");Identity identity;
-            if(File.Exists(path))identity=JsonUtility.FromJson<Identity>(File.ReadAllText(path));else{identity=new Identity{id=Guid.NewGuid().ToString("N"),secret=Guid.NewGuid().ToString("N")+Guid.NewGuid().ToString("N")};Directory.CreateDirectory(Application.persistentDataPath);File.WriteAllText(path,JsonUtility.ToJson(identity));}
+            var commandArguments=Environment.GetCommandLineArgs();
+            string identityName=Array.IndexOf(commandArguments,"-dedicatedClientTest")>=0
+                ?(Array.IndexOf(commandArguments,"-pairLeader")>=0?"test-leader-identity.json":Array.IndexOf(commandArguments,"-dedicatedPair")>=0?"test-peer-identity.json":"test-connection-identity.json")
+                :"connection-identity.json";
+            string identityRoot=Application.persistentDataPath;
+            if(string.IsNullOrWhiteSpace(identityRoot))identityRoot=Application.temporaryCachePath;
+            if(string.IsNullOrWhiteSpace(identityRoot))identityRoot=Path.GetTempPath();
+            string path=Path.Combine(identityRoot,identityName);Identity identity;
+            if(File.Exists(path))identity=JsonUtility.FromJson<Identity>(File.ReadAllText(path));
+            else
+            {
+                identity=new Identity{id=Guid.NewGuid().ToString("N"),secret=Guid.NewGuid().ToString("N")+Guid.NewGuid().ToString("N")};
+                Directory.CreateDirectory(identityRoot);File.WriteAllText(path,JsonUtility.ToJson(identity));
+            }
             PlayerId=identity.id;PlayerSecret=identity.secret;reconnect=true;InvokeRepeating(nameof(Retry),5,5);Join(Address);
         }
         if(AccountClient.Enabled)InvokeRepeating(nameof(Retry),5,5);
