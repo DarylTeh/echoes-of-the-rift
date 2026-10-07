@@ -1,8 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 84 - 8 October 2026. Refine town navigation to match the reference hierarchy.
+Revision 85 - 8 October 2026. Clear the campaign combat lane.
 
-## Current iteration - revision 84: compact the town activity rail
+## Current iteration - revision 85: remove redundant stage banners during combat
+
+Removed the large stage-name banner from the middle of the expedition view. Stage number and objective remain grouped in the left objective panel, while the boss identity/health bar stays at the top center and the right minimap retains room progress. The battle center is now clear for enemies, player movement, damage numbers and skill effects. The centered status text remains available for save errors and result/recovery messages.
+
+Validation: Unity Windows build succeeded. The four-resolution runtime layout suite passed 350 checks with zero failures/runtime errors, including boss health tracking, minimap bounds, stage progression and the campaign/town regression. The revised 1280x720 combat HUD was visually reviewed at `Logs/CombatHUDIteration/combat-hud-1280x720.png`. The player was synced to tracked `Release/Windows`; key gameplay resource hashes match the tested build. Physical phone and low-end PC checks remain open; this focused combat pass does not rescore the whole game.
+
+Next: review touch skill spacing and labels on mobile landscape, then continue through the remaining page flows with the same corner-based hierarchy. Preserve the current account/sign-out safeguards.
+
+## Previous iteration - revision 84: compact the town activity rail
 
 Replaced the town's oversized three-card rail with a narrow vertical menu: the campaign is the highlighted primary destination, Events and Inbox remain compact secondary actions, and their labels sit beneath the icons. Removed the large centered RIFT HAVEN / SAFE ZONE text that covered the guild-hall banner, and moved the control hint to the lower-left so it no longer competes with the campaign gate. Wallet, bag, minimap, Settings > Accounts sign-out protection and all world interactions remain in their existing positions and flows.
 

@@ -12,6 +12,10 @@ Item borders now use the asset's rarity color while enhancement only adds bounde
 
 The oversized three-card town rail was reduced to a narrow vertical menu with a highlighted Campaign action and secondary Events/Inbox entries. Removed the centered title that obscured the guild-hall banner and relocated the movement hint away from the campaign gate. Four landscape sizes passed the 350-check UI suite; town/campaign movement, merchant stock, raid/trial/world-boss gates and Events/Inbox navigation passed without runtime errors. The visually reviewed town capture is `Logs/TownNavigationIteration/town-1280x720.png`. The fresh tested player was synced to tracked `Release/Windows`. Remaining gaps include character/NPC density, missing quest/social screens, art and the combat HUD.
 
+## Follow-up — 8 October 2026, campaign combat HUD
+
+Removed the large stage-name banner from the center of the battle view because stage number/objectives are already shown in the left panel. Boss name/health remains top-center, with room progress in the right minimap. The 350-check four-resolution player suite passed with no layout/runtime failures, including boss-health tracking, minimap bounds and stage progression. The 1280×720 combat capture was reviewed at `Logs/CombatHUDIteration/combat-hud-1280x720.png`, and the tested build was synced into tracked `Release/Windows`.
+
 ## Current verification — revision 62
 
 The account form now has release-player UAT for failed Sign in and failed Recover account submissions. Each was submitted through its visible mode and primary action; both displayed the service’s error while keeping the user unauthenticated. The recovery capture confirms the new-password label and recovery-code input. Registration still passes through copy/acknowledgement, town entry and four campaign stages. Desktop UI passed 350 checks, touch-layout passed 351, and full server `npm test` passed. Build/release assembly SHA-256: `D7DB0BE44A6300955FA5FB306B9809DBEB4F0B39937797F646BE1F12BAC29563`.

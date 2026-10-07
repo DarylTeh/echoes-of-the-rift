@@ -109,7 +109,9 @@ public sealed class ArenaGame : MonoBehaviour
         rewardedStage=-1;
         Hub.Close(); Player.InSafeZone=false; ClearResult(); finished=false; controller.ControlsEnabled=true; Player.ResetHealth(Forge.Stats.MaxHealth); controller.Skills.ResetCooldowns(); Dungeon.StartRun(); RefreshStage();
     }
-    private void RefreshStage()=>status.text=$"{Dungeon.StageName} / STAGE {Dungeon.StageIndex+1}/{Dungeon.StageCount}";
+    // Stage progress is already pinned in the objective panel. Keep the combat
+    // lane free of a large transient title over enemies and skill effects.
+    private void RefreshStage()=>status.text="";
     private void ClearRoom(bool final)
     {
         if(Session.DedicatedServer){Session.World.PersistStage(final);return;}
