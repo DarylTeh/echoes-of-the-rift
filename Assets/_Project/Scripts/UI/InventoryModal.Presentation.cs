@@ -132,20 +132,29 @@ public sealed partial class InventoryModal
     private void BuildInspector()
     {
         inspector=FullScreenShade("ItemInspector",.72f);
-        var panel=CollectionPanel(inspector,"ItemDetails",new Vector2(-62,0),new Vector2(732,536));
-        var ribbon=CollectionPanel(panel,"RarityRibbon",new Vector2(0,263),new Vector2(274,38));ribbon.GetComponent<UnityEngine.UI.Image>().color=new Color32(154,80,160,255);
+        // Keep the item details and their actions together in one centered card.
+        // This follows the dense, inspect-then-act pattern used by MyHeroes while
+        // giving the effect text enough room to remain legible on laptop displays.
+        var panel=CollectionPanel(inspector,"ItemDetails",Vector2.zero,new Vector2(900,560));
+        var ribbon=CollectionPanel(panel,"RarityRibbon",new Vector2(0,272),new Vector2(274,38));ribbon.GetComponent<UnityEngine.UI.Image>().color=new Color32(154,80,160,255);
         itemRarity=GameUI.Label(ribbon,"",Vector2.zero,new Vector2(250,30),20);itemRarity.alignment=TextAlignmentOptions.Center;
-        closeInspectorButton=RedClose(inspector,new Vector2(426,252),CloseInspector);
-        var frame=GameUI.Panel(panel,"SelectedItemFrame",new Vector2(-277,164),new Vector2(124,124));frame.GetComponent<UnityEngine.UI.Image>().sprite=PixelArt.Frame(true);
+        closeInspectorButton=RedClose(panel,new Vector2(426,256),CloseInspector);
+        var frame=GameUI.Panel(panel,"SelectedItemFrame",new Vector2(-344,174),new Vector2(124,124));frame.GetComponent<UnityEngine.UI.Image>().sprite=PixelArt.Frame(true);
         selectedBorder=frame.gameObject.AddComponent<ItemBorderVFX>();selectedIcon=GameUI.Icon(frame,null,Vector2.zero,new Vector2(100,100));
-        itemName=GameUI.Label(panel,"",new Vector2(66,201),new Vector2(472,58),28);
-        itemSummary=GameUI.Label(panel,"",new Vector2(66,135),new Vector2(472,62),24);
-        description=GameUI.Label(panel,"",new Vector2(0,-25),new Vector2(672,234),22);description.richText=false;description.alignment=TextAlignmentOptions.TopLeft;
-        upgradeDetails=GameUI.Label(panel,"",new Vector2(0,-203),new Vector2(672,70),20);upgradeDetails.color=new Color32(140,220,170,255);
-        actionButton=GameUI.Button(inspector,EnglishUI.Equip,new Vector2(393,137),new Vector2(156,62),Equip);
+        itemName=GameUI.Label(panel,"",new Vector2(-70,211),new Vector2(360,52),28);
+        itemSummary=GameUI.Label(panel,"",new Vector2(-70,156),new Vector2(360,66),21);
+        var effectPanel=CollectionPanel(panel,"EffectPanel",new Vector2(-43,6),new Vector2(602,230));
+        var effectHeading=GameUI.Label(effectPanel,"EFFECT / COMPARISON",new Vector2(-20,94),new Vector2(550,24),16);effectHeading.color=new Color32(174,162,212,255);
+        description=GameUI.Label(effectPanel,"",new Vector2(0,-8),new Vector2(550,166),20);description.richText=false;description.alignment=TextAlignmentOptions.TopLeft;
+        var upgradePanel=CollectionPanel(panel,"UpgradePanel",new Vector2(-43,-174),new Vector2(602,82));
+        upgradeDetails=GameUI.Label(upgradePanel,"",Vector2.zero,new Vector2(550,64),18);upgradeDetails.color=new Color32(140,220,170,255);upgradeDetails.alignment=TextAlignmentOptions.Center;
+        var actionRail=CollectionPanel(panel,"ItemActionRail",new Vector2(337,-25),new Vector2(174,382));
+        var actionHeading=GameUI.Label(actionRail,"ACTIONS",new Vector2(0,151),new Vector2(150,26),16);actionHeading.color=new Color32(174,162,212,255);actionHeading.alignment=TextAlignmentOptions.Center;
+        actionButton=GameUI.Button(actionRail,EnglishUI.Equip,new Vector2(0,91),new Vector2(146,58),Equip);
         actionButton.GetComponent<UnityEngine.UI.Image>().color=new Color32(138,195,109,255);
-        fuseButton=GameUI.Button(inspector,EnglishUI.Fuse,new Vector2(393,57),new Vector2(156,62),Fuse);
-        loreButton=GameUI.Button(inspector,EnglishUI.Lore,new Vector2(393,-23),new Vector2(156,62),()=>{showLore=!showLore;if(selectedSpell!=null)InspectStarter(selectedSpell);else if(selected!=null)Inspect(selected);});
+        fuseButton=GameUI.Button(actionRail,EnglishUI.Fuse,new Vector2(0,17),new Vector2(146,58),Fuse);
+        loreButton=GameUI.Button(actionRail,EnglishUI.Lore,new Vector2(0,-57),new Vector2(146,58),()=>{showLore=!showLore;if(selectedSpell!=null)InspectStarter(selectedSpell);else if(selected!=null)Inspect(selected);});
+        var closeHint=GameUI.Label(actionRail,"ESC  /  BACK",new Vector2(0,-145),new Vector2(150,26),14);closeHint.alignment=TextAlignmentOptions.Center;closeHint.color=new Color32(159,153,179,255);
         inspector.gameObject.SetActive(false);
     }
     private void InspectStarter(SpellData spell)

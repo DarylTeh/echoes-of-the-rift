@@ -1,5 +1,9 @@
 # My Heroes reference UAT — 3 October 2026
 
+## Follow-up — 8 October 2026, item inspection
+
+Rebuilt the raised item popup as a centered card with a rarity/enhancement ribbon, selected icon, readable name/stats, separate effect/comparison and upgrade areas, and an integrated action rail. Reviewed captures at 1280×720, 1024×768, 1920×1080 and 1600×900 after correcting a title/icon collision and heading alignment. The packaged Windows player passed the 350-check UI suite with zero layout failures or runtime errors; the existing test fixture exercises purchase and equip actions. This improves the item-detail hierarchy but does not establish the requested 90% whole-game match. The item still uses original Echoes art and only displays fields supported by the current game data. Evidence: `Logs/ItemInspectorIteration/item-inspector-1280x720.png`, `runtime-smoke.txt`, and `layout-failures.txt`.
+
 ## Current verification — revision 62
 
 The account form now has release-player UAT for failed Sign in and failed Recover account submissions. Each was submitted through its visible mode and primary action; both displayed the service’s error while keeping the user unauthenticated. The recovery capture confirms the new-password label and recovery-code input. Registration still passes through copy/acknowledgement, town entry and four campaign stages. Desktop UI passed 350 checks, touch-layout passed 351, and full server `npm test` passed. Build/release assembly SHA-256: `D7DB0BE44A6300955FA5FB306B9809DBEB4F0B39937797F646BE1F12BAC29563`.

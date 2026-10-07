@@ -1,14 +1,22 @@
 # Echoes of the Rift master plan
 
-Revision 81 - 8 October 2026. Replace the flat town with an original pixel-art guild hall.
+Revision 82 - 8 October 2026. Center and clarify the item inspector.
 
-## Current iteration - revision 81: enrich the town scene
+## Current iteration - revision 82: refine MyHeroes-style item inspection
+
+Rebuilt the item detail overlay as a centered, double-beveled card over the dimmed backpack. The selected item now has a clear rarity/enhancement ribbon, large illustrated icon, separated name and supported stats, a dedicated comparison/effect area, and a right-side action rail contained inside the panel. Upgrade information remains in a distinct footer card, and the lore toggle stays alongside Equip and Upgrade. No unsupported DPS, class, socket, or source data was added. The icon and Echoes art remain original; the layout follows the observed MyHeroes inspection hierarchy.
+
+Validation: Unity Windows build succeeded. The multi-resolution runtime UI suite passed 350 checks with zero layout failures or runtime errors; equip and shop transactions are exercised in that suite. Four item-inspector captures were generated; the 1280x720 capture was visually inspected after correcting a title/icon collision and effect-heading alignment (`Logs/ItemInspectorIteration/item-inspector-1280x720.png`). `Release/Windows` remains untouched while the existing processes use it; the tested build is under ignored `Builds/Windows`. Android and physical low-end-PC checks remain open.
+
+Next: refine the shared item borders and inventory cell density, then recompose the town navigation rail and combat HUD using the same compact frame hierarchy. Keep the user’s protected sign-out location and validate mobile landscape separately.
+
+## Previous iteration - revision 81: enrich the town scene
 
 Replaced the flat green/brick crossroad floor with a full-screen original pixel-art guild hall background: ruby gathering carpet, violet stone, bright crystal lamps, banners and detailed side counters. Repositioned specialists beside those counters and moved the campaign/raid/trial/world-boss destinations to the room edges, retaining the scrolling camera and safe-zone behavior. Gate labels now stay clear of the fixed activity rail and right-side utilities. The previous tilemap remains as an automatic fallback if the art resource is unavailable.
 
 Validation: Unity Windows player built successfully (`Logs/build-StandaloneWindows64-1791412712509.log`). New 1280x720 town capture reviewed at `Logs/TownArtIteration/rift-haven.png`. Full local gameplay smoke passed, including merchant/gate interaction, camera scroll, combat, pause/results, 10 campaign loops, save recovery, inventory, and no runtime errors (`Logs/TownArtIteration/runtime-smoke.txt`). Multi-resolution UI layout checks passed 350/350 with zero failures (`Logs/TownArtIteration/layout-failures.txt`). The town looks materially richer; MyHeroes layout/art parity is still low and the old 35/100 whole-game baseline has not been rescored. `Release/Windows` could not be replaced because its game/server processes are still running (PIDs 25704 and 26700); the tested player is in ignored `Builds/Windows`. Do not terminate those sessions automatically.
 
-Next: refine the shared item frame/icon/font treatment, then redesign the town navigation rail and combat HUD against the reference screens. Keep the user’s protected sign-out location and test mobile landscape separately.
+Next: item-inspector redesign and visual verification (completed in revision 82), then redesign the town navigation rail and combat HUD against the reference screens. Keep the user’s protected sign-out location and test mobile landscape separately.
 
 ## Previous iteration - revision 80: strict reference audit
 
