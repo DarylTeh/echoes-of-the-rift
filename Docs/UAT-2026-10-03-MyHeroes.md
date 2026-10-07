@@ -1,5 +1,9 @@
 # My Heroes reference UAT — 3 October 2026
 
+## Follow-up — 8 October 2026, high-tier gear effects
+
+Rarity borders now gain a pulsing tier-colored rim and more/faster perimeter sparks (4/10/16 at tiers 3/4/5); enhanced gear adds a bounded number of extra motes. Equipped tier-4/5 weapons create brighter orbiting echoes and a larger attack spark fan, with higher tiers using larger aura/trail budgets under the existing mobile pool cap. The effect keeps item art/text still and drops decoration safely if the pool saturates. Desktop 350-check and simulated-touch 351-check UI suites passed. Full gameplay smoke passed movement, combat, tier fusion/aura/burst behavior, save/recovery and ten campaign runs with `runtimeErrors=False`. Mythic inspector capture: `Logs/GearVFXIteration/FinalDesktop2/item-inspector-1280x720.png`; gameplay smoke: `Logs/GearVFXIteration/Gameplay/runtime-smoke.txt`. No physical Android/low-end-PC frame-time result is claimed. This visual pass adds no ad or real-money SDK; future rewarded gems should be opt-in, transparent and server-verified.
+
 ## Follow-up — 8 October 2026, mobile landscape combat controls
 
 Grouped touch-mode stance swap, three numbered skills, dodge and the primary attack into a compact two-row right-thumb cluster; desktop keeps the Q/E/R, Tab and Space keyboard hints and existing arrangement. The lower-left movement stick and open center lane remain unobstructed. The optimized Windows build passed 351 simulated touch-layout checks and 350 desktop checks with zero layout failures or runtime errors. Both 1280×720 captures were visually reviewed: `Logs/TouchControlIteration/combat-hud-1280x720.png` and `Logs/TouchControlIteration/Desktop/combat-hud-1280x720.png`. These scripted checks do not certify physical Android usability. The overall presentation remains below the requested 90% MyHeroes similarity.

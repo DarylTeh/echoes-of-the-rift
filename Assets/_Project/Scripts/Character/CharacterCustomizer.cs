@@ -160,15 +160,20 @@ public sealed class CharacterCustomizer : MonoBehaviour
     {
         EquipmentTier = Mathf.Clamp(tier, 1, 5);
         if(trail!=null)trail.Tier=EquipmentTier;
-        SetAura(TierFourAura, EquipmentTier == 4);
-        SetAura(TierFiveAura, EquipmentTier == 5);
+        SetAura(TierFourAura, EquipmentTier == 4,28,16);
+        SetAura(TierFiveAura, EquipmentTier == 5,48,28);
     }
 
-    private static void SetAura(ParticleSystem aura, bool active)
+    private static void SetAura(ParticleSystem aura, bool active,int particleBudget,float emissionRate)
     {
         if (aura == null) return;
         aura.GetComponent<ParticleSystemRenderer>().sharedMaterial=WeaponTrailVFX.Glow;
-        if (active) { aura.gameObject.SetActive(true); if (!aura.isPlaying) aura.Play(); }
+        if (active)
+        {
+            var main=aura.main;main.maxParticles=particleBudget;
+            var emission=aura.emission;emission.rateOverTime=emissionRate;
+            aura.gameObject.SetActive(true);if (!aura.isPlaying) aura.Play();
+        }
         else { aura.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear); aura.gameObject.SetActive(false); }
     }
 }

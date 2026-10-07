@@ -105,7 +105,14 @@ public sealed partial class RuntimeSmokeTest
         inventory.SendMessage("Inspect",new ItemStack{ItemId=game.Items[0].Id,Tier=5,Count=1});
         // Exercise ornament while paused: motion stays outside the icon.
         var ornament=GameObject.Find("SelectedItemFrame").GetComponent<ItemBorderVFX>();
-        ornament.Tier=5;yield return null;yield return null;
+        ornament.EnhancementLevel=1;
+        int[] expectedSparks={4,10,16};bool tierDensity=true;
+        for(int tier=3;tier<=5;tier++)
+        {
+            ornament.Tier=tier;yield return new WaitForSecondsRealtime(.06f);
+            int shown=0;foreach(var image in ornament.GetComponentsInChildren<UnityEngine.UI.Image>())if(image.name=="BorderSpark"&&image.enabled)shown++;
+            tierDensity&=shown==expectedSparks[tier-3];
+        }
         var icon=ornament.transform.Find("Icon").GetComponent<UnityEngine.UI.Image>();
         var originalSprite=icon.sprite;var originalColour=icon.color;
         var spark=ornament.transform.Find("BorderSpark").GetComponent<UnityEngine.UI.Image>();
@@ -114,7 +121,8 @@ public sealed partial class RuntimeSmokeTest
         if((spark.rectTransform.anchoredPosition-before).sqrMagnitude<1||icon.sprite!=originalSprite||icon.color!=originalColour)layoutFailures.Add("Border motion missing or icon core changed");
         foreach(var image in ornament.GetComponentsInChildren<UnityEngine.UI.Image>())
             if(image.name=="BorderSpark"&&(image.raycastTarget||Mathf.Max(Mathf.Abs(image.rectTransform.anchoredPosition.x),Mathf.Abs(image.rectTransform.anchoredPosition.y))<50))layoutFailures.Add("Spark intrudes into icon or blocks clicks");
-        layoutChecks.Add("Tier 5 perimeter movement, static icon, click-through");
+        if(!tierDensity)layoutFailures.Add("Gear rarity sparkle density did not increase by tier");
+        layoutChecks.Add("Tier 3/4/5 high-intensity perimeter sparkle density, movement, static icon, click-through");
         inventory.CloseInspector();inventory.Close();yield return null;inventory.OpenMerchant(null);yield return null;
         foreach(var size in LayoutSizes){yield return SetLayoutSize(size);AuditLayout(GameObject.Find("InventoryModal").transform,"merchant cards "+size);yield return NativeCapture("merchant-"+Screen.width+"x"+Screen.height+".png");}
         yield return SetLayoutSize(LayoutSizes[0]);

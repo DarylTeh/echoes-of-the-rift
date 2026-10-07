@@ -194,8 +194,10 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         for(int race=0;race<9;race++){var custom=original;custom.Race=race;custom.CustomColors=true;custom.SkinRGB=Color.magenta;custom.HairRGB=Color.cyan;custom.EyeRGB=Color.yellow;cosmetics.Apply(custom);races&=cosmetics.Appearance.Race==race&&cosmetics.Appearance.SkinRGB==Color.magenta;}
         cosmetics.Apply(original);
         var tierState=game.Forge.State.Copy();tierState.Coins=1000;tierState.Add(game.Items[0].Id,4,2);ProfileStore.Save(tierState,game.Forge.SavePath);game.Forge.Configure(tierState);game.Forge.Equip(game.Items[0].Id,4);
-        bool tierEffects=game.Player.GetComponentInChildren<WeaponTrailVFX>().Tier==4;
-        game.Forge.TryFuse(game.Items[0].Id,4,out _);tierEffects&=game.Player.GetComponentInChildren<WeaponTrailVFX>().Tier==5;
+        var equippedTrail=game.Player.GetComponentInChildren<WeaponTrailVFX>();
+        bool tierEffects=equippedTrail.Tier==4&&cosmetics.TierFourAura.main.maxParticles==28;
+        game.Forge.TryFuse(game.Items[0].Id,4,out _);tierEffects&=equippedTrail.Tier==5&&cosmetics.TierFiveAura.main.maxParticles==48;
+        equippedTrail.Burst();yield return null;tierEffects&=CosmeticTrailPool.ActiveCount>=10;
         inventory.Open();yield return new WaitForSecondsRealtime(.5f);Capture("mythic-inspector.png");inventory.Close();
 
 

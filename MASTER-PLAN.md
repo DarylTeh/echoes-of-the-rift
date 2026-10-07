@@ -1,6 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 86 - 8 October 2026. Tighten the mobile landscape combat controls.
+Revision 87 - 8 October 2026. Amplify gear rarity and weapon effects.
+
+## Current iteration - revision 87: high-tier gear VFX
+
+Raised the visual reward of stronger gear while keeping item art and descriptions steady: rarity borders now pulse with tier-colored light and carry 4/10/16 moving perimeter sparks at tiers 3/4/5 (enhancement can add a few more). Equipped tier-4/5 weapons leave brighter orbiting echoes and create a larger spark fan on attacks; the tier-5 character aura uses a bounded 48-particle budget. Common gear stays visually quiet. Effect overflow is cosmetic only and still drops safely at the existing mobile trail-pool cap.
+
+Validation: Unity Windows build succeeded. Desktop and simulated touch suites passed 350 and 351 checks, including rarity-density, static icon, click-through and pooled-emission checks. Full gameplay smoke passed movement, attacks, fusion through tier 5, aura scaling, attack burst, ten campaign runs, save/recovery and defeat handling with no runtime errors. The 1280x720 mythic inspector capture was visually reviewed at `Logs/GearVFXIteration/FinalDesktop2/item-inspector-1280x720.png`; the full smoke result is `Logs/GearVFXIteration/Gameplay/runtime-smoke.txt`. Physical Android/low-end-PC frame-time profiling remains open.
+
+Monetization follow-up: preserve clear item odds/prices and opt-in rewarded ads with explicit gem rewards and server-verified grants; premium gear should not depend on pressure prompts. No real-money purchase or ad SDK was added in this visual pass.
+
+Next: continue the strict screen-flow pass with shop and event/reward presentation, keeping currency offers transparent and preserving a gameplay-earned route to strong gear.
 
 ## Current iteration - revision 86: compact touch combat cluster
 
@@ -16,7 +26,7 @@ Removed the large stage-name banner from the middle of the expedition view. Stag
 
 Validation: Unity Windows build succeeded. The four-resolution runtime layout suite passed 350 checks with zero failures/runtime errors, including boss health tracking, minimap bounds, stage progression and the campaign/town regression. The revised 1280x720 combat HUD was visually reviewed at `Logs/CombatHUDIteration/combat-hud-1280x720.png`. The player was synced to tracked `Release/Windows`; key gameplay resource hashes match the tested build. Physical phone and low-end PC checks remain open; this focused combat pass does not rescore the whole game.
 
-Previous next-step note: the touch skill spacing and labels are now revised in revision 86. Continue through the remaining page flows with the same corner-based hierarchy. Preserve the current account/sign-out safeguards.
+Previous next-step note: the touch skill spacing and labels were revised in revision 86. Continue through the remaining page flows with the same corner-based hierarchy. Preserve the current account/sign-out safeguards.
 
 ## Previous iteration - revision 84: compact the town activity rail
 
