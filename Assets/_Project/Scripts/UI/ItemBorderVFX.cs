@@ -4,24 +4,21 @@ using UnityEngine.UI;
 // Fixed-cost ornament: only the perimeter moves, never the item or its text.
 public sealed class ItemBorderVFX : MonoBehaviour
 {
+    // Tier is the rarity band (1-5); EnhancementLevel only adds a small number
+    // of extra perimeter motes so rarity stays the main color signal.
     public int Tier=1;
+    public int EnhancementLevel=1;
     private RectTransform rect;
     private Image edge;
     private float nextUpdate;
     private readonly Image[] halos=new Image[8];
     private readonly Image[] sparks=new Image[8];
+    private int allocatedSparks;
     private void Start()
     {
         rect=(RectTransform)transform;
         edge=GameUI.Icon(transform,PixelArt.Border(),Vector2.zero,rect.sizeDelta);
         edge.name="RarityEdge";edge.type=Image.Type.Sliced;edge.preserveAspect=false;edge.pixelsPerUnitMultiplier=3.125f;
-        for(int i=0;i<sparks.Length;i++)
-        {
-            halos[i]=GameUI.Icon(transform,CombatVisual.Square,Vector2.zero,Vector2.one*7);
-            halos[i].name="BorderHalo";
-            sparks[i]=GameUI.Icon(transform,CombatVisual.Square,Vector2.zero,Vector2.one*(i%3==0?3:2));
-            sparks[i].name="BorderSpark";
-        }
     }
     private void Update()
     {
@@ -30,14 +27,28 @@ public sealed class ItemBorderVFX : MonoBehaviour
         edge.rectTransform.sizeDelta=rect.sizeDelta;
         Color tint=PixelArt.Rarity(Tier);edge.color=tint;
         int count=Tier>=5?8:Tier==4?5:Tier==3?2:0;
+        count=Mathf.Min(sparks.Length,count+(EnhancementLevel>=20?2:EnhancementLevel>=10?1:0));
+        EnsureSparks(count);
         for(int i=0;i<sparks.Length;i++)
         {
+            if(sparks[i]==null)continue;
             sparks[i].enabled=i<count;halos[i].enabled=sparks[i].enabled;
             if(!sparks[i].enabled)continue;
             sparks[i].rectTransform.anchoredPosition=Perimeter(Time.unscaledTime*(Tier>=5?42:28)+i*37);
             halos[i].rectTransform.anchoredPosition=sparks[i].rectTransform.anchoredPosition;
             halos[i].color=new Color(tint.r,tint.g,tint.b,.18f);
             sparks[i].color=Color.Lerp(tint,Color.white,i%3==0?.8f:.25f);
+        }
+    }
+    private void EnsureSparks(int count)
+    {
+        while(allocatedSparks<count)
+        {
+            int i=allocatedSparks++;
+            halos[i]=GameUI.Icon(transform,CombatVisual.Square,Vector2.zero,Vector2.one*7);
+            halos[i].name="BorderHalo";
+            sparks[i]=GameUI.Icon(transform,CombatVisual.Square,Vector2.zero,Vector2.one*(i%3==0?3:2));
+            sparks[i].name="BorderSpark";
         }
     }
     private Vector2 Perimeter(float travel)

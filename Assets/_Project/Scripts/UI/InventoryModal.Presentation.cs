@@ -105,7 +105,7 @@ public sealed partial class InventoryModal
             if(item!=null){var equippedLabel=GameUI.Label(paperdollSlots,"EQUIPPED",positions[i]+new Vector2(0,-79),new Vector2(94,18),11);equippedLabel.alignment=TextAlignmentOptions.Center;equippedLabel.color=new Color32(147,226,155,255);}
             if(item==null)continue;
             attack+=item.FlatDamage*enhancement;health+=item.FlatHealth*enhancement;
-            slot.gameObject.AddComponent<ItemBorderVFX>().Tier=enhancement;
+            var rarityBorder=slot.gameObject.AddComponent<ItemBorderVFX>();rarityBorder.Tier=(int)item.rarity+1;rarityBorder.EnhancementLevel=enhancement;
             GameUI.Icon(slot,IllustratedArt.Item(item),new Vector2(0,5),new Vector2(74,74));
             GameUI.Label(slot,ProgressionRules.EnhancementBadge(enhancement),new Vector2(0,-30),new Vector2(62,24),18);
             var stack=new ItemStack{ItemId=item.Id,Tier=tier,EnhancementLevel=enhancement,Count=state.Count(item.Id,tier,enhancement)};

@@ -95,10 +95,18 @@ public sealed partial class InventoryModal : MonoBehaviour
             slot.GetComponent<UnityEngine.UI.Image>().sprite=PixelArt.Frame(true);
             if(index>=visible.Count)continue;
             var stack=visible[index];var item=Array.Find(Game.Items,x=>x.Id==stack.ItemId);if(item==null)continue;
-            slot.gameObject.AddComponent<ItemBorderVFX>().Tier=stack.EffectiveEnhancement;
-            GameUI.Icon(slot,IllustratedArt.Item(item), new Vector2(0,shopping?24:8),shopping?new Vector2(174,174):new Vector2(72,72));
+            var rarityBorder=slot.gameObject.AddComponent<ItemBorderVFX>();rarityBorder.Tier=(int)item.rarity+1;rarityBorder.EnhancementLevel=stack.EffectiveEnhancement;
+            GameUI.Icon(slot,IllustratedArt.Item(item), new Vector2(0,shopping?24:8),shopping?new Vector2(174,174):new Vector2(70,70));
             if(shopping){var name=GameUI.Label(slot,item.DisplayName,new Vector2(0,140),new Vector2(280,56),24);name.alignment=TextAlignmentOptions.Center;name.color=PixelArt.Rarity(stack.Tier);var priceBand=GameUI.Panel(slot,"PriceBand",new Vector2(0,-146),new Vector2(290,50));GameUI.Icon(priceBand,PixelArt.Icon("gold"),new Vector2(-46,0),new Vector2(30,30));GameUI.Label(priceBand,(15*stack.Tier*stack.Tier).ToString(),new Vector2(18,0),new Vector2(76,30),26).color=GameUI.Gold;}
-            var stackLabel=GameUI.Label(slot,shopping?$"{ProgressionRules.StarRating(item.rarity)}  {ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)} / Owned {EnglishUI.Compact(stack.Count)}":EnglishUI.Stack(item,stack.EffectiveEnhancement,stack.Count),new Vector2(0,shopping?-93:-33),new Vector2(shopping?266:100,24),shopping?18:14);if(shopping)stackLabel.alignment=TextAlignmentOptions.Center;
+            if(shopping)
+            {
+                var stackLabel=GameUI.Label(slot,$"{ProgressionRules.StarRating(item.rarity)}  {ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)} / Owned {EnglishUI.Compact(stack.Count)}",new Vector2(0,-93),new Vector2(266,24),18);stackLabel.alignment=TextAlignmentOptions.Center;
+            }
+            else
+            {
+                var stars=GameUI.Label(slot,ProgressionRules.StarRating(item.rarity),new Vector2(-23,-34),new Vector2(54,20),9);stars.alignment=TextAlignmentOptions.Center;stars.color=PixelArt.Rarity((int)item.rarity+1);
+                var levelAndCount=GameUI.Label(slot,$"{ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)} x{EnglishUI.Compact(stack.Count)}",new Vector2(27,-34),new Vector2(48,20),12);levelAndCount.alignment=TextAlignmentOptions.Center;
+            }
             var outline=slot.gameObject.AddComponent<UnityEngine.UI.Outline>();outline.effectColor=GameUI.Cream;outline.effectDistance=new Vector2(3,-3);outline.enabled=false;outlines[stack.ItemId+"/"+stack.Tier+"/"+stack.EffectiveEnhancement]=outline;
             var button=slot.gameObject.AddComponent<UnityEngine.UI.Button>();button.onClick.AddListener(()=>{showLore=false;Inspect(stack);});
         }
@@ -120,11 +128,11 @@ public sealed partial class InventoryModal : MonoBehaviour
         OpenInspector();
         bool alreadyEquipped=item.Kind==ItemKind.Gear&&Game.Forge.State.EquippedIds[(int)item.Slot]==stack.ItemId&&Game.Forge.State.EquippedTiers[(int)item.Slot]==stack.Tier&&Game.Forge.State.EquippedEnhancementLevels[(int)item.Slot]==stack.EffectiveEnhancement;
         actionButton.GetComponentInChildren<TMP_Text>().text=shopping?EnglishUI.Buy:alreadyEquipped?"Equipped":item.Kind==ItemKind.SkillBook?EnglishUI.EquipBook:EnglishUI.Equip;
-        selectedIcon.enabled=true;selectedIcon.sprite=IllustratedArt.Item(item);selectedIcon.material=IllustratedArt.Owns(selectedIcon.sprite)?IllustratedArt.UI:null;selectedBorder.Tier=stack.EffectiveEnhancement;
+        selectedIcon.enabled=true;selectedIcon.sprite=IllustratedArt.Item(item);selectedIcon.material=IllustratedArt.Owns(selectedIcon.sprite)?IllustratedArt.UI:null;selectedBorder.Tier=(int)item.rarity+1;selectedBorder.EnhancementLevel=stack.EffectiveEnhancement;
         foreach(var pair in outlines)pair.Value.enabled=pair.Key==stack.ItemId+"/"+stack.Tier+"/"+stack.EffectiveEnhancement;
         int slot=(int)item.Slot,owned=Game.Forge.State.Count(stack.ItemId,stack.Tier,stack.EffectiveEnhancement);
         var equipped=Array.Find(Game.Items,x=>x.Id==Game.Forge.State.EquippedIds[slot]);
-        itemName.text=item.DisplayName;itemName.color=PixelArt.Rarity(stack.Tier);itemRarity.text=$"{ProgressionRules.StarRating(item.rarity)}  {ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)}";
+        itemName.text=item.DisplayName;itemName.color=PixelArt.Rarity((int)item.rarity+1);itemRarity.text=$"{ProgressionRules.StarRating(item.rarity)}  {ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)}";
         itemSummary.text=$"{(item.Kind==ItemKind.Gear?item.Slot.ToString():"Skill book")}  /  Owned {EnglishUI.Compact(owned)}\n"+(item.Kind==ItemKind.Gear?$"{item.FlatDamage*stack.EffectiveEnhancement:0.##} ATK   {item.FlatHealth*stack.EffectiveEnhancement:0.##} HP":"Primary Q assignment");
         description.color=showLore?GameUI.Cream:new Color32(153,226,145,255);description.text=showLore?item.description+"\n\n"+item.villageQuote:EnglishUI.Comparison(item,stack.EffectiveEnhancement,equipped,Game.Forge.State.EquippedEnhancementLevels[slot]);
         upgradeDetails.text=shopping?EnglishUI.Price(15*stack.Tier*stack.Tier):EnglishUI.Upgrade(item,stack.EffectiveEnhancement,owned)+(item.Kind==ItemKind.Gear&&item.Slot==EquipmentSlot.Weapon?"\n"+EnglishUI.VisualMilestone(stack.EffectiveEnhancement):"");

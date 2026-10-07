@@ -1,8 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 82 - 8 October 2026. Center and clarify the item inspector.
+Revision 83 - 8 October 2026. Improve inventory rarity treatment and reduce VFX overhead.
 
-## Current iteration - revision 82: refine MyHeroes-style item inspection
+## Current iteration - revision 83: sharpen inventory identity and lightweight borders
+
+Inventory frames now use the item's actual rarity band for their color and particle tier; enhancement adds at most two additional perimeter motes, so rarity remains the primary signal. Perimeter particle objects are created only when a frame needs them, avoiding 16 unused spark/halo images per common or rare item. The five-column collection cells now separate rarity marks from enhancement/count labels, use a slightly smaller icon to create breathing room, and the inspector name color also follows actual rarity instead of enhancement level. Equipped items still live only on the hero paperdoll.
+
+Validation: Unity Windows build succeeded; the four-resolution UI suite passed 350 checks with zero layout failures/runtime errors and exercised actual Buy, Equip and Upgrade operations on its disposable save. The 1280x720 inventory capture was visually reviewed (`Logs/InventoryArtIteration/inventory-1280x720.png`). The tested player was copied to tracked `Release/Windows` after the user-requested shutdown; executable, Assembly-CSharp, globalgamemanagers and UnityPlayer hashes match the tested `Builds/Windows` output. Game clients and the local project server are stopped; ports 7770/8081/8082 are closed. Physical Android and low-end-PC tests remain open.
+
+Next: recompose the town activity rail and combat HUD against the reference hierarchy, then review the remaining secondary screens. Keep the protected sign-out location and validate mobile landscape separately.
+
+## Previous iteration - revision 82: refine MyHeroes-style item inspection
 
 Rebuilt the item detail overlay as a centered, double-beveled card over the dimmed backpack. The selected item now has a clear rarity/enhancement ribbon, large illustrated icon, separated name and supported stats, a dedicated comparison/effect area, and a right-side action rail contained inside the panel. Upgrade information remains in a distinct footer card, and the lore toggle stays alongside Equip and Upgrade. No unsupported DPS, class, socket, or source data was added. The icon and Echoes art remain original; the layout follows the observed MyHeroes inspection hierarchy.
 
