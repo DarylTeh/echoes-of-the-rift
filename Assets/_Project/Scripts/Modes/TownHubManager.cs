@@ -28,9 +28,9 @@ public sealed partial class TownHubManager : MonoBehaviour
         if(root!=null)return;
         scenery=TownScenery.Build(Session.Game.CharacterPrefab,Positions);
         root=GameUI.Canvas("TownHub");
-        GameUI.Label(root,"RIFT HAVEN",new Vector2(0,326),new Vector2(220,28),24).alignment=TextAlignmentOptions.Center;
-        var safe=GameUI.Label(root,"SAFE ZONE",new Vector2(0,302),new Vector2(180,22),16);safe.alignment=TextAlignmentOptions.Center;safe.color=new Color32(132,222,178,255);
-        hint=GameUI.Label(root,"WASD / left stick: move",new Vector2(0,-326),new Vector2(360,26),18);hint.alignment=TextAlignmentOptions.Center;
+        // The hall's banner is the visual title; keep instructions out of its
+        // central focal area and clear of the campaign gate at the bottom.
+        hint=GameUI.Label(root,"WASD / left stick: move",new Vector2(-438,-324),new Vector2(276,24),15);hint.alignment=TextAlignmentOptions.Center;
         for(int i=0;i<Names.Length;i++)
         {
             int index=i;var button=GameUI.Button(root,i<5?"":Names[i],Vector2.zero,i<5?new Vector2(38,38):new Vector2(174,32),()=>Interact(index));
@@ -47,10 +47,13 @@ public sealed partial class TownHubManager : MonoBehaviour
         contextAction=interact.GetComponent<UnityEngine.UI.Button>();contextActionLabel=interact.GetComponentInChildren<TMP_Text>();interact.gameObject.SetActive(false);
         var settings=GameUI.Button(root,"",new Vector2(592,321),new Vector2(52,52),OpenSettings);settings.name="SettingsButton";GameUI.Pin((RectTransform)settings.transform,Vector2.one,new Vector2(-48,-39));
         GameUI.Icon(settings.transform,PixelArt.Icon("settings"),Vector2.zero,new Vector2(36,36));
-        var rail=GameUI.Panel(root,"TownActivityRail",new Vector2(-575,50),new Vector2(136,254));GameUI.Pin(rail,new Vector2(0,.5f),new Vector2(74,38));
-        AddRailAction(rail,"CampaignButton","Campaign","sword",new Vector2(0,78),()=>{if(!Session.UsesDedicated||Session.Authenticated)ExpeditionRequested?.Invoke();});
+        var rail=GameUI.Panel(root,"TownActivityRail",Vector2.zero,new Vector2(84,292));GameUI.Pin(rail,new Vector2(0,.5f),new Vector2(56,0));
+        rail.GetComponent<UnityEngine.UI.Image>().color=new Color32(35,32,49,205);rail.GetComponent<UnityEngine.UI.Image>().raycastTarget=false;
+        var railHeading=GameUI.Label(rail,"MENU",new Vector2(0,120),new Vector2(76,18),11);railHeading.alignment=TextAlignmentOptions.Center;railHeading.color=GameUI.Gold;
+        var campaign=AddRailAction(rail,"CampaignButton","Campaign","sword",new Vector2(0,68),()=>{if(!Session.UsesDedicated||Session.Authenticated)ExpeditionRequested?.Invoke();});
+        campaign.GetComponent<UnityEngine.UI.Image>().color=new Color32(112,169,201,255);
         AddRailAction(rail,"EventsButton","Events","quest",new Vector2(0,0),()=>GetComponent<EventDrawerUI>()?.Open());
-        AddRailAction(rail,"InboxButton","Inbox","book",new Vector2(0,-78),()=>GetComponent<InboxDrawerUI>()?.Open());
+        AddRailAction(rail,"InboxButton","Inbox","book",new Vector2(0,-68),()=>GetComponent<InboxDrawerUI>()?.Open());
         var map=GameUI.Panel(root,"HavenMinimap",new Vector2(570,143),new Vector2(84,84));GameUI.Pin(map,Vector2.one,new Vector2(-62,-225));
         foreach(var point in new[]{new Vector2(0,26),new Vector2(0,-26),new Vector2(26,0),new Vector2(-26,0)})GameUI.Icon(map,CombatVisual.Square,point,new Vector2(4,4)).color=new Color32(194,158,232,255);
         mapMarker=GameUI.Icon(map,CombatVisual.Square,Vector2.zero,new Vector2(4,4)).rectTransform;mapMarker.GetComponent<UnityEngine.UI.Image>().color=new Color32(122,239,172,255);
@@ -85,11 +88,12 @@ public sealed partial class TownHubManager : MonoBehaviour
         }
 
     }
-    private static void AddRailAction(Transform rail,string name,string label,string icon,Vector2 position,Action action)
+    private static UnityEngine.UI.Button AddRailAction(Transform rail,string name,string label,string icon,Vector2 position,Action action)
     {
-        var button=GameUI.Button(rail,"",position,new Vector2(116,62),action);button.name=name;
-        GameUI.Icon(button.transform,PixelArt.Icon(icon),new Vector2(-37,0),new Vector2(26,26));
-        var text=GameUI.Label(button.transform,label,new Vector2(22,0),new Vector2(70,44),12);text.alignment=TextAlignmentOptions.Center;
+        var button=GameUI.Button(rail,"",position,new Vector2(70,64),action);button.name=name;
+        GameUI.Icon(button.transform,PixelArt.Icon(icon),new Vector2(0,10),new Vector2(26,26));
+        var text=GameUI.Label(button.transform,label,new Vector2(0,-20),new Vector2(66,22),11);text.alignment=TextAlignmentOptions.Center;
+        return button;
     }
     public void Interact(int index)
     {

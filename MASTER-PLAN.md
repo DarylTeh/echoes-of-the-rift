@@ -1,14 +1,22 @@
 # Echoes of the Rift master plan
 
-Revision 83 - 8 October 2026. Improve inventory rarity treatment and reduce VFX overhead.
+Revision 84 - 8 October 2026. Refine town navigation to match the reference hierarchy.
 
-## Current iteration - revision 83: sharpen inventory identity and lightweight borders
+## Current iteration - revision 84: compact the town activity rail
+
+Replaced the town's oversized three-card rail with a narrow vertical menu: the campaign is the highlighted primary destination, Events and Inbox remain compact secondary actions, and their labels sit beneath the icons. Removed the large centered RIFT HAVEN / SAFE ZONE text that covered the guild-hall banner, and moved the control hint to the lower-left so it no longer competes with the campaign gate. Wallet, bag, minimap, Settings > Accounts sign-out protection and all world interactions remain in their existing positions and flows.
+
+Validation: Unity Windows build succeeded. The four-resolution UI/town smoke passed 350 checks with zero layout failures or runtime errors, exercising the campaign entry, merchant stock, raid, trial, world-boss, Events and Inbox routes. The 1280x720 town screenshot was visually reviewed (`Logs/TownNavigationIteration/town-1280x720.png`). Game and project server were stopped during release synchronization; the tested payload was copied to tracked `Release/Windows`. The screens now follow the observed left-rail/top-corner hierarchy more closely, but the whole game still needs a strict multi-page rescore and remains below the user's 90% target. Android/low-end-PC checks remain open.
+
+Next: recompose the combat HUD to tighten the left objective block and right-side skill/utility grouping against the combat references, then review the secondary screens. Preserve landscape main-game flow and the safe sign-out path.
+
+## Previous iteration - revision 83: sharpen inventory identity and lightweight borders
 
 Inventory frames now use the item's actual rarity band for their color and particle tier; enhancement adds at most two additional perimeter motes, so rarity remains the primary signal. Perimeter particle objects are created only when a frame needs them, avoiding 16 unused spark/halo images per common or rare item. The five-column collection cells now separate rarity marks from enhancement/count labels, use a slightly smaller icon to create breathing room, and the inspector name color also follows actual rarity instead of enhancement level. Equipped items still live only on the hero paperdoll.
 
 Validation: Unity Windows build succeeded; the four-resolution UI suite passed 350 checks with zero layout failures/runtime errors and exercised actual Buy, Equip and Upgrade operations on its disposable save. The 1280x720 inventory capture was visually reviewed (`Logs/InventoryArtIteration/inventory-1280x720.png`). The tested player was copied to tracked `Release/Windows` after the user-requested shutdown; executable, Assembly-CSharp, globalgamemanagers and UnityPlayer hashes match the tested `Builds/Windows` output. Game clients and the local project server are stopped; ports 7770/8081/8082 are closed. Physical Android and low-end-PC tests remain open.
 
-Next: recompose the town activity rail and combat HUD against the reference hierarchy, then review the remaining secondary screens. Keep the protected sign-out location and validate mobile landscape separately.
+Next: recompose the town activity rail and combat HUD against the reference hierarchy (town activity rail completed in revision 84), then review the remaining secondary screens. Keep the protected sign-out location and validate mobile landscape separately.
 
 ## Previous iteration - revision 82: refine MyHeroes-style item inspection
 

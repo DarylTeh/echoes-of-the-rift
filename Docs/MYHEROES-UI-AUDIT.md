@@ -12,7 +12,7 @@ This pass reviews the current Echoes build against the supplied MyHeroes: SEA/Du
 |---|---:|---|
 | Title/splash and account entry | N/A (no direct in-game equivalent) | Current entry is a sparse dark title/account flow. It is readable, but not evidence of MyHeroes lobby style. Account create/sign-in/recovery and server-error states are game-specific. |
 | Character creator | 15% | Basic character preview and choices exist; composition and asset treatment do not resemble the dense framed hero/profile screens. |
-| Town / lobby | 32% | It has a top-left hero/vitals block, upper-right currency, utility rail and NPC/gate destinations. The current room reads as a sparse brick cross with scattered cards/labels; it lacks the lively, layered city scene, dense character silhouettes, quest/diary/friends/guild access and bright contextual markers. |
+| Town / lobby | 46% (revision 84 provisional) | The guild hall now has an original detailed pixel backdrop, a compact left activity rail, top-left hero/vitals, upper-right wallet/settings, right-side bag/minimap and world destinations. It still lacks the reference's busy NPC density, quest/diary/friends/guild flows, matching character/icon art and consistent contextual markers. |
 | Campaign combat HUD | 56% | Corner hierarchy, boss bar, objective block, currency, bag and lower-right skill/attack controls are directionally similar. Current screenshots still show large plain panels, simplified minimap, different control geometry and iconography, weak effect/UI integration, and no MyHeroes sprite language. Desktop captures omit touch-stick presentation. |
 | Backpack / equipment | 62% (revision 83 provisional) | The two-column paperdoll plus five-column collection grid, categories, clear equipped state and weapon in the hero's hand are the strongest structural match. Rarity-colored borders and separated star/enhancement/count labels improve scanability; the preview is still plain/small, the slot system is sparse, and the fuller equipment/profile/status composition is missing. |
 | Item inspection | 54% (revision 82 provisional) | It is now a centered overlay with a rarity ribbon, selected art, supported stats, effect/comparison inset, upgrade footer and integrated action rail. It still lacks the reference's original art, class-specific data where the game model has none, richer item-specific effects/source detail, and conditional socket presentation. |
@@ -37,6 +37,10 @@ The inspector now uses a centered raised card, rarity/enhancement ribbon, separa
 ### Inventory identity iteration update — revision 83
 
 Collection and paperdoll borders now take their color from actual item rarity, with enhancement adding a bounded number of perimeter particles. Particle images are created only for tiers that display them. Cell metadata separates rarity marks from enhancement and owned count, and selected item names use the rarity color. The four-resolution suite again passed 350 checks without layout/runtime errors; the reviewed backpack capture is `Logs/InventoryArtIteration/inventory-1280x720.png`. The backpack score is provisionally 62/100; the whole-game score remains unrescored and is not accepted at the requested 90%.
+
+### Town navigation iteration update — revision 84
+
+The oversized rail is now a narrow, labeled vertical menu with Campaign as its highlighted action and Events/Inbox as secondary actions. The large centered town title was removed from over the guild banner, and the movement hint moved away from the campaign gate. All four landscape layout sizes and the town interactions passed in the 350-check player suite; see `Logs/TownNavigationIteration/town-1280x720.png`. Town is provisionally **46/100** on the same qualitative scale. NPC density, missing quest/social screens and art mismatch remain substantial gaps; the whole-game baseline was not rescored.
 
 ### Important reference surfaces still missing or materially incomplete
 
