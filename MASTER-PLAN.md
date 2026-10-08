@@ -1,14 +1,24 @@
 # Echoes of the Rift master plan
 
-Revision 89 - 8 October 2026. Add truthful hero identity and combat summary.
+Revision 90 - 9 October 2026. Rework Shop browsing and offer cards.
+
+## Current iteration - revision 90: shop browsing and offer hierarchy
+
+Reworked the general Shop into a dedicated catalog surface with Best Buys, Catalog and Restock sections, plus an All/Weapons/Armour/Charms/Skills rail. Best Buys only recommends tier-one gear the account does not already own, catalogue cards use a smaller consistent footprint, prices no longer intercept the item-preview tap, and Restock clearly states when no authoritative schedule exists. NPC merchants default to their filtered Catalog. No fake stock, discounts, countdowns or premium-currency offer was introduced.
+
+Validation: the initial desktop and simulated-touch UI suites passed 357 and 358 checks before the final visual-spacing correction. Reviewing the screenshots found the first card touching the category rail and the RESTOCK tab overlapping the wallet at some aspect ratios; source corrections were made to both positions and to Best Buys ownership filtering. The final source could not be rebuilt or rerun because Unity CLI reports no active signed-in license (`com.unity.editor.headless` unavailable, exit 198). The retained screenshot is pre-correction and is not evidence that the final geometry passes. No release binary was replaced. Build and four-resolution desktop/touch review are still required after Unity licensing is active. This iteration does not claim 90% MyHeroes similarity.
+
+Next: rebuild and visually verify the corrected Shop at 1280x720 and 1024x768 before taking on the next screen. Then add an authoritative server-managed general-shop rotation only if the backend supports its inventory, schedule and purchase rules; until then keep Restock informational. Continue using the 35/100 whole-game visual baseline and do not rescore without a comparable screen review.
+
+## Previous iteration - revision 89: hero profile summary
 
 ## Current iteration - revision 89: hero profile summary
 
 The backpack paperdoll now identifies the saved class and level and shows live Offense and Survival values from CharacterStats, with equipped gear bonuses as a secondary line. This gives the hero side the compact identity/stat hierarchy seen in the reference profile while staying within the three gear slots and combat data the current account model actually supports. The layout does not invent extra gear slots or unsaved profile fields.
 
-Validation: the Unity Windows player build succeeded with a non-blocking licensing-client validation warning. The four-resolution desktop suite passed 352 checks and simulated-touch passed 353, both with zero layout failures or runtime errors. Added assertions verify class/level rendering and that Offense/Survival match live character stats. Reviewed the 1280x720 backpack capture at `Logs/ReferenceLayoutIteration/ProfileDesktop/inventory-1280x720.png`; physical Android behavior is still unverified. The tested player is synced to `Release/Windows` and key release hashes match the build; GitHub push is pending.
+Validation: the Unity Windows player build succeeded with a non-blocking licensing-client validation warning. The four-resolution desktop suite passed 352 checks and simulated-touch passed 353, both with zero layout failures or runtime errors. Added assertions verify class/level rendering and that Offense/Survival match live character stats. Reviewed the 1280x720 backpack capture at `Logs/ReferenceLayoutIteration/ProfileDesktop/inventory-1280x720.png`; physical Android behavior is still unverified. The tested player is synced to `Release/Windows` and key release hashes match the build. The source revision was pushed to GitHub.
 
-Next: improve the hero artwork and make the next weakest full screen flow, Shop, follow the reference's category and item-detail hierarchy. Keep three-slot equipment truthful until the account/progression migration adds more slots. The whole game remains well below the requested 90% visual match.
+Previous next-step note: the Shop browsing hierarchy is now implemented in revision 90. Keep three-slot equipment truthful until the account/progression migration adds more slots. The whole game remains well below the requested 90% visual match.
 
 ## Current iteration - revision 88: readable inventory hierarchy and reference proportions
 

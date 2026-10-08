@@ -11,6 +11,8 @@ public sealed partial class InventoryModal
     private UnityEngine.UI.Image selectedStars;
     private UnityEngine.UI.Button closeInspectorButton,closeCollectionButton;
     private UnityEngine.UI.Button[] categoryButtons;
+    private UnityEngine.UI.Button[] shopTabs,shopCategoryButtons,collectionShortcuts;
+    private RectTransform shopCategoryRail;
     private GameObject returnFocus;
     private SpellData selectedSpell;
     public bool IsInspecting=>inspector!=null&&inspector.gameObject.activeSelf;
@@ -63,6 +65,7 @@ public sealed partial class InventoryModal
         GameUI.Icon(skills.transform,PixelArt.Icon("book"),new Vector2(0,12),new Vector2(36,36));skills.GetComponentInChildren<TMP_Text>().rectTransform.anchoredPosition=new Vector2(0,-22);
         var shop=GameUI.Button(browse,"Shop",new Vector2(-558,39),new Vector2(76,78),()=>SwitchCollection(true,0));
         GameUI.Icon(shop.transform,PixelArt.Icon("gold"),new Vector2(0,12),new Vector2(36,36));shop.GetComponentInChildren<TMP_Text>().rectTransform.anchoredPosition=new Vector2(0,-22);
+        collectionShortcuts=new[]{bag,skills,shop};
         var header=GameUI.Label(left,"YOUR HERO",new Vector2(0,278),new Vector2(460,32),24);header.alignment=TextAlignmentOptions.Center;
         BuildPreview(left);
         paperdollSlots=GameUI.Rect("EquippedSlots",left,Vector2.one*.5f,Vector2.zero,new Vector2(420,500));
@@ -72,12 +75,17 @@ public sealed partial class InventoryModal
         heroStats=GameUI.Label(stats,"",Vector2.zero,new Vector2(364,54),18);heroStats.gameObject.name="HeroCombatSummary";heroStats.alignment=TextAlignmentOptions.Center;
         categoryButtons=new UnityEngine.UI.Button[Filters.Length];
         for(int i=0;i<Filters.Length;i++){int category=i;categoryButtons[i]=GameUI.Button(right,Filters[i],new Vector2(-196+i*98,292),new Vector2(94,40),()=>SetBrowse(category,sorting));categoryButtons[i].GetComponentInChildren<TMP_Text>().fontSize=16;}
+        string[] shopSectionNames={"BEST BUYS","CATALOG","RESTOCK"};shopTabs=new UnityEngine.UI.Button[shopSectionNames.Length];
+        for(int i=0;i<shopTabs.Length;i++){int section=i;shopTabs[i]=GameUI.Button(right,shopSectionNames[i],new Vector2(-320+i*190,292),new Vector2(170,40),()=>SetShopSection(section));shopTabs[i].name="ShopTab_"+i;shopTabs[i].GetComponentInChildren<TMP_Text>().fontSize=16;shopTabs[i].gameObject.SetActive(false);}
+        shopCategoryRail=CollectionPanel(right,"ShopCategoryRail",new Vector2(-450,-6),new Vector2(122,438));shopCategoryRail.gameObject.SetActive(false);
+        shopCategoryButtons=new UnityEngine.UI.Button[Filters.Length];
+        for(int i=0;i<Filters.Length;i++){int category=i;var button=GameUI.Button(shopCategoryRail,Filters[i],new Vector2(0,164-i*78),new Vector2(106,56),()=>SetShopCategory(category));button.name="ShopCategory_"+i;button.GetComponentInChildren<TMP_Text>().fontSize=15;shopCategoryButtons[i]=button;}
+        emptyLabel=GameUI.Label(right,EnglishUI.EmptyCategory,new Vector2(0,-40),new Vector2(420,40),22);emptyLabel.gameObject.name="ShopEmptyNotice";emptyLabel.alignment=TextAlignmentOptions.Center;
         sortButton=GameUI.Button(right,"Sort",new Vector2(152,236),new Vector2(180,38),OpenSort);
         sortButton.GetComponentInChildren<TMP_Text>().fontSize=16;
         total=GameUI.Label(right,"",new Vector2(-100,236),new Vector2(260,30),17);
         total.textWrappingMode=TextWrappingModes.NoWrap;
         grid=GameUI.Rect("ItemGrid",right,Vector2.one*.5f,new Vector2(0,-40),new Vector2(500,470));
-        emptyLabel=GameUI.Label(right,EnglishUI.EmptyCategory,new Vector2(0,-40),new Vector2(420,40),22);emptyLabel.alignment=TextAlignmentOptions.Center;
         previousButton=GameUI.Button(right,"<",new Vector2(-208,-286),new Vector2(68,40),()=>{page=Mathf.Max(0,page-1);Refresh();});
         nextButton=GameUI.Button(right,">",new Vector2(208,-286),new Vector2(68,40),()=>{page++;Refresh();});
         var hint=GameUI.Label(right,"Tap an item to inspect",new Vector2(0,-286),new Vector2(300,32),17);hint.alignment=TextAlignmentOptions.Center;
@@ -85,13 +93,20 @@ public sealed partial class InventoryModal
     }
     private void SwitchCollection(bool shop,int category)
     {
-        shopping=shop;merchant=null;SetBrowse(category,sorting);
+        shopping=shop;merchant=null;shopSection=0;SetBrowse(category,sorting);
     }
     private void LayoutCollection()
     {
         equipmentFrame.gameObject.SetActive(!shopping);
         collectionFrame.anchoredPosition=new Vector2(shopping?0:274,0);
         collectionFrame.sizeDelta=new Vector2(shopping?1040:520,650);
+        grid.sizeDelta=new Vector2(shopping?920:500,470);
+        foreach(var shortcut in collectionShortcuts)shortcut.gameObject.SetActive(!shopping);
+        foreach(var category in categoryButtons)category.gameObject.SetActive(!shopping);
+        foreach(var tab in shopTabs)tab.gameObject.SetActive(shopping);
+        shopCategoryRail.gameObject.SetActive(shopping);
+        for(int i=0;i<shopCategoryButtons.Length;i++)shopCategoryButtons[i].GetComponent<UnityEngine.UI.Image>().color=i==filter?new Color32(147,138,199,255):Color.white;
+        for(int i=0;i<shopTabs.Length;i++)shopTabs[i].GetComponent<UnityEngine.UI.Image>().color=i==shopSection?new Color32(110,183,210,255):Color.white;
         previousButton.GetComponent<RectTransform>().anchoredPosition=new Vector2(shopping?-442:-208,-286);
         nextButton.GetComponent<RectTransform>().anchoredPosition=new Vector2(shopping?442:208,-286);
     }

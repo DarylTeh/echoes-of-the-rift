@@ -1,5 +1,9 @@
 # My Heroes reference UAT — 3 October 2026
 
+## Follow-up — 9 October 2026, Shop browsing
+
+The Shop now separates Best Buys, Catalog and Restock, with category navigation for All, Weapons, Armour, Charms and Skills. Best Buys filters out gear already owned by the account; the Catalog lists available items; Restock explains that no global schedule is configured. Price bands no longer block the card's inspect action. The first desktop and simulated-touch runs passed 357/358 layout and flow checks, but visual review found a category-rail/card collision and a RESTOCK/wallet collision at some sizes. The final source correction addresses those positions; Unity could not rebuild or rerun after that correction because the CLI reports no active license. The retained `Logs/ShopIteration/Desktop/merchant-catalog-1280x720.png` is from before the correction. Treat final Shop alignment as unverified until a licensed build is captured at 1280×720 and 1024×768. No Android-device test or 90% reference-parity claim is made.
+
 ## Follow-up — 8 October 2026, hero profile summary
 
 Added the saved class and level to the paperdoll and replaced the generic gear-only totals with live Offense and Survival values plus secondary equipped-gear bonuses. The account model still has only three gear slots, so the panel does not imply unimplemented slots or profile fields. The four-resolution desktop suite passed 352 checks and simulated touch passed 353 with no layout failures or runtime errors; new assertions compare the displayed identity/stats to the saved profile and CharacterStats. Reviewed capture: `Logs/ReferenceLayoutIteration/ProfileDesktop/inventory-1280x720.png`. This remains a layout/progression improvement, not a 1:1 art match or physical Android certification.

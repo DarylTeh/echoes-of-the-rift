@@ -37,6 +37,12 @@ public sealed partial class RuntimeSmokeTest
         Rect b=new Rect(second.anchoredPosition-second.sizeDelta*.5f,second.sizeDelta);
         return a.Overlaps(b,false);
     }
+    private static bool WorldRectsOverlap(RectTransform first,RectTransform second)
+    {
+        var a=new Vector3[4];var b=new Vector3[4];first.GetWorldCorners(a);second.GetWorldCorners(b);
+        Rect firstRect=Rect.MinMaxRect(a[0].x,a[0].y,a[2].x,a[2].y);Rect secondRect=Rect.MinMaxRect(b[0].x,b[0].y,b[2].x,b[2].y);
+        return firstRect.Overlaps(secondRect,false);
+    }
     private IEnumerator NativeCapture(string name)
     {
         yield return new WaitForEndOfFrame();ScreenCapture.CaptureScreenshot(Path.Combine(output,name));
@@ -145,8 +151,38 @@ public sealed partial class RuntimeSmokeTest
         if(!tierDensity)layoutFailures.Add("Gear rarity sparkle density did not increase by tier");
         layoutChecks.Add("Tier 3/4/5 high-intensity perimeter sparkle density, movement, static icon, click-through");
         inventory.CloseInspector();inventory.Close();yield return null;inventory.OpenMerchant(null);yield return null;
-        foreach(var size in LayoutSizes){yield return SetLayoutSize(size);AuditLayout(GameObject.Find("InventoryModal").transform,"merchant cards "+size);yield return NativeCapture("merchant-"+Screen.width+"x"+Screen.height+".png");}
+        foreach(var size in LayoutSizes)
+        {
+            yield return SetLayoutSize(size);AuditLayout(GameObject.Find("InventoryModal").transform,"merchant cards "+size);
+            var categoryRail=GameObject.Find("ShopCategoryRail")?.GetComponent<RectTransform>();var restockTab=GameObject.Find("ShopTab_2")?.GetComponent<RectTransform>();var goldBalance=GameObject.Find("goldBalance")?.GetComponent<RectTransform>();
+            Transform firstCard=null;foreach(Transform child in GameObject.Find("ItemGrid").transform)if(child.name.StartsWith("ItemSlot_")){firstCard=child;break;}
+            if(categoryRail!=null&&firstCard!=null&&WorldRectsOverlap(categoryRail,firstCard.GetComponent<RectTransform>()))layoutFailures.Add("Shop category rail overlaps first offer at "+size);
+            if(restockTab!=null&&goldBalance!=null&&WorldRectsOverlap(restockTab,goldBalance))layoutFailures.Add("Shop Restock tab overlaps wallet at "+size);
+            yield return NativeCapture("merchant-"+Screen.width+"x"+Screen.height+".png");
+        }
         yield return SetLayoutSize(LayoutSizes[0]);
+        var shopRoot=GameObject.Find("InventoryModal").transform;var catalogTab=GameObject.Find("ShopTab_1")?.GetComponent<UnityEngine.UI.Button>();
+        catalogTab?.onClick.Invoke();yield return null;
+        if(catalogTab==null||inventory.CurrentShopSection!=1||inventory.VisibleCount!=game.Items.Length)layoutFailures.Add("Shop catalog tab did not show the full item catalog");
+        for(int sizeIndex=0;sizeIndex<LayoutSizes.Length;sizeIndex++){if(sizeIndex>0)yield return SetLayoutSize(LayoutSizes[sizeIndex]);AuditLayout(shopRoot,"shop catalog "+LayoutSizes[sizeIndex]);yield return NativeCapture("merchant-catalog-"+Screen.width+"x"+Screen.height+".png");}
+        yield return SetLayoutSize(LayoutSizes[0]);
+        var categoryWeapons=GameObject.Find("ShopCategory_1")?.GetComponent<UnityEngine.UI.Button>();categoryWeapons?.onClick.Invoke();
+        if(categoryWeapons==null||!inventory.VisibleCategoryMatches(1))layoutFailures.Add("Shop category rail did not filter weapons");
+        var categoryAll=GameObject.Find("ShopCategory_0")?.GetComponent<UnityEngine.UI.Button>();categoryAll?.onClick.Invoke();
+        Transform firstOffer=null;foreach(Transform child in GameObject.Find("ItemGrid").transform)if(child.name.StartsWith("ItemSlot_")){firstOffer=child;break;}
+        var priceBand=firstOffer!=null?firstOffer.Find("PriceBand")?.GetComponent<UnityEngine.UI.Image>():null;
+        var offerButton=firstOffer!=null?firstOffer.GetComponent<UnityEngine.UI.Button>():null;
+        if(priceBand==null||priceBand.raycastTarget||offerButton==null)layoutFailures.Add("Shop offer card price layer blocks its item button");
+        offerButton?.onClick.Invoke();var buyAction=GameObject.Find(EnglishUI.Equip)?.GetComponent<UnityEngine.UI.Button>();
+        if(!inventory.IsInspecting||buyAction==null||buyAction.GetComponentInChildren<TMP_Text>().text!=EnglishUI.Buy)layoutFailures.Add("Shop offer tap did not open the buy preview");inventory.CloseInspector();
+        GameObject.Find("ShopTab_0")?.GetComponent<UnityEngine.UI.Button>()?.onClick.Invoke();
+        if(inventory.VisibleCount>3)layoutFailures.Add("Best Buys exposed more than one compact offer row");
+        foreach(var item in game.Items)if(inventory.CollectionContains(item.Id,item.itemTier)&&(item.Kind!=ItemKind.Gear||item.itemTier!=1||game.Forge.State.Count(item.Id,item.itemTier)>0))layoutFailures.Add("Best Buys included owned or non-tier-one gear: "+item.Id);
+        GameObject.Find("ShopTab_2")?.GetComponent<UnityEngine.UI.Button>()?.onClick.Invoke();
+        var restockNotice=GameObject.Find("ShopEmptyNotice")?.GetComponent<TMP_Text>();
+        if(inventory.VisibleCount!=0||restockNotice==null||!restockNotice.text.Contains("No scheduled restock"))layoutFailures.Add("Inactive shop restock state was not explained clearly");
+        GameObject.Find("ShopTab_1")?.GetComponent<UnityEngine.UI.Button>()?.onClick.Invoke();GameObject.Find("ShopCategory_0")?.GetComponent<UnityEngine.UI.Button>()?.onClick.Invoke();
+        layoutChecks.Add("Shop Best Buys/Catalog/Restock tabs, category rail, inspect-before-buy and click-through");
         // Use only this smoke test's disposable save for actual UI transactions.
         var beforeTransactions=game.Forge.State.Copy();var transactionFixture=beforeTransactions.Copy();transactionFixture.Coins=1000;
         var tradeItem=Array.Find(game.Items,x=>x.Kind==ItemKind.Gear&&x.Slot!=EquipmentSlot.Weapon&&x.itemTier==1&&x.Id!=game.Forge.State.EquippedIds[(int)x.Slot]);

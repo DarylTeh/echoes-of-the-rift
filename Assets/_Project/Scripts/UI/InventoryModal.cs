@@ -20,8 +20,9 @@ public sealed partial class InventoryModal : MonoBehaviour
     private ItemStack selected;
     private int page;
     private bool shopping;
+    private int shopSection;
     private string merchant;
-    public void OpenMerchant(string name){merchant=name;shopping=true;filter=0;page=0;selected=null;Open();Refresh();}
+    public void OpenMerchant(string name){merchant=name;shopping=true;shopSection=string.IsNullOrEmpty(name)?0:1;filter=0;page=0;selected=null;Open();Refresh();}
     private readonly List<GameObject> suspendedScreens=new List<GameObject>();
     private int filter, sorting;
     private UnityEngine.UI.Button sortButton;
@@ -65,7 +66,7 @@ public sealed partial class InventoryModal : MonoBehaviour
     private void UpdatePreview(){if(preview==null)return;var customizer=preview.GetComponent<CharacterCustomizer>();customizer.SetEquipmentTier(Game.Player.GetComponent<CharacterCustomizer>().EquipmentTier);var weapon=Array.Find(Game.Items,x=>x.Id==Game.Forge.State.EquippedIds[0]);int enhancement=Game.Forge.State.EquippedEnhancementLevels!=null&&Game.Forge.State.EquippedEnhancementLevels.Length>0?Game.Forge.State.EquippedEnhancementLevels[0]:Game.Forge.State.EquippedTiers[0];customizer.SetWeapon(weapon!=null?weapon.Family:"sword",enhancement);}
     public void Refresh()
     {
-        if(grid==null)return;title.text=shopping?(merchant??"MERCHANT"):"BACKPACK";LayoutCollection();
+        if(grid==null)return;title.text=shopping?(merchant??"SHOP"):"BACKPACK";LayoutCollection();
         inventoryGold.text=EnglishUI.Compact(Game.Forge.State.Coins);inventoryGems.text=EnglishUI.Compact(Game.Forge.State.Gems);
         foreach(Transform child in grid)Destroy(child.gameObject);
         outlines.Clear();visible.Clear();
@@ -77,7 +78,32 @@ public sealed partial class InventoryModal : MonoBehaviour
             if(IsEquippedWeapon(item))continue;
             visible.Add(new ItemStack{ItemId=item.ItemId,Tier=item.Tier,EnhancementLevel=item.EffectiveEnhancement,Count=item.Count});
         }
-        if(shopping){visible.Clear();foreach(var item in Game.Items)visible.Add(new ItemStack{ItemId=item.Id,Tier=item.itemTier,Count=Game.Forge.State.Count(item.Id,item.itemTier)});}
+        if(shopping)
+        {
+            visible.Clear();
+            if(shopSection!=2)
+            {
+                var featuredSlots=new HashSet<int>();bool featuredSkill=false;
+                foreach(var item in Game.Items)
+                {
+                    if(merchant!=null&&!TownHubManager.Sells(merchant,item))continue;
+                    if(shopSection==0)
+                    {
+                        if(item.itemTier!=1)continue;
+                        if(filter==4){if(item.Kind!=ItemKind.SkillBook||featuredSkill)continue;featuredSkill=true;}
+                        else
+                        {
+                            if(item.Kind!=ItemKind.Gear||(filter>0&&(int)item.Slot!=filter-1)||!featuredSlots.Add((int)item.Slot))continue;
+                            int slot=(int)item.Slot;
+                            bool equipped=slot<Game.Forge.State.EquippedIds.Length&&Game.Forge.State.EquippedIds[slot]==item.Id&&Game.Forge.State.EquippedEnhancementLevels[slot]>=item.itemTier;
+                            if(equipped||Game.Forge.State.Count(item.Id,item.itemTier)>0){featuredSlots.Remove(slot);continue;}
+                        }
+                        if(visible.Count>=3)break;
+                    }
+                    visible.Add(new ItemStack{ItemId=item.Id,Tier=item.itemTier,Count=Game.Forge.State.Count(item.Id,item.itemTier)});
+                }
+            }
+        }
         visible.RemoveAll(stack=>{var item=Array.Find(Game.Items,x=>x.Id==stack.ItemId);return item==null||(shopping&&merchant!=null&&!TownHubManager.Sells(merchant,item))||(filter==4?item.Kind!=ItemKind.SkillBook:filter>0&&(item.Kind!=ItemKind.Gear||(int)item.Slot!=filter-1));});
         visible.Sort((a,b)=>{int comparison=sorting==1?b.EffectiveEnhancement.CompareTo(a.EffectiveEnhancement):sorting==2?b.Count.CompareTo(a.Count):0;if(comparison!=0)return comparison;var left=Array.Find(Game.Items,x=>x.Id==a.ItemId);var right=Array.Find(Game.Items,x=>x.Id==b.ItemId);comparison=string.CompareOrdinal(left.DisplayName,right.DisplayName);return comparison!=0?comparison:b.EffectiveEnhancement.CompareTo(a.EffectiveEnhancement);});
         sortButton.GetComponentInChildren<TMP_Text>().text=EnglishUI.Sort+Sorts[sorting]+" v";
@@ -87,21 +113,24 @@ public sealed partial class InventoryModal : MonoBehaviour
         page=Mathf.Clamp(page,0,Mathf.Max(0,(visible.Count-1)/capacity));
         total.text=$"{(shopping?"Offers":"Stacks")}: {visible.Count}   /   Page {page+1}/{Mathf.Max(1,(visible.Count+capacity-1)/capacity)}";
         previousButton.interactable=page>0;nextButton.interactable=(page+1)*capacity<visible.Count;
+        emptyLabel.text=shopping&&shopSection==2?"No scheduled restock is active.":shopping&&shopSection==0?"You already own the featured gear.":EnglishUI.EmptyCategory;
         emptyLabel.gameObject.SetActive(visible.Count==0);
         for(int n=0;n<capacity;n++)
         {
-            int index=page*capacity+n;Vector2 pos=shopping?new Vector2(-330+n*330,0):new Vector2(-200+n%5*100,193-n/5*118);
-            var slot=GameUI.Panel(grid,index<visible.Count?"ItemSlot_"+visible[index].ItemId:"ItemSlot",pos,shopping?new Vector2(310,366):new Vector2(94,110));
+            int index=page*capacity+n;if(shopping&&index>=visible.Count)continue;
+            int shopRowCount=Mathf.Max(1,Mathf.Min(capacity,visible.Count-page*capacity));
+            Vector2 pos=shopping?new Vector2((n-(shopRowCount-1)*.5f)*295+50,0):new Vector2(-200+n%5*100,193-n/5*118);
+            var slot=GameUI.Panel(grid,index<visible.Count?"ItemSlot_"+visible[index].ItemId:"ItemSlot",pos,shopping?new Vector2(250,366):new Vector2(94,110));
             slot.GetComponent<UnityEngine.UI.Image>().sprite=PixelArt.Frame(true);
             if(index>=visible.Count)continue;
             var stack=visible[index];var item=Array.Find(Game.Items,x=>x.Id==stack.ItemId);if(item==null)continue;
             var rarityBorder=slot.gameObject.AddComponent<ItemBorderVFX>();rarityBorder.Tier=(int)item.rarity+1;rarityBorder.EnhancementLevel=stack.EffectiveEnhancement;
-            GameUI.Icon(slot,IllustratedArt.Item(item), new Vector2(0,shopping?24:16),shopping?new Vector2(174,174):new Vector2(58,58));
-            if(shopping){var name=GameUI.Label(slot,item.DisplayName,new Vector2(0,140),new Vector2(280,56),24);name.alignment=TextAlignmentOptions.Center;name.color=PixelArt.Rarity(stack.Tier);var priceBand=GameUI.Panel(slot,"PriceBand",new Vector2(0,-146),new Vector2(290,50));GameUI.Icon(priceBand,PixelArt.Icon("gold"),new Vector2(-46,0),new Vector2(30,30));GameUI.Label(priceBand,(15*stack.Tier*stack.Tier).ToString(),new Vector2(18,0),new Vector2(76,30),26).color=GameUI.Gold;}
+            GameUI.Icon(slot,IllustratedArt.Item(item), new Vector2(0,shopping?34:16),shopping?new Vector2(140,140):new Vector2(58,58));
+            if(shopping){var name=GameUI.Label(slot,item.DisplayName,new Vector2(0,146),new Vector2(228,46),20);name.alignment=TextAlignmentOptions.Center;name.textWrappingMode=TextWrappingModes.NoWrap;name.overflowMode=TextOverflowModes.Ellipsis;name.color=PixelArt.Rarity(stack.Tier);var priceBand=GameUI.Panel(slot,"PriceBand",new Vector2(0,-145),new Vector2(228,46));priceBand.GetComponent<UnityEngine.UI.Image>().raycastTarget=false;GameUI.Icon(priceBand,PixelArt.Icon("gold"),new Vector2(-42,0),new Vector2(28,28));var price=GameUI.Label(priceBand,(15*stack.Tier*stack.Tier).ToString(),new Vector2(24,0),new Vector2(90,30),23);price.color=GameUI.Gold;price.alignment=TextAlignmentOptions.Center;}
             if(shopping)
             {
-                var stars=GameUI.Icon(slot,PixelArt.RarityStars(item.rarity),new Vector2(0,-82),new Vector2(88,16));stars.name="RarityStars";stars.preserveAspect=false;
-                var stackLabel=GameUI.Label(slot,$"{ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)} / Owned {EnglishUI.Compact(stack.Count)}",new Vector2(0,-108),new Vector2(266,20),16);stackLabel.alignment=TextAlignmentOptions.Center;stackLabel.textWrappingMode=TextWrappingModes.NoWrap;stackLabel.overflowMode=TextOverflowModes.Ellipsis;
+                var stars=GameUI.Icon(slot,PixelArt.RarityStars(item.rarity),new Vector2(0,-69),new Vector2(88,18));stars.name="RarityStars";stars.preserveAspect=false;
+                var stackLabel=GameUI.Label(slot,$"{ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)} / Owned {EnglishUI.Compact(stack.Count)}",new Vector2(0,-95),new Vector2(220,20),14);stackLabel.alignment=TextAlignmentOptions.Center;stackLabel.textWrappingMode=TextWrappingModes.NoWrap;stackLabel.overflowMode=TextOverflowModes.Ellipsis;
             }
             else
             {
@@ -114,7 +143,10 @@ public sealed partial class InventoryModal : MonoBehaviour
         if(IsInspecting&&selected!=null)Inspect(selected);else if(IsInspecting)CloseInspector();RefreshPaperdoll();UpdatePreview();if(previewCamera!=null)previewCamera.Render();
     }
     public void SetBrowse(int category,int order){CloseInspector();CloseSort();filter=Mathf.Clamp(category,0,4);sorting=Mathf.Clamp(order,0,2);page=0;selected=null;Refresh();}
+    public void SetShopSection(int section){if(!shopping)return;shopSection=Mathf.Clamp(section,0,2);page=0;selected=null;CloseInspector();Refresh();}
+    public void SetShopCategory(int category){if(!shopping)return;filter=Mathf.Clamp(category,0,4);page=0;selected=null;SetShopSection(shopSection);}
     public int VisibleCount=>visible.Count;
+    public int CurrentShopSection=>shopSection;
     public bool CollectionContains(string itemId,int tier)=>visible.Exists(x=>x.ItemId==itemId&&x.Tier==tier);
     private bool IsEquippedWeapon(ItemStack stack)
     {
@@ -180,7 +212,7 @@ public sealed partial class InventoryModal : MonoBehaviour
     private void Fuse(){if(selected==null)return;try{Game.Forge.TryFuse(selected.ItemId,selected.Tier,out string message);Refresh();description.text=message;}catch(Exception e){description.text=EnglishScreens.SaveFailed+e.Message;}}
     public void Close()
     {
-        if(root==null)return;Destroy(root.gameObject);root=null;inspector=null;sortMenu=null;merchant=null;shopping=false;filter=0;page=0;selected=null;
+        if(root==null)return;Destroy(root.gameObject);root=null;inspector=null;sortMenu=null;merchant=null;shopping=false;shopSection=0;filter=0;page=0;selected=null;
         foreach(var screen in suspendedScreens)if(screen!=null)screen.SetActive(true);suspendedScreens.Clear();
         if(preview!=null)Destroy(preview);if(previewCamera!=null)Destroy(previewCamera.gameObject);if(previewTexture!=null){previewTexture.Release();Destroy(previewTexture);}
         if(!Game.Cooperative){Time.timeScale=previousScale;if(Game.Session.UsesDedicated&&Game.Session.World.ClientReady)Game.Session.World.CommandServerRpc("resume");}
