@@ -8,6 +8,7 @@ public sealed partial class InventoryModal
     private RectTransform inspector,sortMenu,paperdollSlots,equipmentFrame,collectionFrame;
     private CanvasGroup browseGroup;
     private TMP_Text itemName,itemRarity,itemSummary,heroLevel,heroStats,emptyLabel;
+    private UnityEngine.UI.Image selectedStars;
     private UnityEngine.UI.Button closeInspectorButton,closeCollectionButton;
     private UnityEngine.UI.Button[] categoryButtons;
     private GameObject returnFocus;
@@ -45,14 +46,16 @@ public sealed partial class InventoryModal
     }
     private void BuildCollection()
     {
-        var browse=GameUI.Rect("CollectionBrowse",root,Vector2.one*.5f,Vector2.zero,new Vector2(1200,640));
+        var browse=GameUI.Rect("CollectionBrowse",root,Vector2.one*.5f,Vector2.zero,new Vector2(1200,680));
         browseGroup=browse.gameObject.AddComponent<CanvasGroup>();
-        title=GameUI.Label(browse,"BACKPACK",new Vector2(-378,294),new Vector2(440,36),28);
-        inventoryGems=BuildCurrency(browse,"gem",new Vector2(286,294));inventoryGold=BuildCurrency(browse,"gold",new Vector2(455,294));
-        closeCollectionButton=RedClose(browse,new Vector2(568,294),Close);
-        var left=CollectionPanel(browse,"EquipmentFrame",new Vector2(-295,-26),new Vector2(438,552));
-        var right=CollectionPanel(browse,"CollectionFrame",new Vector2(230,-26),new Vector2(596,552));
+        // Match the reference's nearly full-height, balanced paperdoll / collection split.
+        var left=CollectionPanel(browse,"EquipmentFrame",new Vector2(-254,0),new Vector2(520,650));
+        var right=CollectionPanel(browse,"CollectionFrame",new Vector2(274,0),new Vector2(520,650));
         equipmentFrame=left;collectionFrame=right;
+        // Align the heading's left edge with the paperdoll frame, not the side rail.
+        title=GameUI.Label(browse,"BACKPACK",new Vector2(-290,316),new Vector2(440,36),28);
+        inventoryGems=BuildCurrency(browse,"gem",new Vector2(286,316));inventoryGold=BuildCurrency(browse,"gold",new Vector2(455,316));
+        closeCollectionButton=RedClose(browse,new Vector2(568,316),Close);
         var bag=GameUI.Button(browse,"Bag",new Vector2(-558,215),new Vector2(76,78),()=>SwitchCollection(false,0));
         GameUI.Icon(bag.transform,PixelArt.Icon("bag"),new Vector2(0,12),new Vector2(36,36));
         bag.GetComponentInChildren<TMP_Text>().rectTransform.anchoredPosition=new Vector2(0,-22);
@@ -60,7 +63,7 @@ public sealed partial class InventoryModal
         GameUI.Icon(skills.transform,PixelArt.Icon("book"),new Vector2(0,12),new Vector2(36,36));skills.GetComponentInChildren<TMP_Text>().rectTransform.anchoredPosition=new Vector2(0,-22);
         var shop=GameUI.Button(browse,"Shop",new Vector2(-558,39),new Vector2(76,78),()=>SwitchCollection(true,0));
         GameUI.Icon(shop.transform,PixelArt.Icon("gold"),new Vector2(0,12),new Vector2(36,36));shop.GetComponentInChildren<TMP_Text>().rectTransform.anchoredPosition=new Vector2(0,-22);
-        var header=GameUI.Label(left,"YOUR HERO",new Vector2(0,241),new Vector2(392,32),24);header.alignment=TextAlignmentOptions.Center;
+        var header=GameUI.Label(left,"YOUR HERO",new Vector2(0,278),new Vector2(460,32),24);header.alignment=TextAlignmentOptions.Center;
         BuildPreview(left);
         paperdollSlots=GameUI.Rect("EquippedSlots",left,Vector2.one*.5f,Vector2.zero,new Vector2(420,500));
         heroLevel=GameUI.Label(left,"",new Vector2(0,-43),new Vector2(180,32),22);heroLevel.alignment=TextAlignmentOptions.Center;heroLevel.color=new Color32(137,218,199,255);
@@ -68,14 +71,16 @@ public sealed partial class InventoryModal
         var stats=CollectionPanel(left,"EquipmentTotals",new Vector2(0,-222),new Vector2(400,68));
         heroStats=GameUI.Label(stats,"",Vector2.zero,new Vector2(364,54),22);heroStats.alignment=TextAlignmentOptions.Center;
         categoryButtons=new UnityEngine.UI.Button[Filters.Length];
-        for(int i=0;i<Filters.Length;i++){int category=i;categoryButtons[i]=GameUI.Button(right,Filters[i],new Vector2(-226+i*113,243),new Vector2(109,40),()=>SetBrowse(category,sorting));}
-        sortButton=GameUI.Button(right,"Sort",new Vector2(176,196),new Vector2(204,38),OpenSort);
-        total=GameUI.Label(right,"",new Vector2(-101,196),new Vector2(310,32),18);
-        grid=GameUI.Rect("ItemGrid",right,Vector2.one*.5f,new Vector2(0,-34),new Vector2(560,430));
-        emptyLabel=GameUI.Label(right,EnglishUI.EmptyCategory,new Vector2(0,0),new Vector2(420,40),22);emptyLabel.alignment=TextAlignmentOptions.Center;
-        previousButton=GameUI.Button(right,"<",new Vector2(-222,-245),new Vector2(68,40),()=>{page=Mathf.Max(0,page-1);Refresh();});
-        nextButton=GameUI.Button(right,">",new Vector2(222,-245),new Vector2(68,40),()=>{page++;Refresh();});
-        var hint=GameUI.Label(right,"Tap an item to inspect",new Vector2(0,-245),new Vector2(324,32),18);hint.alignment=TextAlignmentOptions.Center;
+        for(int i=0;i<Filters.Length;i++){int category=i;categoryButtons[i]=GameUI.Button(right,Filters[i],new Vector2(-196+i*98,292),new Vector2(94,40),()=>SetBrowse(category,sorting));categoryButtons[i].GetComponentInChildren<TMP_Text>().fontSize=16;}
+        sortButton=GameUI.Button(right,"Sort",new Vector2(152,236),new Vector2(180,38),OpenSort);
+        sortButton.GetComponentInChildren<TMP_Text>().fontSize=16;
+        total=GameUI.Label(right,"",new Vector2(-100,236),new Vector2(260,30),17);
+        total.textWrappingMode=TextWrappingModes.NoWrap;
+        grid=GameUI.Rect("ItemGrid",right,Vector2.one*.5f,new Vector2(0,-40),new Vector2(500,470));
+        emptyLabel=GameUI.Label(right,EnglishUI.EmptyCategory,new Vector2(0,-40),new Vector2(420,40),22);emptyLabel.alignment=TextAlignmentOptions.Center;
+        previousButton=GameUI.Button(right,"<",new Vector2(-208,-286),new Vector2(68,40),()=>{page=Mathf.Max(0,page-1);Refresh();});
+        nextButton=GameUI.Button(right,">",new Vector2(208,-286),new Vector2(68,40),()=>{page++;Refresh();});
+        var hint=GameUI.Label(right,"Tap an item to inspect",new Vector2(0,-286),new Vector2(300,32),17);hint.alignment=TextAlignmentOptions.Center;
         BuildInspector();
     }
     private void SwitchCollection(bool shop,int category)
@@ -85,10 +90,10 @@ public sealed partial class InventoryModal
     private void LayoutCollection()
     {
         equipmentFrame.gameObject.SetActive(!shopping);
-        collectionFrame.anchoredPosition=new Vector2(shopping?40:230,-26);
-        collectionFrame.sizeDelta=new Vector2(shopping?1040:596,552);
-        previousButton.GetComponent<RectTransform>().anchoredPosition=new Vector2(shopping?-442:-222,-245);
-        nextButton.GetComponent<RectTransform>().anchoredPosition=new Vector2(shopping?442:222,-245);
+        collectionFrame.anchoredPosition=new Vector2(shopping?0:274,0);
+        collectionFrame.sizeDelta=new Vector2(shopping?1040:520,650);
+        previousButton.GetComponent<RectTransform>().anchoredPosition=new Vector2(shopping?-442:-208,-286);
+        nextButton.GetComponent<RectTransform>().anchoredPosition=new Vector2(shopping?442:208,-286);
     }
     private void RefreshPaperdoll()
     {
@@ -107,7 +112,8 @@ public sealed partial class InventoryModal
             attack+=item.FlatDamage*enhancement;health+=item.FlatHealth*enhancement;
             var rarityBorder=slot.gameObject.AddComponent<ItemBorderVFX>();rarityBorder.Tier=(int)item.rarity+1;rarityBorder.EnhancementLevel=enhancement;
             GameUI.Icon(slot,IllustratedArt.Item(item),new Vector2(0,5),new Vector2(74,74));
-            GameUI.Label(slot,ProgressionRules.EnhancementBadge(enhancement),new Vector2(0,-30),new Vector2(62,24),18);
+            var enhancementBadge=GameUI.Panel(slot,"EnhancementBadge",new Vector2(27,34),new Vector2(42,22));enhancementBadge.GetComponent<UnityEngine.UI.Image>().color=new Color32(31,24,43,245);
+            var enhancementText=GameUI.Label(enhancementBadge,ProgressionRules.EnhancementBadge(enhancement),Vector2.zero,new Vector2(38,20),13);enhancementText.alignment=TextAlignmentOptions.Center;enhancementText.color=GameUI.Cream;
             var stack=new ItemStack{ItemId=item.Id,Tier=tier,EnhancementLevel=enhancement,Count=state.Count(item.Id,tier,enhancement)};
             slot.gameObject.AddComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>{shopping=false;Refresh();Inspect(stack);});
         }
@@ -136,8 +142,9 @@ public sealed partial class InventoryModal
         // This follows the dense, inspect-then-act pattern used by MyHeroes while
         // giving the effect text enough room to remain legible on laptop displays.
         var panel=CollectionPanel(inspector,"ItemDetails",Vector2.zero,new Vector2(900,560));
-        var ribbon=CollectionPanel(panel,"RarityRibbon",new Vector2(0,272),new Vector2(274,38));ribbon.GetComponent<UnityEngine.UI.Image>().color=new Color32(154,80,160,255);
-        itemRarity=GameUI.Label(ribbon,"",Vector2.zero,new Vector2(250,30),20);itemRarity.alignment=TextAlignmentOptions.Center;
+        var ribbon=CollectionPanel(panel,"RarityRibbon",new Vector2(0,258),new Vector2(274,38));ribbon.GetComponent<UnityEngine.UI.Image>().color=new Color32(154,80,160,255);
+        selectedStars=GameUI.Icon(ribbon,PixelArt.RarityStars(ItemRarity.Mythic),new Vector2(-54,0),new Vector2(82,16));selectedStars.name="InspectorRarityStars";selectedStars.preserveAspect=false;
+        itemRarity=GameUI.Label(ribbon,"",new Vector2(76,0),new Vector2(112,30),20);itemRarity.alignment=TextAlignmentOptions.Center;
         closeInspectorButton=RedClose(panel,new Vector2(426,256),CloseInspector);
         var frame=GameUI.Panel(panel,"SelectedItemFrame",new Vector2(-344,174),new Vector2(124,124));frame.GetComponent<UnityEngine.UI.Image>().sprite=PixelArt.Frame(true);
         selectedBorder=frame.gameObject.AddComponent<ItemBorderVFX>();selectedIcon=GameUI.Icon(frame,null,Vector2.zero,new Vector2(100,100));
@@ -160,7 +167,7 @@ public sealed partial class InventoryModal
     private void InspectStarter(SpellData spell)
     {
         selected=null;selectedSpell=spell;OpenInspector();
-        selectedIcon.enabled=true;selectedIcon.sprite=IllustratedArt.Skill(spell);selectedIcon.material=IllustratedArt.Owns(selectedIcon.sprite)?IllustratedArt.UI:null;selectedBorder.Tier=1;
+        selectedIcon.enabled=true;selectedIcon.sprite=IllustratedArt.Skill(spell);selectedIcon.material=IllustratedArt.Owns(selectedIcon.sprite)?IllustratedArt.UI:null;selectedBorder.Tier=1;selectedStars.enabled=false;itemRarity.rectTransform.anchoredPosition=Vector2.zero;itemRarity.rectTransform.sizeDelta=new Vector2(250,30);
         itemName.text=spell.DisplayName;itemName.color=new Color32(139,224,235,255);itemRarity.text="STARTER SKILL";
         itemSummary.text=$"Cooldown {spell.Cooldown:0.#}s / Mana 10\nPower {spell.Power:0.#} / Range {spell.Range:0.#}";
         description.color=GameUI.Cream;description.text=showLore?spell.villageQuote:spell.mechanicalDescription;

@@ -14,10 +14,12 @@ public sealed partial class TownHubManager : MonoBehaviour
     private GameObject scenery;
     private TMP_Text hint;
     private TMP_Text contextActionLabel;
+    private TMP_Text contextTargetLabel;
     private UnityEngine.UI.Button contextAction;
     private int nearest=-1;
     private readonly TMP_Text[] merchantLabels=new TMP_Text[5];
     private static readonly string[] MerchantIcons={"hammer","bow","staff","amulet","book"};
+    private static readonly string[] GateLabels={"Raids","Campaign","DPS Trial","World Boss"};
     public static readonly string[] Names={"Hephaestus","Artemis","Helios","Asclepius","Athena","North / Raids","South / Campaign","East / DPS trial","West / World boss"};
     // Specialists sit beside the visible left/right counters in the new guild hall;
     // the campaign, raid, trial and world-boss exits frame the room edges.
@@ -33,18 +35,19 @@ public sealed partial class TownHubManager : MonoBehaviour
         hint=GameUI.Label(root,"WASD / left stick: move",new Vector2(-438,-324),new Vector2(276,24),15);hint.alignment=TextAlignmentOptions.Center;
         for(int i=0;i<Names.Length;i++)
         {
-            int index=i;var button=GameUI.Button(root,i<5?"":Names[i],Vector2.zero,i<5?new Vector2(38,38):new Vector2(174,32),()=>Interact(index));
+            int index=i;var button=GameUI.Button(root,i<5?"":GateLabels[i-5],Vector2.zero,i<5?new Vector2(38,38):new Vector2(146,30),()=>Interact(index));
             button.name="TownService"+i;
-            button.GetComponentInChildren<TMP_Text>().fontSize=16;
+            var signLabel=button.GetComponentInChildren<TMP_Text>();signLabel.fontSize=i<5?16:14;signLabel.textWrappingMode=TextWrappingModes.NoWrap;signLabel.overflowMode=TextOverflowModes.Ellipsis;
             button.GetComponent<UnityEngine.UI.Image>().color=new Color(1,1,1,.9f);
             if(i<5){
                 GameUI.Icon(button.transform,PixelArt.Icon(MerchantIcons[i]),Vector2.zero,new Vector2(30,30));
-                merchantLabels[i]=GameUI.Label(button.transform,Names[i],new Vector2(0,31),new Vector2(134,24),16);merchantLabels[i].alignment=TextAlignmentOptions.Center;merchantLabels[i].gameObject.SetActive(false);
+                merchantLabels[i]=GameUI.Label(button.transform,Names[i],new Vector2(0,29),new Vector2(124,20),13);merchantLabels[i].alignment=TextAlignmentOptions.Center;merchantLabels[i].textWrappingMode=TextWrappingModes.NoWrap;merchantLabels[i].overflowMode=TextOverflowModes.Ellipsis;merchantLabels[i].gameObject.SetActive(false);
             }
             signs.Add(button.GetComponent<RectTransform>());
         }
-        var interact=GameUI.Button(root,"",new Vector2(482,-286),new Vector2(236,54),()=>Interact(nearest));interact.name="TownContextAction";GameUI.Pin((RectTransform)interact.transform,new Vector2(1,0),new Vector2(-146,96));
-        contextAction=interact.GetComponent<UnityEngine.UI.Button>();contextActionLabel=interact.GetComponentInChildren<TMP_Text>();interact.gameObject.SetActive(false);
+        var interact=GameUI.Button(root,"INTERACT",new Vector2(482,-286),new Vector2(236,54),()=>Interact(nearest));interact.name="TownContextAction";GameUI.Pin((RectTransform)interact.transform,new Vector2(1,0),new Vector2(-146,96));
+        contextAction=interact.GetComponent<UnityEngine.UI.Button>();contextActionLabel=interact.GetComponentInChildren<TMP_Text>();contextActionLabel.fontSize=16;contextActionLabel.textWrappingMode=TextWrappingModes.NoWrap;contextActionLabel.overflowMode=TextOverflowModes.Ellipsis;interact.gameObject.SetActive(false);
+        contextTargetLabel=GameUI.Label(root,"",new Vector2(482,-240),new Vector2(220,22),14);contextTargetLabel.gameObject.name="TownContextTarget";contextTargetLabel.alignment=TextAlignmentOptions.Center;contextTargetLabel.color=GameUI.Gold;contextTargetLabel.textWrappingMode=TextWrappingModes.NoWrap;contextTargetLabel.overflowMode=TextOverflowModes.Ellipsis;GameUI.Pin(contextTargetLabel.rectTransform,new Vector2(1,0),new Vector2(-146,136));contextTargetLabel.gameObject.SetActive(false);
         var settings=GameUI.Button(root,"",new Vector2(592,321),new Vector2(52,52),OpenSettings);settings.name="SettingsButton";GameUI.Pin((RectTransform)settings.transform,Vector2.one,new Vector2(-48,-39));
         GameUI.Icon(settings.transform,PixelArt.Icon("settings"),Vector2.zero,new Vector2(36,36));
         var rail=GameUI.Panel(root,"TownActivityRail",Vector2.zero,new Vector2(84,292));GameUI.Pin(rail,new Vector2(0,.5f),new Vector2(56,0));
@@ -74,7 +77,7 @@ public sealed partial class TownHubManager : MonoBehaviour
             screen.x=Mathf.Clamp(screen.x,safe.xMin+half.x,safe.xMax-half.x);
             screen.y=Mathf.Clamp(screen.y,safe.yMin+half.y,safe.yMax-half.y);
             RectTransformUtility.ScreenPointToLocalPointInRectangle(root,screen,null,out var local);
-            local.y=Mathf.Min(local.y,i<5?300:242);
+            local.y=Mathf.Clamp(local.y,-270,i<5?300:242);
             // Keep gate labels clear of the fixed left activity rail and right bag/minimap.
             if(i>=5)local.x=Mathf.Clamp(local.x,-405,405);
             signs[i].anchoredPosition=local;
@@ -82,8 +85,9 @@ public sealed partial class TownHubManager : MonoBehaviour
         if(!HasDialog){
             bool canInteract=nearest>=0;
             if(contextAction.gameObject.activeSelf!=canInteract)contextAction.gameObject.SetActive(canInteract);
-            if(canInteract){contextActionLabel.text=nearest==6?"Enter Campaign":"Talk to "+Names[nearest];}
-            hint.text=canInteract?"F / Tap to interact":"WASD / left stick: move";
+            if(contextTargetLabel.gameObject.activeSelf!=canInteract)contextTargetLabel.gameObject.SetActive(canInteract);
+            if(canInteract){contextActionLabel.text=nearest==6?"ENTER CAMPAIGN":nearest<5?"OPEN SHOP":"VIEW MODE";contextTargetLabel.text=nearest<5?Names[nearest]:GateLabels[nearest-5];}
+            hint.text=canInteract?(FixedTouchStick.EnabledForDevice?"Tap to interact":"F: Interact"):"WASD / left stick: move";
             if(Keyboard.current?.fKey.wasPressedThisFrame==true)Interact(nearest);
         }
 
@@ -130,6 +134,6 @@ public sealed partial class TownHubManager : MonoBehaviour
         }
     }
     public void Refresh(){GetComponent<SkillWheelHUD>()?.RefreshWallet();}
-    public void Close(){CloseSettings();GetComponent<EventDrawerUI>()?.Close();GetComponent<InboxDrawerUI>()?.Close();if(root!=null){root.gameObject.SetActive(false);Destroy(root.gameObject);}root=null;dialog=null;contextAction=null;contextActionLabel=null;signs.Clear();if(scenery!=null){scenery.SetActive(false);Destroy(scenery);}scenery=null;}
+    public void Close(){CloseSettings();GetComponent<EventDrawerUI>()?.Close();GetComponent<InboxDrawerUI>()?.Close();if(root!=null){root.gameObject.SetActive(false);Destroy(root.gameObject);}root=null;dialog=null;contextAction=null;contextActionLabel=null;contextTargetLabel=null;signs.Clear();if(scenery!=null){scenery.SetActive(false);Destroy(scenery);}scenery=null;}
     private void OnDestroy()=>Close();
 }

@@ -90,22 +90,23 @@ public sealed partial class InventoryModal : MonoBehaviour
         emptyLabel.gameObject.SetActive(visible.Count==0);
         for(int n=0;n<capacity;n++)
         {
-            int index=page*capacity+n;Vector2 pos=shopping?new Vector2(-330+n*330,0):new Vector2(-224+n%5*112,158-n/5*98);
-            var slot=GameUI.Panel(grid,index<visible.Count?"ItemSlot_"+visible[index].ItemId:"ItemSlot",pos,shopping?new Vector2(310,366):new Vector2(104,96));
+            int index=page*capacity+n;Vector2 pos=shopping?new Vector2(-330+n*330,0):new Vector2(-200+n%5*100,193-n/5*118);
+            var slot=GameUI.Panel(grid,index<visible.Count?"ItemSlot_"+visible[index].ItemId:"ItemSlot",pos,shopping?new Vector2(310,366):new Vector2(94,110));
             slot.GetComponent<UnityEngine.UI.Image>().sprite=PixelArt.Frame(true);
             if(index>=visible.Count)continue;
             var stack=visible[index];var item=Array.Find(Game.Items,x=>x.Id==stack.ItemId);if(item==null)continue;
             var rarityBorder=slot.gameObject.AddComponent<ItemBorderVFX>();rarityBorder.Tier=(int)item.rarity+1;rarityBorder.EnhancementLevel=stack.EffectiveEnhancement;
-            GameUI.Icon(slot,IllustratedArt.Item(item), new Vector2(0,shopping?24:8),shopping?new Vector2(174,174):new Vector2(70,70));
+            GameUI.Icon(slot,IllustratedArt.Item(item), new Vector2(0,shopping?24:16),shopping?new Vector2(174,174):new Vector2(58,58));
             if(shopping){var name=GameUI.Label(slot,item.DisplayName,new Vector2(0,140),new Vector2(280,56),24);name.alignment=TextAlignmentOptions.Center;name.color=PixelArt.Rarity(stack.Tier);var priceBand=GameUI.Panel(slot,"PriceBand",new Vector2(0,-146),new Vector2(290,50));GameUI.Icon(priceBand,PixelArt.Icon("gold"),new Vector2(-46,0),new Vector2(30,30));GameUI.Label(priceBand,(15*stack.Tier*stack.Tier).ToString(),new Vector2(18,0),new Vector2(76,30),26).color=GameUI.Gold;}
             if(shopping)
             {
-                var stackLabel=GameUI.Label(slot,$"{ProgressionRules.StarRating(item.rarity)}  {ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)} / Owned {EnglishUI.Compact(stack.Count)}",new Vector2(0,-93),new Vector2(266,24),18);stackLabel.alignment=TextAlignmentOptions.Center;
+                var stars=GameUI.Icon(slot,PixelArt.RarityStars(item.rarity),new Vector2(0,-82),new Vector2(88,16));stars.name="RarityStars";stars.preserveAspect=false;
+                var stackLabel=GameUI.Label(slot,$"{ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)} / Owned {EnglishUI.Compact(stack.Count)}",new Vector2(0,-108),new Vector2(266,20),16);stackLabel.alignment=TextAlignmentOptions.Center;stackLabel.textWrappingMode=TextWrappingModes.NoWrap;stackLabel.overflowMode=TextOverflowModes.Ellipsis;
             }
             else
             {
-                var stars=GameUI.Label(slot,ProgressionRules.StarRating(item.rarity),new Vector2(-23,-34),new Vector2(54,20),9);stars.alignment=TextAlignmentOptions.Center;stars.color=PixelArt.Rarity((int)item.rarity+1);
-                var levelAndCount=GameUI.Label(slot,$"{ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)} x{EnglishUI.Compact(stack.Count)}",new Vector2(27,-34),new Vector2(48,20),12);levelAndCount.alignment=TextAlignmentOptions.Center;
+                var stars=GameUI.Icon(slot,PixelArt.RarityStars(item.rarity),new Vector2(0,-27),new Vector2(76,18));stars.name="RarityStars";stars.preserveAspect=false;
+                var levelAndCount=GameUI.Label(slot,$"{ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)}  x{EnglishUI.Compact(stack.Count)}",new Vector2(0,-47),new Vector2(88,16),11);levelAndCount.alignment=TextAlignmentOptions.Center;levelAndCount.textWrappingMode=TextWrappingModes.NoWrap;levelAndCount.overflowMode=TextOverflowModes.Ellipsis;
             }
             var outline=slot.gameObject.AddComponent<UnityEngine.UI.Outline>();outline.effectColor=GameUI.Cream;outline.effectDistance=new Vector2(3,-3);outline.enabled=false;outlines[stack.ItemId+"/"+stack.Tier+"/"+stack.EffectiveEnhancement]=outline;
             var button=slot.gameObject.AddComponent<UnityEngine.UI.Button>();button.onClick.AddListener(()=>{showLore=false;Inspect(stack);});
@@ -132,7 +133,7 @@ public sealed partial class InventoryModal : MonoBehaviour
         foreach(var pair in outlines)pair.Value.enabled=pair.Key==stack.ItemId+"/"+stack.Tier+"/"+stack.EffectiveEnhancement;
         int slot=(int)item.Slot,owned=Game.Forge.State.Count(stack.ItemId,stack.Tier,stack.EffectiveEnhancement);
         var equipped=Array.Find(Game.Items,x=>x.Id==Game.Forge.State.EquippedIds[slot]);
-        itemName.text=item.DisplayName;itemName.color=PixelArt.Rarity((int)item.rarity+1);itemRarity.text=$"{ProgressionRules.StarRating(item.rarity)}  {ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement)}";
+        itemName.text=item.DisplayName;itemName.color=PixelArt.Rarity((int)item.rarity+1);selectedStars.sprite=PixelArt.RarityStars(item.rarity);selectedStars.enabled=true;itemRarity.rectTransform.anchoredPosition=new Vector2(76,0);itemRarity.rectTransform.sizeDelta=new Vector2(112,30);itemRarity.text=ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement);
         itemSummary.text=$"{(item.Kind==ItemKind.Gear?item.Slot.ToString():"Skill book")}  /  Owned {EnglishUI.Compact(owned)}\n"+(item.Kind==ItemKind.Gear?$"{item.FlatDamage*stack.EffectiveEnhancement:0.##} ATK   {item.FlatHealth*stack.EffectiveEnhancement:0.##} HP":"Primary Q assignment");
         description.color=showLore?GameUI.Cream:new Color32(153,226,145,255);description.text=showLore?item.description+"\n\n"+item.villageQuote:EnglishUI.Comparison(item,stack.EffectiveEnhancement,equipped,Game.Forge.State.EquippedEnhancementLevels[slot]);
         upgradeDetails.text=shopping?EnglishUI.Price(15*stack.Tier*stack.Tier):EnglishUI.Upgrade(item,stack.EffectiveEnhancement,owned)+(item.Kind==ItemKind.Gear&&item.Slot==EquipmentSlot.Weapon?"\n"+EnglishUI.VisualMilestone(stack.EffectiveEnhancement):"");

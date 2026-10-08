@@ -44,9 +44,17 @@ public sealed partial class RuntimeSmokeTest
                 if(gate==5)dialog&=GameObject.Find("RiftDefenseLaunch")!=null;
                 maps&=dialog;game.Hub.CloseDialog();
             }
-            if(!npcs||!maps)failed=true;
+        if(!npcs||!maps)failed=true;
             Debug.Log($"TOWN_SERVICE_CHECK merchantNPCs={npcs} raidDpsWorldBossGates={maps}");
         }
+        game.Player.transform.position=TownHubManager.Positions[8];yield return new WaitForSecondsRealtime(.1f);
+        var contextButton=GameObject.Find("TownContextAction")?.GetComponent<UnityEngine.UI.Button>();
+        var contextTarget=GameObject.Find("TownContextTarget")?.GetComponent<TMPro.TMP_Text>();
+        bool compactContext=contextButton!=null&&contextButton.gameObject.activeInHierarchy&&contextTarget!=null&&contextTarget.text=="World Boss"&&contextButton.GetComponentInChildren<TMPro.TMP_Text>().text=="VIEW MODE";
+        if(!compactContext)failed=true;
+        else{AuditLayout(GameObject.Find("TownHub").transform,"town compact world interaction");contextButton.onClick.Invoke();yield return null;compactContext&=GameObject.Find("GateDialog")!=null;game.Hub.CloseDialog();}
+        if(!compactContext)failed=true;
+        Debug.Log($"TOWN_CONTEXT_CHECK compactLabelsAndTap={compactContext}");
         var eventsButton=GameObject.Find("EventsButton")?.GetComponent<UnityEngine.UI.Button>();
         bool activityRail=GameObject.Find("TownActivityRail")!=null&&GameObject.Find("CampaignButton")!=null&&GameObject.Find("TownContextAction")!=null;
         if(!activityRail)failed=true;

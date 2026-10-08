@@ -26,6 +26,21 @@ public static class PixelArt
     public static Sprite Frame(bool slot=false) => Surface(slot ? "slot" : "frame",false,false,slot);
     public static Sprite Border() => Surface("border",true,false,false);
     public static Sprite Orb() => Surface("orb",false,true,false);
+    public static Sprite RarityStars(ItemRarity rarity)
+    {
+        string key="rarity-stars/"+(int)rarity;
+        if(cache.TryGetValue(key,out var sprite))return sprite;
+        var art=new Raster();
+        // Tall, chunky five-point stars stay legible when the strip is scaled
+        // into a compact inventory cell.
+        string[] shape={"..#..","..#..","..#..",".###.","#####","#####","#####",".###.","..#..","..#..",".#.#.",".#.#.","#...#","#...#"};
+        Color filled=new Color32(255,205,75,255),empty=new Color32(76,72,91,255);
+        for(int star=0;star<5;star++)
+        for(int y=0;y<shape.Length;y++)
+        for(int x=0;x<shape[y].Length;x++)
+            if(shape[y][x]=='#')art.P(star*6+x,9+y,star<Mathf.Clamp((int)rarity+1,1,5)?filled:empty);
+        return cache[key]=art.Finish(32);
+    }
     private static Sprite Surface(string key,bool edge,bool circle,bool slot)
     {
         if(cache.TryGetValue(key,out var sprite))return sprite;

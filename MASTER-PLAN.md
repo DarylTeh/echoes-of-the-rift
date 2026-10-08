@@ -1,6 +1,14 @@
 # Echoes of the Rift master plan
 
-Revision 87 - 8 October 2026. Amplify gear rarity and weapon effects.
+Revision 88 - 8 October 2026. Align backpack and item-detail layout.
+
+## Current iteration - revision 88: readable inventory hierarchy and reference proportions
+
+Rebalanced the backpack into near-even, nearly full-height paperdoll and five-column collection panels. Corrected title/wallet draw order, gave rarity stars enough pixel height to read at cell size, separated stars from enhancement/count, and moved the item-detail ribbon fully inside its card. Equipped items stay on the hero side, the weapon appears in the hero's hand, and equip/buy/upgrade remain inspect-then-act interactions. This is a responsive Echoes implementation informed by the supplied reference composition; it is not a literal copy of MyHeroes assets or a 1:1 match.
+
+Validation: Unity Windows player build succeeded; Unity CLI reported a non-blocking licensing-client validation warning. The four-resolution desktop UI suite passed 351 checks and simulated-touch passed 352, both with zero layout failures or runtime errors. The checks include item-cell art/metadata separation, equip removal from the collection, equipped state on the paperdoll, weapon-in-hand, Buy/Equip/Upgrade transactions, keyboard/back navigation and safe-area bounds. Reviewed the 1280x720 backpack and inspector captures at `Logs/ReferenceLayoutIteration/ReviewedDesktop/`; no physical Android test is claimed. The tested player was synced to tracked `Release/Windows` and key release hashes match the build.
+
+Next: bring the hero/profile composition and gear art closer to the reference while keeping all labels readable, then continue the strict shop/events/account/results review. The whole game remains well below the requested 90% visual match.
 
 ## Current iteration - revision 87: high-tier gear VFX
 

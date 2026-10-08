@@ -31,6 +31,12 @@ public sealed partial class RuntimeSmokeTest
         }
         layoutChecks.Add(context+": "+Screen.width+"x"+Screen.height);
     }
+    private static bool LocalRectsOverlap(RectTransform first,RectTransform second)
+    {
+        Rect a=new Rect(first.anchoredPosition-first.sizeDelta*.5f,first.sizeDelta);
+        Rect b=new Rect(second.anchoredPosition-second.sizeDelta*.5f,second.sizeDelta);
+        return a.Overlaps(b,false);
+    }
     private IEnumerator NativeCapture(string name)
     {
         yield return new WaitForEndOfFrame();ScreenCapture.CaptureScreenshot(Path.Combine(output,name));
@@ -59,6 +65,16 @@ public sealed partial class RuntimeSmokeTest
         game.Forge.Configure(originalProfile);game.Hub.Refresh();inventory.Open();yield return null;
         if(GameObject.Find("TownHub")!=null||GameObject.Find("SkillHUD")!=null)layoutFailures.Add("Inventory retained a background menu");
         layoutChecks.Add("inventory owns primary interaction overlay");
+        var itemGrid=GameObject.Find("ItemGrid").transform;bool itemTextClear=true;
+        foreach(Transform slot in itemGrid)
+        {
+            if(!slot.name.StartsWith("ItemSlot_"))continue;
+            var art=slot.Find("Icon") as RectTransform;var stars=slot.Find("RarityStars") as RectTransform;var labels=slot.GetComponentsInChildren<TMP_Text>(true);
+            if(art==null||stars==null||labels.Length<1){itemTextClear=false;continue;}
+            if(LocalRectsOverlap(art,stars)||LocalRectsOverlap(art,labels[0].rectTransform)||LocalRectsOverlap(stars,labels[0].rectTransform))itemTextClear=false;
+        }
+        if(!itemTextClear)layoutFailures.Add("Inventory item text overlaps the icon or another label");
+        layoutChecks.Add("inventory cells keep rarity, enhancement and count labels separate from item art");
         foreach(var size in LayoutSizes)
         {
             yield return SetLayoutSize(size);
