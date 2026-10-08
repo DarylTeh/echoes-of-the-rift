@@ -208,6 +208,20 @@ public sealed partial class RuntimeSmokeTest
             if(game.Forge.State.EquippedIds[(int)EquipmentSlot.Weapon]!=weaponItem.Id||inventory.CollectionContains(weaponItem.Id,1)||!inventory.PaperdollShowsEquipped(EquipmentSlot.Weapon))layoutFailures.Add("Equipped weapon was not moved from collection to hero paperdoll");
             if(heldWeapon==null||heldWeapon.GetComponent<SpriteRenderer>().sprite==null||heldWeapon.localPosition.y<customizer.PresentationScale*.6f)layoutFailures.Add("Equipped weapon was not visibly held at the hero's hand");
         }
+        var skillItem=Array.Find(game.Items,x=>x.Kind==ItemKind.SkillBook&&x.Spell!=null);
+        if(skillItem==null)layoutFailures.Add("No skill book available for loadout assignment test");
+        else
+        {
+            var skillFixture=game.Forge.State.Copy();skillFixture.Add(skillItem.Id,skillItem.itemTier);game.Forge.Configure(skillFixture);inventory.Refresh();inventory.SetBrowse(4,0);
+            GameObject.Find("EquippedSkill4")?.GetComponent<UnityEngine.UI.Button>()?.onClick.Invoke();
+            if(inventory.CurrentSkillTargetSlot!=4)layoutFailures.Add("Tapping the Ember E loadout slot did not select it as the skill target");
+            var bookCard=GameObject.Find("ItemSlot_"+skillItem.Id)?.GetComponent<UnityEngine.UI.Button>();bookCard?.onClick.Invoke();
+            var assignSkill=GameObject.Find(EnglishUI.Equip)?.GetComponent<UnityEngine.UI.Button>();
+            if(assignSkill==null||assignSkill.GetComponentInChildren<TMP_Text>().text!="Equip to EMBER E")layoutFailures.Add("Skill book preview did not name the selected loadout slot");
+            assignSkill?.onClick.Invoke();
+            if(game.Forge.State.SkillIds[4]!=skillItem.Spell.Id)layoutFailures.Add("Skill book assignment did not update the selected Ember skill slot");
+            layoutChecks.Add("Select Moon/Ember skill slot, inspect a book and assign to the chosen slot");
+        }
         game.Forge.Configure(beforeTransactions);ProfileStore.Save(beforeTransactions,game.Forge.SavePath);inventory.Close();yield return null;inventory.Open();
         // Burst pressure must not grow the cosmetic pool after its first fill.
         for(int i=0;i<2000;i++)CosmeticTrailPool.Emit(CombatVisual.Square,Color.cyan,new Vector3(9000,9000),Quaternion.identity,Vector3.one,0,1);

@@ -7,7 +7,7 @@ public sealed partial class InventoryModal
 {
     private RectTransform inspector,sortMenu,paperdollSlots,equipmentFrame,collectionFrame;
     private CanvasGroup browseGroup;
-    private TMP_Text itemName,itemRarity,itemSummary,heroLevel,heroStats,emptyLabel;
+    private TMP_Text itemName,itemRarity,itemSummary,heroLevel,heroStats,skillTargetHint,emptyLabel;
     private UnityEngine.UI.Image selectedStars;
     private UnityEngine.UI.Button closeInspectorButton,closeCollectionButton;
     private UnityEngine.UI.Button[] categoryButtons;
@@ -70,8 +70,11 @@ public sealed partial class InventoryModal
         BuildPreview(left);
         paperdollSlots=GameUI.Rect("EquippedSlots",left,Vector2.one*.5f,Vector2.zero,new Vector2(420,500));
         heroLevel=GameUI.Label(left,"",new Vector2(0,-43),new Vector2(270,32),20);heroLevel.gameObject.name="HeroProfileLevel";heroLevel.alignment=TextAlignmentOptions.Center;heroLevel.color=new Color32(137,218,199,255);
-        var stance=GameUI.Label(left,"MOON  /  EMBER",new Vector2(0,-94),new Vector2(390,26),18);stance.alignment=TextAlignmentOptions.Center;
-        var stats=CollectionPanel(left,"EquipmentTotals",new Vector2(0,-222),new Vector2(400,68));
+        var stance=GameUI.Label(left,"SKILL LOADOUT",new Vector2(0,-94),new Vector2(390,26),18);stance.alignment=TextAlignmentOptions.Center;
+        var moonHeader=GameUI.Label(left,"MOON",new Vector2(-96,-116),new Vector2(174,18),12);moonHeader.alignment=TextAlignmentOptions.Center;moonHeader.color=new Color32(112,205,242,255);
+        var emberHeader=GameUI.Label(left,"EMBER",new Vector2(96,-116),new Vector2(174,18),12);emberHeader.alignment=TextAlignmentOptions.Center;emberHeader.color=new Color32(255,154,112,255);
+        skillTargetHint=GameUI.Label(left,"",new Vector2(0,-136),new Vector2(390,18),12);skillTargetHint.alignment=TextAlignmentOptions.Center;skillTargetHint.color=GameUI.Gold;
+        var stats=CollectionPanel(left,"EquipmentTotals",new Vector2(0,-252),new Vector2(400,68));
         heroStats=GameUI.Label(stats,"",Vector2.zero,new Vector2(364,54),18);heroStats.gameObject.name="HeroCombatSummary";heroStats.alignment=TextAlignmentOptions.Center;
         categoryButtons=new UnityEngine.UI.Button[Filters.Length];
         for(int i=0;i<Filters.Length;i++){int category=i;categoryButtons[i]=GameUI.Button(right,Filters[i],new Vector2(-196+i*98,292),new Vector2(94,40),()=>SetBrowse(category,sorting));categoryButtons[i].GetComponentInChildren<TMP_Text>().fontSize=16;}
@@ -139,16 +142,16 @@ public sealed partial class InventoryModal
             var activeSpell=activeSkills!=null?activeSkills.GetSpell(i):null;
             if(string.IsNullOrEmpty(id))id=activeSpell!=null?activeSpell.Id:null;
             var item=Array.Find(Game.Items,x=>x.Spell!=null&&x.Spell.Id==id);
-            var slot=GameUI.Panel(paperdollSlots,"EquippedSkill"+i,new Vector2(-163+i*65,-145),new Vector2(58,62));
-            slot.GetComponent<UnityEngine.UI.Image>().sprite=PixelArt.Frame(true);
-            if(item==null&&activeSpell==null)continue;
-            GameUI.Icon(slot,item!=null?IllustratedArt.Item(item):IllustratedArt.Skill(activeSpell),new Vector2(0,4),new Vector2(48,48));
+            int target=i;var slot=GameUI.Panel(paperdollSlots,"EquippedSkill"+i,new Vector2(-163+i*65,-171),new Vector2(58,62));
+            var slotFrame=slot.GetComponent<UnityEngine.UI.Image>();slotFrame.sprite=PixelArt.Frame(true);slotFrame.color=i==skillTargetSlot?new Color32(118,207,239,255):Color.white;
+            var targetOutline=slot.gameObject.AddComponent<UnityEngine.UI.Outline>();targetOutline.effectColor=GameUI.Gold;targetOutline.effectDistance=new Vector2(3,-3);targetOutline.enabled=i==skillTargetSlot;
+            if(item!=null||activeSpell!=null)GameUI.Icon(slot,item!=null?IllustratedArt.Item(item):IllustratedArt.Skill(activeSpell),new Vector2(0,4),new Vector2(48,48));
+            else {var empty=GameUI.Label(slot,"EMPTY",new Vector2(0,5),new Vector2(54,18),9);empty.alignment=TextAlignmentOptions.Center;empty.color=new Color32(154,150,169,255);}
             var hotkey=GameUI.Label(slot,new[]{"Q","E","R"}[i%3],new Vector2(0,-21),new Vector2(36,18),14);hotkey.alignment=TextAlignmentOptions.Center;
-            if(item==null){slot.gameObject.AddComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>{showLore=false;InspectStarter(activeSpell);});continue;}
-            var owned=state.Items.Find(x=>x.ItemId==item.Id&&x.Count>0)??new ItemStack{ItemId=item.Id,Tier=item.itemTier,Count=0};
-            slot.gameObject.AddComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>{shopping=false;Refresh();Inspect(owned);});
+            var skillButton=slot.gameObject.AddComponent<UnityEngine.UI.Button>();skillButton.onClick.AddListener(()=>SelectSkillTarget(target));
         }
         var stats=Game.Player.GetComponent<CharacterStats>();
+        skillTargetHint.text=$"TARGET: {SkillTargetName(skillTargetSlot)} - TAP SKILL BOOK TO ASSIGN";
         heroStats.text=$"OFFENSE {stats.AttackDamage:0}       SURVIVAL {stats.MaxHealth:0}\nGEAR ATK +{attack:0.##}    HP +{health:0.##}";
     }
     private void BuildInspector()

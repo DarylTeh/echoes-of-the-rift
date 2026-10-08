@@ -1,5 +1,9 @@
 # My Heroes reference UAT — 3 October 2026
 
+## Follow-up — 9 October 2026, Moon/Ember skill assignment
+
+The hero side now distinguishes the three Moon and three Ember positions. A player selects the destination on the paperdoll, then opens an owned book from the right-side collection; its detail card names the destination and gives the actual spell cooldown, power and mechanic. Local profile saves and dedicated-server transactions both store the selected slot. The server suite's skill transaction now checks slots 1–6, ownership, and removing books from assigned positions. Unity has no active license on this machine, so the new backpack interaction and screenshots remain unverified; the UI smoke test is queued for the next licensed build. No similarity score increase or Android-device certification is claimed.
+
 ## Follow-up — 9 October 2026, Shop browsing
 
 The Shop now separates Best Buys, Catalog and Restock, with category navigation for All, Weapons, Armour, Charms and Skills. Best Buys filters out gear already owned by the account; the Catalog lists available items; Restock explains that no global schedule is configured. Price bands no longer block the card's inspect action. The first desktop and simulated-touch runs passed 357/358 layout and flow checks, but visual review found a category-rail/card collision and a RESTOCK/wallet collision at some sizes. The final source correction addresses those positions; Unity could not rebuild or rerun after that correction because the CLI reports no active license. The retained `Logs/ShopIteration/Desktop/merchant-catalog-1280x720.png` is from before the correction. Treat final Shop alignment as unverified until a licensed build is captured at 1280×720 and 1024×768. No Android-device test or 90% reference-parity claim is made.

@@ -7,9 +7,9 @@ import { fileURLToPath } from 'node:url';
 import { normalizeProgression } from './progression-rules.mjs';
 import { createEventStore } from './events/event-store.mjs';
 const hash=s=>createHash('sha256').update(s).digest('hex');
-export function createStore(path,catalog) {
+export function createStore(path,catalog,clock=Date.now) {
  const db=new DatabaseSync(path);db.exec('PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000; CREATE TABLE IF NOT EXISTS players(id TEXT PRIMARY KEY, secret TEXT NOT NULL, profile TEXT NOT NULL); CREATE TABLE IF NOT EXISTS receipts(player TEXT, receipt TEXT, PRIMARY KEY(player,receipt)); CREATE TABLE IF NOT EXISTS inbox(id TEXT PRIMARY KEY, player TEXT NOT NULL, event_id TEXT NOT NULL, event_version INTEGER NOT NULL, claim_key TEXT NOT NULL, reward_json TEXT NOT NULL, status TEXT NOT NULL, created_at TEXT NOT NULL, claimed_at TEXT); CREATE INDEX IF NOT EXISTS inbox_player_status_created_idx ON inbox(player,status,created_at DESC);');
- const events=createEventStore(db);
+ const events=createEventStore(db,clock);
  const get=id=>{const row=db.prepare('SELECT profile FROM players WHERE id=?').get(id);if(!row)throw Error('Unknown player');const result=normalizeProgression({Gems:0,Level:1,AdminRevision:0,...JSON.parse(row.profile)});if(result.changed)db.prepare('UPDATE players SET profile=? WHERE id=?').run(JSON.stringify(result.profile),id);return result.profile;};
  const save=(id,p)=>{normalizeProgression(p);p.AdminRevision=(p.AdminRevision??0)+1;return db.prepare('UPDATE players SET profile=? WHERE id=?').run(JSON.stringify(p),id);};
  const add=(p,id,tier)=>{let s=p.Items.find(x=>x.ItemId===id&&x.Tier===tier&&x.EnhancementLevel===tier);if(s)s.Count++;else p.Items.push({ItemId:id,Tier:tier,EnhancementLevel:tier,Count:1});};
@@ -56,9 +56,9 @@ export function createStore(path,catalog) {
      events.recordActiveProgress(id,'campaign',{'verified-event-clears':1,'event-tokens':10});
     }
    }else{
-    if(!item||!Number.isInteger(tier)||tier<1||tier>5)throw Error('Unknown item/tier');
+    if(!item||!Number.isInteger(tier)||(action==='skill'?(tier<1||tier>6):(tier<1||tier>5)))throw Error('Unknown item/tier');
     if(action==='purchase'){const cost=15*tier*tier;if(tier!==item.tier||p.Coins<cost)throw Error('Insufficient gold');p.Coins-=cost;add(p,itemId,tier);}
-    else if(action==='skill'){if(item.kind!==1||!p.Items.some(x=>x.ItemId===itemId&&x.Count>0))throw Error('Book not owned');p.SkillIds??=Array(6).fill('');p.SkillIds[0]=item.skill;}
+    else if(action==='skill'){if(item.kind!==1||!p.Items.some(x=>x.ItemId===itemId&&x.Count>0))throw Error('Book not owned');p.SkillIds??=Array(6).fill('');p.SkillLevels??=Array(6).fill(0);p.SkillIds[tier-1]=item.skill;p.SkillLevels[tier-1]=Math.max(1,p.SkillLevels[tier-1]||0);}
     else if(action==='equip'){if(item.kind!==0||!stack||stack.Count<1)throw Error('Item not owned or not gear');p.EquippedIds[item.slot]=itemId;p.EquippedTiers[item.slot]=tier;}
     else if(action==='fuse'){const cost=10*tier;if(tier>=5||!stack||stack.Count<2||p.Coins<cost)throw Error('Fusion requirements not met');stack.Count-=2;p.Coins-=cost;add(p,itemId,tier+1);const slot=p.EquippedIds.indexOf(itemId);if(slot>=0&&p.EquippedTiers[slot]===tier)p.EquippedTiers[slot]++;}
     else throw Error('Unknown transaction');
@@ -71,9 +71,9 @@ export function createStore(path,catalog) {
   p.Appearance={Race:a.Race,CustomColors:!!a.CustomColors,HairStyle:Math.max(0,Math.min(2,a.HairStyle|0)),SkinIndex:Math.max(0,Math.min(3,a.SkinIndex|0)),HairColor:Math.max(0,Math.min(3,a.HairColor|0)),SkinRGB:color(a.SkinRGB),HairRGB:color(a.HairRGB),EyeRGB:color(a.EyeRGB),ClassId:'wayfarer',PassiveSkillId:'steadfast'};save(id,p);return p;
  }};
 }
-export function startServer({port=8081,host='127.0.0.1',key=process.env.COOKIE_SERVER_KEY,path='progress.sqlite',catalog=[]}={}){
+export function startServer({port=8081,host='127.0.0.1',key=process.env.COOKIE_SERVER_KEY,path='progress.sqlite',catalog=[],clock=Date.now}={}){
  if(!key||key.length<32)throw Error('Set COOKIE_SERVER_KEY to a private random value of at least 32 characters.');
- const store=createStore(path,catalog);const accounts=createAccounts(store);let heartbeat=0;const ready=()=>{store.db.prepare("SELECT 1").get();return Date.now()-heartbeat<10000;};const server=http.createServer(async(req,res)=>{
+ const store=createStore(path,catalog,clock);const accounts=createAccounts(store);let heartbeat=0;const ready=()=>{store.db.prepare("SELECT 1").get();return Date.now()-heartbeat<10000;};const server=http.createServer(async(req,res)=>{
   const reply=(code,body)=>{res.writeHead(code,{'Content-Type':'application/json'});res.end(JSON.stringify(body));};
   if(req.method==='GET'&&req.url==='/health')return reply(200,{ok:true});
   if(req.method!=='POST'||req.headers.authorization!==`Bearer ${key}`)return reply(403,{error:'Forbidden'});

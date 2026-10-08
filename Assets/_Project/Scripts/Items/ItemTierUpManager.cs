@@ -34,11 +34,11 @@ public sealed class ItemTierUpManager : MonoBehaviour
         var next=State.Copy(); next.EquippedIds[(int)item.Slot]=itemId; next.EquippedTiers[(int)item.Slot]=tier;var stack=next.Items.Find(x=>x.ItemId==itemId&&x.Tier==tier);next.EquippedEnhancementLevels[(int)item.Slot]=stack?.EffectiveEnhancement??tier;
         ProfileStore.Save(next,SavePath); State=next; ApplyEquipment(); Changed?.Invoke(); return true;
     }
-    public bool EquipSkill(string itemId)
+    public bool EquipSkill(string itemId,int slot=0)
     {
-        if(ServerTransaction!=null){ServerTransaction("skill",itemId,1);return true;}
-        var item=Array.Find(Definitions,x=>x.Id==itemId);if(item==null||item.Spell==null||!State.Items.Exists(x=>x.ItemId==itemId&&x.Count>0))return false;
-        var next=State.Copy();next.SkillIds??=new string[6];next.SkillIds[0]=item.Spell.Id;ProfileStore.Save(next,SavePath);State=next;ApplyEquipment();Changed?.Invoke();return true;
+        if(ServerTransaction!=null){if(slot<0||slot>=6)return false;ServerTransaction("skill",itemId,slot+1);return true;}
+        var item=Array.Find(Definitions,x=>x.Id==itemId);if(item==null||item.Spell==null||slot<0||slot>=6||!State.Items.Exists(x=>x.ItemId==itemId&&x.Count>0))return false;
+        var next=State.Copy();if(next.SkillIds==null||next.SkillIds.Length!=6)next.SkillIds=new string[6];if(next.SkillLevels==null||next.SkillLevels.Length!=6)next.SkillLevels=new int[6];next.SkillIds[slot]=item.Spell.Id;next.SkillLevels[slot]=Mathf.Max(1,next.SkillLevels[slot]);ProfileStore.Save(next,SavePath);State=next;ApplyEquipment();Changed?.Invoke();return true;
     }
     public void Grant(string itemId,int coins,int campaignStage=0)
     {

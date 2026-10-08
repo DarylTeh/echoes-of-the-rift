@@ -45,8 +45,8 @@ try{
  await mutate('giveItem',{itemId:'book-1',tier:1,quantity:3});await mutate('setItem',{itemId:'book-1',tier:1,quantity:7});
  await mutate('giveItem',{itemId:'unknown',tier:1,quantity:1},400);await mutate('giveItem',{itemId:'book-1',tier:6,quantity:1},400);
  await mutate('deleteItem',{itemId:'gear-0',tier:1},409);await mutate('deleteItem',{itemId:'gear-0',tier:1,unequip:true});assert.equal(app.store.get(id).EquippedIds[0],'');
- app.store.transaction(id,'skill','book-1',1);revision=app.store.get(id).AdminRevision;
- await mutate('deleteItem',{itemId:'book-1',tier:1},409);await mutate('deleteItem',{itemId:'book-1',tier:1,unequip:true});assert.equal(app.store.get(id).SkillIds[0],'');
+ app.store.transaction(id,'skill','book-1',1);assert.equal(app.store.get(id).SkillIds[0],'test-skill');assert.equal(app.store.get(id).SkillLevels[0],1);app.store.transaction(id,'skill','book-1',4);assert.equal(app.store.get(id).SkillIds[3],'test-skill');assert.equal(app.store.get(id).SkillLevels[3],1);assert.throws(()=>app.store.transaction(id,'skill','book-1',7),/Unknown item\/tier/);assert.throws(()=>app.store.transaction(id,'skill','book-1',0),/Unknown item\/tier/);revision=app.store.get(id).AdminRevision;
+ await mutate('deleteItem',{itemId:'book-1',tier:1},409);await mutate('deleteItem',{itemId:'book-1',tier:1,unequip:true});assert.equal(app.store.get(id).SkillIds[0],'');assert.equal(app.store.get(id).SkillIds[3],'');
  await mutate('deleteItem',{itemId:'book-1',tier:1},404);
  const legacy=app.store.get(id);delete legacy.Level;delete legacy.Gems;delete legacy.AdminRevision;app.store.db.prepare('UPDATE players SET profile=? WHERE id=?').run(JSON.stringify(legacy),id);
  const migrated=(await call('/api/players/'+id,undefined,'GET')).body.profile;assert.equal(migrated.Level,1);assert.equal(migrated.Gems,0);revision=0;

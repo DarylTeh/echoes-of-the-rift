@@ -21,6 +21,7 @@ public sealed partial class InventoryModal : MonoBehaviour
     private int page;
     private bool shopping;
     private int shopSection;
+    private int skillTargetSlot;
     private string merchant;
     public void OpenMerchant(string name){merchant=name;shopping=true;shopSection=string.IsNullOrEmpty(name)?0:1;filter=0;page=0;selected=null;Open();Refresh();}
     private readonly List<GameObject> suspendedScreens=new List<GameObject>();
@@ -147,6 +148,9 @@ public sealed partial class InventoryModal : MonoBehaviour
     public void SetShopCategory(int category){if(!shopping)return;filter=Mathf.Clamp(category,0,4);page=0;selected=null;SetShopSection(shopSection);}
     public int VisibleCount=>visible.Count;
     public int CurrentShopSection=>shopSection;
+    public int CurrentSkillTargetSlot=>skillTargetSlot;
+    private static string SkillTargetName(int slot)=>$"{(slot<3?"MOON":"EMBER")} {new[]{"Q","E","R"}[slot%3]}";
+    private void SelectSkillTarget(int slot){if(shopping)return;skillTargetSlot=Mathf.Clamp(slot,0,5);RefreshPaperdoll();}
     public bool CollectionContains(string itemId,int tier)=>visible.Exists(x=>x.ItemId==itemId&&x.Tier==tier);
     private bool IsEquippedWeapon(ItemStack stack)
     {
@@ -160,18 +164,19 @@ public sealed partial class InventoryModal : MonoBehaviour
         selectedSpell=null;actionButton.gameObject.SetActive(true);fuseButton.gameObject.SetActive(true);
         OpenInspector();
         bool alreadyEquipped=item.Kind==ItemKind.Gear&&Game.Forge.State.EquippedIds[(int)item.Slot]==stack.ItemId&&Game.Forge.State.EquippedTiers[(int)item.Slot]==stack.Tier&&Game.Forge.State.EquippedEnhancementLevels[(int)item.Slot]==stack.EffectiveEnhancement;
-        actionButton.GetComponentInChildren<TMP_Text>().text=shopping?EnglishUI.Buy:alreadyEquipped?"Equipped":item.Kind==ItemKind.SkillBook?EnglishUI.EquipBook:EnglishUI.Equip;
+        bool skillAlreadyAssigned=item.Kind==ItemKind.SkillBook&&Game.Forge.State.SkillIds!=null&&skillTargetSlot<Game.Forge.State.SkillIds.Length&&Game.Forge.State.SkillIds[skillTargetSlot]==item.Spell?.Id;
+        actionButton.GetComponentInChildren<TMP_Text>().text=shopping?EnglishUI.Buy:alreadyEquipped||skillAlreadyAssigned?"Equipped":item.Kind==ItemKind.SkillBook?"Equip to "+SkillTargetName(skillTargetSlot):EnglishUI.Equip;
         selectedIcon.enabled=true;selectedIcon.sprite=IllustratedArt.Item(item);selectedIcon.material=IllustratedArt.Owns(selectedIcon.sprite)?IllustratedArt.UI:null;selectedBorder.Tier=(int)item.rarity+1;selectedBorder.EnhancementLevel=stack.EffectiveEnhancement;
         foreach(var pair in outlines)pair.Value.enabled=pair.Key==stack.ItemId+"/"+stack.Tier+"/"+stack.EffectiveEnhancement;
         int slot=(int)item.Slot,owned=Game.Forge.State.Count(stack.ItemId,stack.Tier,stack.EffectiveEnhancement);
         var equipped=Array.Find(Game.Items,x=>x.Id==Game.Forge.State.EquippedIds[slot]);
         itemName.text=item.DisplayName;itemName.color=PixelArt.Rarity((int)item.rarity+1);selectedStars.sprite=PixelArt.RarityStars(item.rarity);selectedStars.enabled=true;itemRarity.rectTransform.anchoredPosition=new Vector2(76,0);itemRarity.rectTransform.sizeDelta=new Vector2(112,30);itemRarity.text=ProgressionRules.EnhancementBadge(stack.EffectiveEnhancement);
-        itemSummary.text=$"{(item.Kind==ItemKind.Gear?item.Slot.ToString():"Skill book")}  /  Owned {EnglishUI.Compact(owned)}\n"+(item.Kind==ItemKind.Gear?$"{item.FlatDamage*stack.EffectiveEnhancement:0.##} ATK   {item.FlatHealth*stack.EffectiveEnhancement:0.##} HP":"Primary Q assignment");
-        description.color=showLore?GameUI.Cream:new Color32(153,226,145,255);description.text=showLore?item.description+"\n\n"+item.villageQuote:EnglishUI.Comparison(item,stack.EffectiveEnhancement,equipped,Game.Forge.State.EquippedEnhancementLevels[slot]);
+        itemSummary.text=$"{(item.Kind==ItemKind.Gear?item.Slot.ToString():"Skill book / "+SkillTargetName(skillTargetSlot))}  /  Owned {EnglishUI.Compact(owned)}\n"+(item.Kind==ItemKind.Gear?$"{item.FlatDamage*stack.EffectiveEnhancement:0.##} ATK   {item.FlatHealth*stack.EffectiveEnhancement:0.##} HP":item.Spell!=null?$"Cooldown {item.Spell.Cooldown:0.#}s   Power {item.Spell.Power:0.#}":"Skill data unavailable");
+        description.color=showLore?GameUI.Cream:new Color32(153,226,145,255);description.text=showLore?item.description+"\n\n"+item.villageQuote:item.Kind==ItemKind.SkillBook?(item.Spell!=null?item.Spell.mechanicalDescription:item.description):EnglishUI.Comparison(item,stack.EffectiveEnhancement,equipped,Game.Forge.State.EquippedEnhancementLevels[slot]);
         upgradeDetails.text=shopping?EnglishUI.Price(15*stack.Tier*stack.Tier):EnglishUI.Upgrade(item,stack.EffectiveEnhancement,owned)+(item.Kind==ItemKind.Gear&&item.Slot==EquipmentSlot.Weapon?"\n"+EnglishUI.VisualMilestone(stack.EffectiveEnhancement):"");
         fuseButton.interactable=!shopping&&stack.Tier<5&&owned>=2&&Game.Forge.State.Coins>=10*stack.Tier;
         loreButton.GetComponentInChildren<TMP_Text>().text=showLore?EnglishUI.Stats:EnglishUI.Lore;
-        actionButton.interactable=shopping?Game.Forge.State.Coins>=15*stack.Tier*stack.Tier:owned>0&&!alreadyEquipped;
+        actionButton.interactable=shopping?Game.Forge.State.Coins>=15*stack.Tier*stack.Tier:owned>0&&!alreadyEquipped&&!skillAlreadyAssigned;
     }
 
     private void Equip()
@@ -188,11 +193,11 @@ public sealed partial class InventoryModal : MonoBehaviour
             var item=Array.Find(Game.Items,x=>x.Id==selected.ItemId);
             if(Game.Forge.ServerTransaction!=null)
             {
-                string action=item?.Kind==ItemKind.SkillBook?"skill":"equip";var before=Game.Forge.State;transactionPending=true;
+                bool skill=item?.Kind==ItemKind.SkillBook;string action=skill?"skill":"equip";var before=Game.Forge.State;transactionPending=true;
                 actionButton.interactable=false;actionButton.GetComponentInChildren<TMP_Text>().text="Saving…";description.text="Saving equipment to your account…";
-                Game.Forge.ServerTransaction(action,selected.ItemId,selected.Tier);StartCoroutine(ConfirmServerEquip(before,selected.ItemId,selected.Tier,item));return;
+                int assignment=skill?skillTargetSlot+1:selected.Tier;Game.Forge.ServerTransaction(action,selected.ItemId,assignment);StartCoroutine(ConfirmServerEquip(before,selected.ItemId,assignment,item));return;
             }
-            if(!(item?.Kind==ItemKind.SkillBook?Game.Forge.EquipSkill(selected.ItemId):Game.Forge.Equip(selected.ItemId,selected.Tier)))description.text=EnglishScreens.ThisItemCannotBeEquippedInA;
+            if(!(item?.Kind==ItemKind.SkillBook?Game.Forge.EquipSkill(selected.ItemId,skillTargetSlot):Game.Forge.Equip(selected.ItemId,selected.Tier)))description.text=EnglishScreens.ThisItemCannotBeEquippedInA;
             else Refresh();
         }
         catch(Exception e){transactionPending=false;description.text=EnglishScreens.SaveFailed+e.Message;if(actionButton!=null)actionButton.interactable=true;}
@@ -203,16 +208,16 @@ public sealed partial class InventoryModal : MonoBehaviour
         while(elapsed<8f&&ReferenceEquals(Game.Forge.State,before)){yield return new WaitForSecondsRealtime(.1f);elapsed+=.1f;}
         transactionPending=false;
         bool confirmed=!ReferenceEquals(Game.Forge.State,before)&&(item?.Kind==ItemKind.SkillBook
-            ?Array.Exists(Game.Forge.State.SkillIds,x=>x==item.Spell?.Id)
+            ?tier>=1&&tier<=Game.Forge.State.SkillIds.Length&&Game.Forge.State.SkillIds[tier-1]==item.Spell?.Id
             :Game.Forge.State.EquippedIds[(int)item.Slot]==itemId&&Game.Forge.State.EquippedTiers[(int)item.Slot]==tier);
         if(confirmed)yield break;
-        if(actionButton!=null){actionButton.interactable=true;actionButton.GetComponentInChildren<TMP_Text>().text=EnglishUI.Equip;}
+        if(actionButton!=null){actionButton.interactable=true;actionButton.GetComponentInChildren<TMP_Text>().text=item?.Kind==ItemKind.SkillBook?"Equip to "+SkillTargetName(Mathf.Clamp(tier-1,0,5)):EnglishUI.Equip;}
         if(description!=null&&description.gameObject.activeInHierarchy)description.text="The server did not confirm this change. Please check your connection and try again.";
     }
     private void Fuse(){if(selected==null)return;try{Game.Forge.TryFuse(selected.ItemId,selected.Tier,out string message);Refresh();description.text=message;}catch(Exception e){description.text=EnglishScreens.SaveFailed+e.Message;}}
     public void Close()
     {
-        if(root==null)return;Destroy(root.gameObject);root=null;inspector=null;sortMenu=null;merchant=null;shopping=false;shopSection=0;filter=0;page=0;selected=null;
+        if(root==null)return;Destroy(root.gameObject);root=null;inspector=null;sortMenu=null;merchant=null;shopping=false;shopSection=0;skillTargetSlot=0;filter=0;page=0;selected=null;
         foreach(var screen in suspendedScreens)if(screen!=null)screen.SetActive(true);suspendedScreens.Clear();
         if(preview!=null)Destroy(preview);if(previewCamera!=null)Destroy(previewCamera.gameObject);if(previewTexture!=null){previewTexture.Release();Destroy(previewTexture);}
         if(!Game.Cooperative){Time.timeScale=previousScale;if(Game.Session.UsesDedicated&&Game.Session.World.ClientReady)Game.Session.World.CommandServerRpc("resume");}

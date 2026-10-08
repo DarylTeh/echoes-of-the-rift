@@ -1,6 +1,14 @@
 # Echoes of the Rift master plan
 
-Revision 90 - 9 October 2026. Rework Shop browsing and offer cards.
+Revision 91 - 9 October 2026. Add explicit Moon/Ember skill-slot assignment.
+
+## Current iteration - revision 91: assign skill books to visible stance slots
+
+The backpack hero panel now presents all six existing skill positions in two labeled Moon/Ember groups, highlights the selected assignment target, and explains the two-step action: tap a slot, then inspect and equip an owned book. The item preview names the destination and shows the spell's supported cooldown, power and mechanical description. Both local saves and the dedicated-server transaction now write the selected slot while preserving the existing 3-skill-per-stance combat contract. This follows the reference's paperdoll-left / owned-item-grid-right structure without implying six simultaneous skills.
+
+Validation: the dedicated-server transaction now accepts one-based skill slot values 1–6, preserves book ownership checks, and initializes only the selected skill level. Server admin tests cover Moon Q, Ember Q, invalid slot rejection and removal of an assigned book. The full `npm --prefix Server test` suite now passes; its inbox fixture uses an injected fixed clock instead of an expired hard-coded event date. Unity CLI remains signed out with no active license, so the changed C# and screenshot/layout checks cannot yet be built or run; the added UI smoke exercises choosing Ember E and assigning a book once a licensed build is available. No release binary was updated. Similarity scores remain unchanged pending a fresh capture.
+
+Next: restore Unity licensing, build and run the full desktop/touch suite for revisions 90–91, then visually inspect the backpack at 1280×720 and 1024×768. Keep improving the dedicated quest/profile surfaces from the reference audit afterward; preserve the six-slot/three-per-stance combat contract until an explicit gameplay migration is planned.
 
 ## Current iteration - revision 90: shop browsing and offer hierarchy
 
