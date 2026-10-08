@@ -1,5 +1,9 @@
 # My Heroes reference UAT — 3 October 2026
 
+## Follow-up — 8 October 2026, hero profile summary
+
+Added the saved class and level to the paperdoll and replaced the generic gear-only totals with live Offense and Survival values plus secondary equipped-gear bonuses. The account model still has only three gear slots, so the panel does not imply unimplemented slots or profile fields. The four-resolution desktop suite passed 352 checks and simulated touch passed 353 with no layout failures or runtime errors; new assertions compare the displayed identity/stats to the saved profile and CharacterStats. Reviewed capture: `Logs/ReferenceLayoutIteration/ProfileDesktop/inventory-1280x720.png`. This remains a layout/progression improvement, not a 1:1 art match or physical Android certification.
+
 ## Follow-up — 8 October 2026, backpack spacing and metadata
 
 Rebalanced the backpack's paperdoll and item grid to near-equal panel widths and full-height framing. Rarity stars now remain visible at cell size, and enhancement/count text occupies its own row; the inspector ribbon sits inside the centered detail card. The four-resolution desktop suite passed 351 checks and simulated touch passed 352, both with zero layout failures or runtime errors. These checks include cell label/icon separation, purchase/equip/upgrade transactions, equipped-item removal from the collection, paperdoll state and weapon-in-hand. The visually reviewed 1280×720 captures are `Logs/ReferenceLayoutIteration/ReviewedDesktop/inventory-1280x720.png` and `item-inspector-1280x720.png`. This corrects specific spacing defects but does not establish literal 1:1 or 90% similarity; the art and wider page flows remain notably different, and physical Android use remains unverified.

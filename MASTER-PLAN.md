@@ -1,6 +1,14 @@
 # Echoes of the Rift master plan
 
-Revision 88 - 8 October 2026. Align backpack and item-detail layout.
+Revision 89 - 8 October 2026. Add truthful hero identity and combat summary.
+
+## Current iteration - revision 89: hero profile summary
+
+The backpack paperdoll now identifies the saved class and level and shows live Offense and Survival values from CharacterStats, with equipped gear bonuses as a secondary line. This gives the hero side the compact identity/stat hierarchy seen in the reference profile while staying within the three gear slots and combat data the current account model actually supports. The layout does not invent extra gear slots or unsaved profile fields.
+
+Validation: the Unity Windows player build succeeded with a non-blocking licensing-client validation warning. The four-resolution desktop suite passed 352 checks and simulated-touch passed 353, both with zero layout failures or runtime errors. Added assertions verify class/level rendering and that Offense/Survival match live character stats. Reviewed the 1280x720 backpack capture at `Logs/ReferenceLayoutIteration/ProfileDesktop/inventory-1280x720.png`; physical Android behavior is still unverified. The tested player is synced to `Release/Windows` and key release hashes match the build; GitHub push is pending.
+
+Next: improve the hero artwork and make the next weakest full screen flow, Shop, follow the reference's category and item-detail hierarchy. Keep three-slot equipment truthful until the account/progression migration adds more slots. The whole game remains well below the requested 90% visual match.
 
 ## Current iteration - revision 88: readable inventory hierarchy and reference proportions
 

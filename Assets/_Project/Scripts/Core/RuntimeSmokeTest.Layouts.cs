@@ -65,6 +65,11 @@ public sealed partial class RuntimeSmokeTest
         game.Forge.Configure(originalProfile);game.Hub.Refresh();inventory.Open();yield return null;
         if(GameObject.Find("TownHub")!=null||GameObject.Find("SkillHUD")!=null)layoutFailures.Add("Inventory retained a background menu");
         layoutChecks.Add("inventory owns primary interaction overlay");
+        var profileLevel=GameObject.Find("HeroProfileLevel")?.GetComponent<TMP_Text>();var combatSummary=GameObject.Find("HeroCombatSummary")?.GetComponent<TMP_Text>();var heroStats=game.Player.GetComponent<CharacterStats>();
+        string expectedClass=string.IsNullOrWhiteSpace(originalProfile.Appearance.ClassId)?"HERO":originalProfile.Appearance.ClassId.Replace('_',' ').ToUpperInvariant();
+        if(profileLevel==null||!profileLevel.text.Contains(expectedClass)||!profileLevel.text.Contains("Lv. "+EnglishUI.Compact(originalProfile.Level)))layoutFailures.Add("Paperdoll profile class or level is missing");
+        if(combatSummary==null||!combatSummary.text.Contains("OFFENSE "+heroStats.AttackDamage.ToString("0"))||!combatSummary.text.Contains("SURVIVAL "+heroStats.MaxHealth.ToString("0")))layoutFailures.Add("Paperdoll offense/survival summary is not bound to live character stats");
+        layoutChecks.Add("paperdoll identity and live offense/survival values");
         var itemGrid=GameObject.Find("ItemGrid").transform;bool itemTextClear=true;
         foreach(Transform slot in itemGrid)
         {

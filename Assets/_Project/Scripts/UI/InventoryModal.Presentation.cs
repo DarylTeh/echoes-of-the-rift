@@ -66,10 +66,10 @@ public sealed partial class InventoryModal
         var header=GameUI.Label(left,"YOUR HERO",new Vector2(0,278),new Vector2(460,32),24);header.alignment=TextAlignmentOptions.Center;
         BuildPreview(left);
         paperdollSlots=GameUI.Rect("EquippedSlots",left,Vector2.one*.5f,Vector2.zero,new Vector2(420,500));
-        heroLevel=GameUI.Label(left,"",new Vector2(0,-43),new Vector2(180,32),22);heroLevel.alignment=TextAlignmentOptions.Center;heroLevel.color=new Color32(137,218,199,255);
+        heroLevel=GameUI.Label(left,"",new Vector2(0,-43),new Vector2(270,32),20);heroLevel.gameObject.name="HeroProfileLevel";heroLevel.alignment=TextAlignmentOptions.Center;heroLevel.color=new Color32(137,218,199,255);
         var stance=GameUI.Label(left,"MOON  /  EMBER",new Vector2(0,-94),new Vector2(390,26),18);stance.alignment=TextAlignmentOptions.Center;
         var stats=CollectionPanel(left,"EquipmentTotals",new Vector2(0,-222),new Vector2(400,68));
-        heroStats=GameUI.Label(stats,"",Vector2.zero,new Vector2(364,54),22);heroStats.alignment=TextAlignmentOptions.Center;
+        heroStats=GameUI.Label(stats,"",Vector2.zero,new Vector2(364,54),18);heroStats.gameObject.name="HeroCombatSummary";heroStats.alignment=TextAlignmentOptions.Center;
         categoryButtons=new UnityEngine.UI.Button[Filters.Length];
         for(int i=0;i<Filters.Length;i++){int category=i;categoryButtons[i]=GameUI.Button(right,Filters[i],new Vector2(-196+i*98,292),new Vector2(94,40),()=>SetBrowse(category,sorting));categoryButtons[i].GetComponentInChildren<TMP_Text>().fontSize=16;}
         sortButton=GameUI.Button(right,"Sort",new Vector2(152,236),new Vector2(180,38),OpenSort);
@@ -98,7 +98,7 @@ public sealed partial class InventoryModal
     private void RefreshPaperdoll()
     {
         foreach(Transform child in paperdollSlots)Destroy(child.gameObject);
-        var state=Game.Forge.State;heroLevel.text="Lv. "+EnglishUI.Compact(state.Level);
+        var state=Game.Forge.State;string className=string.IsNullOrWhiteSpace(state.Appearance.ClassId)?"HERO":state.Appearance.ClassId.Replace('_',' ').ToUpperInvariant();heroLevel.text=$"{className}  /  Lv. {EnglishUI.Compact(state.Level)}";
         float attack=0,health=0;
         Vector2[] positions={new Vector2(-158,127),new Vector2(158,127),new Vector2(158,8)};
         for(int i=0;i<3;i++)
@@ -133,7 +133,8 @@ public sealed partial class InventoryModal
             var owned=state.Items.Find(x=>x.ItemId==item.Id&&x.Count>0)??new ItemStack{ItemId=item.Id,Tier=item.itemTier,Count=0};
             slot.gameObject.AddComponent<UnityEngine.UI.Button>().onClick.AddListener(()=>{shopping=false;Refresh();Inspect(owned);});
         }
-        heroStats.text=$"GEAR BONUSES\nATK +{attack:0.##}       HP +{health:0.##}";
+        var stats=Game.Player.GetComponent<CharacterStats>();
+        heroStats.text=$"OFFENSE {stats.AttackDamage:0}       SURVIVAL {stats.MaxHealth:0}\nGEAR ATK +{attack:0.##}    HP +{health:0.##}";
     }
     private void BuildInspector()
     {
