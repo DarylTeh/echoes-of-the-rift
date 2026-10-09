@@ -116,42 +116,75 @@ public sealed class ArenaGame : MonoBehaviour
     {
         if(Session.DedicatedServer){Session.World.PersistStage(final);return;}
         finished=true; controller.ControlsEnabled=false;
-        string itemId=Items[Dungeon.CurrentStage.rewardItem].Id;
+        ItemData reward=Items[Dungeon.CurrentStage.rewardItem];
         try
         {
             if(rewardedStage!=Dungeon.StageIndex)
             {
-                Forge.Grant(itemId,Dungeon.CurrentStage.rewardCoins,Cooperative?0:Dungeon.StageIndex+1);
+                Forge.Grant(reward.Id,Dungeon.CurrentStage.rewardCoins,Cooperative?0:Dungeon.StageIndex+1);
                 rewardedStage=Dungeon.StageIndex;
-                if(Cooperative&&Session.IsHost)Session.World.RewardRemote(itemId,Dungeon.CurrentStage.rewardCoins);
+                if(Cooperative&&Session.IsHost)Session.World.RewardRemote(reward.Id,Dungeon.CurrentStage.rewardCoins);
             }
-            status.text=$"{(final ? "Campaign complete!" : "Stage boss defeated!")} {Items[Dungeon.CurrentStage.rewardItem].DisplayName} + {Dungeon.CurrentStage.rewardCoins} coins saved.";
+            status.text="";
         }
         catch(Exception error)
         {
-            status.text=EnglishScreens.RewardSaveFailedFreeDiskSpaceOr+error.Message;
-            ClearResult(); result=GameUI.Canvas("RewardRecovery");
-            GameUI.Button(result,EnglishScreens.RetryRewardSave,new Vector2(0,220),new Vector2(260,50),()=>ClearRoom(final));
+            Debug.LogError("Campaign reward save failed: "+error);
+            var panel=CreateOutcomePanel("RewardRecovery",EnglishScreens.RewardSaveNotConfirmed,EnglishScreens.RewardSaveRecoveryBody);
+            var body=panel.Find("OutcomeSubtitle");if(body!=null)body.name="RewardSaveRecoveryBody";
+            GameUI.Label(panel,"NO REWARD WAS CONFIRMED",new Vector2(0,5),new Vector2(520,36),20).alignment=TMPro.TextAlignmentOptions.Center;
+            var retry=GameUI.Button(panel,EnglishScreens.RetryRewardSave,new Vector2(0,-142),new Vector2(310,58),()=>ClearRoom(final));
+            retry.gameObject.name=EnglishScreens.RetryRewardSave;
             return;
         }
-        ClearResult(); result=GameUI.Canvas("RoomResult");
-        GameUI.Button(result,final?"Return to town":"Next room",new Vector2(0,220),new Vector2(260,50),()=>
+        var rewardPanel=CreateOutcomePanel("RoomResult",final?EnglishScreens.CampaignComplete:EnglishScreens.StageCleared,$"STAGE {Dungeon.StageIndex+1} / {Dungeon.StageCount}");
+        AddRewardDetails(rewardPanel,reward,Dungeon.CurrentStage.rewardCoins,EnglishScreens.RewardSaved);
+        string action=final?EnglishScreens.ReturnToTown:"Next room";
+        GameUI.Button(rewardPanel,action,new Vector2(0,-164),new Vector2(320,60),()=>
         {
             ClearResult(); if(final) { if(Cooperative)Session.Leave(); else ReturnToTown(); } else { finished=false; controller.ControlsEnabled=true; Dungeon.NextRoom(); RefreshStage(); }
         });
     }
     private void Defeat(Combatant player)
     {
-        if(Cooperative)return;
-        if(finished)return; finished=true; controller.ControlsEnabled=false; status.text=EnglishScreens.YourLanternFadesYourSavedEquipmentIs;
-        ClearResult(); result=GameUI.Canvas("Defeat"); GameUI.Button(result,EnglishScreens.ReturnToTown,new Vector2(0,220),new Vector2(260,50),ReturnToTown);
+        if(Cooperative||finished)return;
+        finished=true; controller.ControlsEnabled=false; status.text="";
+        var panel=CreateOutcomePanel("Defeat",EnglishScreens.RunEnded,$"DEFEATED AT STAGE {Dungeon.StageIndex+1} / {Dungeon.StageCount}");
+        var safe=GameUI.Label(panel,EnglishScreens.SavedGearSafe,new Vector2(0,12),new Vector2(520,52),21);safe.alignment=TMPro.TextAlignmentOptions.Center;safe.gameObject.name="SavedGearSafe";
+        GameUI.Button(panel,EnglishScreens.ReturnToTown,new Vector2(0,-142),new Vector2(320,60),ReturnToTown);
+    }
+
+    private RectTransform CreateOutcomePanel(string canvasName,string title,string subtitle)
+    {
+        ClearResult(); result=GameUI.Canvas(canvasName);
+        var blocker=result.gameObject.AddComponent<UnityEngine.UI.Image>();blocker.color=new Color32(8,7,17,218);blocker.raycastTarget=true;
+        var panel=GameUI.Panel(result,"OutcomePanel",Vector2.zero,new Vector2(720,460));panel.GetComponent<UnityEngine.UI.Image>().raycastTarget=false;
+        var heading=GameUI.Label(panel,title,new Vector2(0,174),new Vector2(620,46),32);heading.alignment=TMPro.TextAlignmentOptions.Center;heading.color=GameUI.Gold;heading.gameObject.name="OutcomeTitle";
+        var sub=GameUI.Label(panel,subtitle,new Vector2(0,132),new Vector2(620,34),20);sub.alignment=TMPro.TextAlignmentOptions.Center;sub.gameObject.name="OutcomeSubtitle";
+        return panel;
+    }
+
+    private static void AddRewardDetails(RectTransform panel,ItemData item,int coins,string statusLabel)
+    {
+        var itemFrame=GameUI.Panel(panel,"RewardItemFrame",new Vector2(-194,10),new Vector2(150,150));
+        Color rarityColor=PixelArt.Rarity((int)item.rarity+1);
+        itemFrame.GetComponent<UnityEngine.UI.Image>().color=Color.Lerp(Color.white,rarityColor,.22f);
+        var icon=GameUI.Icon(itemFrame,item.iconSprite,Vector2.zero,new Vector2(112,112));icon.gameObject.name="RewardItemIcon";
+        var border=itemFrame.gameObject.AddComponent<ItemBorderVFX>();border.Tier=(int)item.rarity+1;border.EnhancementLevel=0;
+        var rarity=GameUI.Label(panel,item.rarity.ToString().ToUpperInvariant()+" REWARD",new Vector2(92,94),new Vector2(340,30),18);rarity.alignment=TMPro.TextAlignmentOptions.Center;rarity.color=rarityColor;
+        var name=GameUI.Label(panel,item.DisplayName,new Vector2(92,50),new Vector2(350,48),26);name.alignment=TMPro.TextAlignmentOptions.Center;name.textWrappingMode=TMPro.TextWrappingModes.Normal;name.overflowMode=TMPro.TextOverflowModes.Ellipsis;name.gameObject.name="RewardItemName";
+        var count=GameUI.Label(panel,"× 1",new Vector2(92,13),new Vector2(180,30),20);count.alignment=TMPro.TextAlignmentOptions.Center;
+        GameUI.Panel(panel,"RewardDivider",new Vector2(92,-20),new Vector2(350,3)).GetComponent<UnityEngine.UI.Image>().color=new Color32(114,101,145,210);
+        GameUI.Icon(panel,PixelArt.Icon("gold"),new Vector2(-31,-63),new Vector2(34,34)).gameObject.name="RewardGoldIcon";
+        var gold=GameUI.Label(panel,$"+{coins:N0} GOLD",new Vector2(136,-63),new Vector2(230,38),25);gold.alignment=TMPro.TextAlignmentOptions.Center;gold.color=GameUI.Gold;gold.gameObject.name="RewardCoinsValue";
+        var saved=GameUI.Label(panel,statusLabel,new Vector2(0,-111),new Vector2(520,28),17);saved.alignment=TMPro.TextAlignmentOptions.Center;saved.color=new Color32(132,235,154,255);saved.gameObject.name="RewardSavedStatus";
     }
     public void ReturnToTown()
     {
         GetComponent<InventoryModal>()?.Close(); ClearResult(); Dungeon.Clear(); finished=false; Player.InSafeZone=true; controller.ControlsEnabled=!Session.UsesDedicated||Session.DedicatedServer||Session.Authenticated; Player.transform.position=new Vector3(0,-1.5f,0); Player.ResetHealth(Forge.Stats.MaxHealth);
         status.text=""; Hub.Open();
     }
-    private void ClearResult() { if(result!=null)Destroy(result.gameObject); result=null; }
+    private void ClearResult() { if(result!=null){result.gameObject.SetActive(false);Destroy(result.gameObject);} result=null; }
     public void SetStatus(string message){if(status!=null)status.text=message;}
     public void PrepareCoop(bool client)
     {
@@ -180,13 +213,17 @@ public sealed class ArenaGame : MonoBehaviour
     }
     public void ShowNetworkRewardRetry()
     {
-        ClearResult();result=GameUI.Canvas("NetworkRewardRetry");status.text=EnglishScreens.ServerSaveUnavailableRetryToKeepEarned;
-        GameUI.Button(result,EnglishScreens.RetrySave,new Vector2(0,220),new Vector2(280,48),()=>Session.World.CommandServerRpc("retry"));
+        status.text="";var panel=CreateOutcomePanel("NetworkRewardRetry",EnglishScreens.RewardSaveNotConfirmed,"The server could not confirm every reward yet.");
+        GameUI.Label(panel,"Retry uses the same run receipt, so saved rewards are not granted twice.",new Vector2(0,17),new Vector2(560,50),18).alignment=TMPro.TextAlignmentOptions.Center;
+        GameUI.Button(panel,EnglishScreens.RetrySave,new Vector2(0,-142),new Vector2(320,60),()=>Session.World.CommandServerRpc("retry"));
     }
     public void ShowNetworkReward(bool final,string message)
     {
-        finished=true;controller.ControlsEnabled=false;status.text=message;ClearResult();result=GameUI.Canvas("NetworkReward");
-        GameUI.Button(result,final?"Return to town":"Next room",new Vector2(0,220),new Vector2(280,48),()=>Session.World.CommandServerRpc(final?"town":"next"));
+        finished=true;controller.ControlsEnabled=false;status.text="";
+        var reward=Items[Dungeon.CurrentStage.rewardItem];var panel=CreateOutcomePanel("NetworkReward",final?EnglishScreens.CampaignComplete:EnglishScreens.StageCleared,$"STAGE {Dungeon.StageIndex+1} / {Dungeon.StageCount}");
+        AddRewardDetails(panel,reward,Dungeon.CurrentStage.rewardCoins,string.IsNullOrWhiteSpace(message)?EnglishScreens.RewardSaved:message);
+        string action=final?EnglishScreens.ReturnToTown:"Next room";
+        GameUI.Button(panel,action,new Vector2(0,-164),new Vector2(320,60),()=>Session.World.CommandServerRpc(final?"town":"next"));
     }
     public Combatant CreateRemotePlayer()
     {
@@ -201,8 +238,10 @@ public sealed class ArenaGame : MonoBehaviour
     }
     public void ShowPartyDefeat()
     {
-        finished=true; controller.ControlsEnabled=false; status.text=Cooperative?"Party defeated. All revives cancelled.":"Campaign ended. Return to town to try again."; ClearResult(); result=GameUI.Canvas("PartyDefeat");
-        GameUI.Button(result,EnglishScreens.LeaveRaid,new Vector2(0,220),new Vector2(260,50),()=>{if(Session.UsesDedicated)Session.World.CommandServerRpc("town");else Session.Leave();});
+        finished=true; controller.ControlsEnabled=false; status.text="";
+        var panel=CreateOutcomePanel("PartyDefeat",EnglishScreens.PartyRunEnded,$"PARTY DEFEATED AT STAGE {Dungeon.StageIndex+1} / {Dungeon.StageCount}");
+        var outcome=GameUI.Label(panel,"All revives are cancelled. Rewards from cleared stages are saved.",new Vector2(0,12),new Vector2(560,56),20);outcome.alignment=TMPro.TextAlignmentOptions.Center;outcome.gameObject.name="PartyDefeatDetails";
+        GameUI.Button(panel,EnglishScreens.LeaveRaid,new Vector2(0,-142),new Vector2(320,60),()=>{if(Session.UsesDedicated)Session.World.CommandServerRpc("town");else Session.Leave();});
     }
     public void SetReplicaState(bool cleared,bool defeated)
     {

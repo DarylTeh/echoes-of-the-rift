@@ -35,3 +35,7 @@ Read the [Quests UI wiki](https://myheroesofficial.fandom.com/wiki/Quests_(UI)) 
 ## Revision 29 - element and interaction audit
 
 See [MYHEROES-UI-AUDIT.md](MYHEROES-UI-AUDIT.md) for the two-pass core-screen comparison, source/version differences, unavailable wiki pages and implementation coverage. Backpack and merchant hierarchy now follow that audit; complete reference parity is still open.
+
+## Revision 30 - reward and outcome presentation
+
+Revision 94 uses the supplied My Heroes “You're received” screenshot as a composition reference for campaign outcomes: keep the dimmed game behind one centered, dark-framed reveal, give the actual item art and rarity color the strongest emphasis, then show saved currency and one forward action. Existing SEA/Dungeon gameplay samples continue to guide the stable edge anchors and uncluttered fight center; none of those sampled timestamps verifies this exact campaign-results interaction. Echoes uses its own item sprites and text. The result card source is awaiting a licensed build and capture review.

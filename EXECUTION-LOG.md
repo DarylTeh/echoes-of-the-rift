@@ -1,5 +1,12 @@
 # Execution log
 
+## Campaign outcome and reward recovery presentation — revision 94, 9 October 2026
+
+- Replaced the detached campaign reward status and lone next button with a framed result panel containing stage/campaign outcome, the actual item icon/name/rarity, gold amount, save confirmation and one primary action. Only the rarity frame animates; the item/icon and copy stay still.
+- Put defeat, party defeat, local save recovery, network save recovery and server-saved reward states into consistent blocking outcome panels. Existing reward grant, receipt deduplication, revive, town-return and next-stage rules remain unchanged. Recovery copy does not claim a reward was saved before confirmation.
+- Expanded campaign smoke assertions for each result card and save-failure explanation and added named captures for stage clear, campaign complete, save recovery, defeat and dedicated stage rewards. My Heroes gameplay notes and the supplied reward-reveal screenshot informed the hierarchy; all project assets remain original.
+- Verification is pending. `unity status` reports no connected Editor/Pipeline, `unity license status` cannot reach the licensing client, and the CLI update check failed because Unity's CDN hostname could not resolve. No build, runtime smoke or visual capture was produced and no release binary was changed. Do not mark this iteration visually accepted until those checks run.
+
 ## Combat lookup optimization and repository audit — revision 78, 8 October 2026
 
 - Enemy target reacquisition now performs a shared, rate-limited scene query only when no live player target is available. This prevents each enemy from independently scanning the scene every frame after a player goes down. Chase-range checks use squared distance, and the enemy collider is cached for the death callback.

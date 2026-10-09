@@ -20,7 +20,7 @@ public static class GameUI
         scaler.referenceResolution = new Vector2(1280,720);
         scaler.screenMatchMode=UnityEngine.UI.CanvasScaler.ScreenMatchMode.Expand;
         go.AddComponent<UISafeArea>();
-        if(name=="ServerUnavailable"||name=="SplashScreen"||name=="InventoryModal"||name=="CharacterCreator"||name=="Leaderboard"||name=="TownHub")go.AddComponent<UIMenuFocus>();
+        if(name=="ServerUnavailable"||name=="SplashScreen"||name=="InventoryModal"||name=="CharacterCreator"||name=="Leaderboard"||name=="TownHub"||name=="RoomResult"||name=="RewardRecovery"||name=="Defeat"||name=="PartyDefeat"||name=="NetworkReward"||name=="NetworkRewardRetry")go.AddComponent<UIMenuFocus>();
         if (UnityEngine.Object.FindFirstObjectByType<EventSystem>() == null)
             new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
         return (RectTransform)go.transform;

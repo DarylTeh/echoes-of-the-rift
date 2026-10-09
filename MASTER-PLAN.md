@@ -1,8 +1,18 @@
 # Echoes of the Rift master plan
 
-Revision 93 - 9 October 2026. Balance draft rewarded gems against skill costs.
+Revision 94 - 9 October 2026. Recompose campaign outcomes around saved rewards.
 
-## Current iteration - revision 93: rewarded-ad progression balance
+## Current iteration - revision 94: reward-first campaign outcomes
+
+Replaced the campaign clear's status-line reward plus isolated button with a centered outcome card: stage/campaign result, the actual stage item and rarity, the actual gold amount, save confirmation and one next action. The item icon stays still while the existing tier-colored neon border moves. Defeat and party-defeat cards now keep stage reached, saved-progress meaning and their one safe exit together. Local and server reward-recovery screens explain that the grant is unconfirmed and keep a retry action in the same panel; the network retry copy describes the deduplicated run receipt. No revive, reward, save or co-op rule changed.
+
+Reference direction: use the supplied My Heroes “You're received” reveal as the reward-first composition, and keep the game's established dark framed panels, vivid item and stable one-action hierarchy. Existing gameplay samples establish clear playfield and compact UI anchors; they do not prove this exact result interaction. Echoes art remains original and this is not a 90% parity claim. Reference notes are in [MYHEROES-GAMEPLAY-REFERENCES.md](Docs/MYHEROES-GAMEPLAY-REFERENCES.md).
+
+Validation source coverage: campaign smoke now asserts stage-clear/campaign-complete rewards, save-recovery explanation, one next action and defeat-safe copy; dedicated-pair smoke checks the server-saved reward card. It captures stage, campaign, recovery, defeat and network result screens for later review. Build and screenshot review are **not yet run**: Unity Editor/Pipeline is not connected, the license client is unreachable, and the Unity CLI update check also failed on DNS. No release binary changed. This source iteration is pending compilation and visual UAT.
+
+Next: restore the user's Unity Editor/license connection and run the campaign, dedicated-pair and four-resolution layout smoke; inspect the new captures before scoring. Then continue with the P1 goal-first Events/detail screen from the strict review. Real purchases/rewarded ads stay gated on Unity IAP/LevelPlay package resolution and store/ad configuration. The seven major milestones remain as listed below; milestone 1 is locally accepted, six broader workstreams remain open.
+
+## Previous iteration - revision 93: rewarded-ad progression balance
 
 Cross-checked the draft ad reward against the progression model's 5/7/9/14/23/43-gem skill-upgrade costs. Revised the proposal from 5 to 2 gems per verified view with three daily claims maximum (6/day): this gives early players a useful fraction of an upgrade while falling from 40% of a level-one cost to 4.7% at level 100. This is a formula comparison, not playtest evidence; reward and cap remain draft values. See [MONETIZATION-OPERATIONS.md](Docs/MONETIZATION-OPERATIONS.md).
 

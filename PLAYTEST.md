@@ -1,5 +1,9 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
+## Current source iteration — revision 94, 9 October 2026
+
+Campaign clear/completion now puts the actual stage reward, rarity, gold, saved status and one next action in a framed result card. Defeat and party defeat explain the stage reached and what remains saved. Local and server reward-save retry states keep the outcome beside the retry action. Runtime smoke assertions/captures cover stage result, campaign completion, save recovery, defeat and the dedicated-network reward card. This source has **not** been compiled or visually reviewed: Unity CLI cannot reach the licensing client, no Editor/Pipeline instance is connected, and the CLI update check failed on DNS. `Release/Windows` was not replaced. The result UI is pending build/UAT; no 90% My Heroes parity claim is made.
+
 ## Latest performance and cleanup UAT — revision 78, 8 October 2026
 
 Optimized enemy target reacquisition to use a shared quarter-second retry when the current player is invalid; replaced two per-frame square-root distance checks with squared-distance comparisons and cached the collider used on death. Optimized Windows export passed the 10-second combat pacing test: 601 samples, 60.0 average FPS, 16.67 ms p50/p95, 0.0% over 17.17 ms, no runtime errors. Full campaign/combat/progression/save smoke passed on the same fresh build. `Logs/RuntimeRevision78/runtime-smoke.txt` and `Logs/FramePacing/frame-pacing.txt` record the results. This was measured on the current PC only. Android, low-end PC, thermal and long-session stress checks remain open.

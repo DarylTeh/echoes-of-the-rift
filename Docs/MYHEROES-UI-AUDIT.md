@@ -1,12 +1,16 @@
 # MyHeroes: SEA UI reference audit
 
-## Strict full-screen audit — 9 October 2026 (updated through revision 90)
+## Strict full-screen audit — 9 October 2026 (source reviewed through revision 94; last comparable score through revision 90)
 
 This pass reviews the current Echoes build against the supplied MyHeroes: SEA/Dungeon Raid screenshots, the existing gameplay-reference notes, and the accessible wiki pages. It covers the implemented UI surfaces found in the Unity scripts and available captures. The implementation still falls well short of the requested 90% resemblance.
 
 ### Baseline
 
 **35/100 qualitative similarity** across comparable game surfaces. This is a design-review score, not an automated pixel comparison. The score uses four criteria: layout and hierarchy 35%, navigation and interaction 25%, visual design and art 30%, and coverage of major reference surfaces 10%. The largest penalty is the art system: Echoes has its own small pixel sprites and icons, but they do not have the reference's character proportions, detail density, icon language, item frames, colorful rarity treatment, or finished visual polish. Functional overlap alone does not count as visual similarity.
+
+### Revision 94 source update — results and recovery
+
+Campaign stage clears and completion now show a centered framed outcome with the actual item art/name/rarity, gold, saved status and one next action. Defeat and party-defeat put the stage reached, saved-progress explanation and safe exit together. Local and server reward-save failures put the unconfirmed state and retry explanation beside the retry action. The tier-colored item border uses the existing moving perimeter effect; item art and text stay still. This follows the supplied My Heroes reward-reveal composition and gameplay references' stable hierarchy, without importing their assets. Runtime assertions/captures are prepared, but Unity compilation and screenshot review have not run because the Editor is unavailable and the license client cannot be reached. Do not raise the qualitative similarity score until comparable captures are reviewed.
 
 | Surface | Similarity | Strict assessment |
 |---|---:|---|

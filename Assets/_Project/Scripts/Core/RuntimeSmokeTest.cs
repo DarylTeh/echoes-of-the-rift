@@ -147,7 +147,7 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         bool bossRequired=!game.Dungeon.IsCleared&&game.Dungeon.StageBoss.Alive;
         game.StartExpedition();
         int initialCoins=game.Forge.State.Coins;
-        bool loops=true,saveRecovery=false,bossOnly=true;var bossTypes=new System.Collections.Generic.HashSet<string>();
+        bool loops=true,saveRecovery=false,bossOnly=true,resultCards=true;var bossTypes=new System.Collections.Generic.HashSet<string>();
         for(int run=0;run<10;run++)
         {
             if(run>0)game.StartExpedition();
@@ -164,7 +164,10 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
                 if(injectFailure)
                 {
                     var recovery=GameObject.Find("Retry reward save")?.GetComponent<UnityEngine.UI.Button>();
-                    saveRecovery=recovery!=null&&game.Forge.State.Coins==initialCoins&&GameObject.Find("Next room")==null;
+                    var recoveryTitle=GameObject.Find("OutcomeTitle")?.GetComponent<TMPro.TMP_Text>();
+                    var recoveryBody=GameObject.Find("RewardSaveRecoveryBody")?.GetComponent<TMPro.TMP_Text>();
+                    saveRecovery=recovery!=null&&recoveryTitle!=null&&recoveryTitle.text==EnglishScreens.RewardSaveNotConfirmed&&recoveryBody!=null&&game.Forge.State.Coins==initialCoins&&GameObject.Find("Next room")==null;
+                    Capture("reward-save-recovery.png");
                     game.Forge.SavePath=validPath;
                     recovery?.onClick.Invoke();
                     // A repeated callback must not duplicate the room reward.
@@ -172,6 +175,20 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
                     yield return null;
                     saveRecovery&=game.Forge.State.Coins==initialCoins+15&&ProfileStore.Load(validPath).Coins==initialCoins+15;
                 }
+                var outcomeTitle=GameObject.Find("OutcomeTitle")?.GetComponent<TMPro.TMP_Text>();
+                var outcomeItem=GameObject.Find("RewardItemName")?.GetComponent<TMPro.TMP_Text>();
+                var outcomeCoins=GameObject.Find("RewardCoinsValue")?.GetComponent<TMPro.TMP_Text>();
+                bool hasOutcome=outcomeTitle!=null&&outcomeItem!=null&&outcomeCoins!=null&&GameObject.Find("RewardItemIcon")!=null&&GameObject.Find("RewardGoldIcon")!=null;
+                var panelRect=GameObject.Find("OutcomePanel")?.GetComponent<RectTransform>();
+                bool panelInside=false;
+                if(panelRect!=null){var corners=new Vector3[4];panelRect.GetWorldCorners(corners);Rect safe=UISafeArea.TestArea??Screen.safeArea;panelInside=corners[0].x>=safe.xMin-2&&corners[0].y>=safe.yMin-2&&corners[2].x<=safe.xMax+2&&corners[2].y<=safe.yMax+2;}
+                hasOutcome&=panelInside;
+                hasOutcome&=outcomeItem!=null&&outcomeItem.text==game.Items[game.Dungeon.CurrentStage.rewardItem].DisplayName;
+                hasOutcome&=outcomeCoins!=null&&outcomeCoins.text.Contains(game.Dungeon.CurrentStage.rewardCoins.ToString());
+                hasOutcome&=outcomeTitle!=null&&outcomeTitle.text==(room==3?EnglishScreens.CampaignComplete:EnglishScreens.StageCleared);
+                resultCards&=hasOutcome;
+                if(run==0&&room==0)Capture("stage-result.png");
+                if(run==0&&room==3)Capture("campaign-complete.png");
                 var button=GameObject.Find(room==3?"Return to town":"Next room")?.GetComponent<UnityEngine.UI.Button>();
                 if(button==null) { loops=false; break; } button.onClick.Invoke(); yield return null;
             }
@@ -208,9 +225,13 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         bool resumed=Time.timeScale==1;
         game.Player.Damage(10000); yield return null;
         game.ReviveWithAdPlaceholder(); bool campaignNoRevive=!game.Player.Alive&&GameObject.Find("Revive")==null;
-        var retry=GameObject.Find("Return to town")?.GetComponent<UnityEngine.UI.Button>(); bool defeat=retry!=null; retry?.onClick.Invoke();
-        bool passed=moved&&walkCycle&&directionalFacing&&dodgePose&&skillPose&&attackPose&&actionPoseResets&&hitPose&&hitPoseResets&&dodged&&immune&&cast&&cooldown&&bank&&expires&&loops&&rewards&&saved&&saveRecovery&&bossOnly&&bossRequired&&inventoryUI&&catalogue&&races&&tierEffects&&loot&&campaignNoRevive&&paused&&resumed&&defeat&&!failed;
-        Finish($"{(passed?"PASS":"FAIL")} movement={moved} walkCycle={walkCycle} directionalFacing={directionalFacing} attackPose={attackPose} skillPose={skillPose} dodgePose={dodgePose} hitPose={hitPose} hitPoseResets={hitPoseResets} actionPoseResets={actionPoseResets} 72RaceDirectionFrames={allRaceFrames} dodge={dodged} immune={immune} cooldown={cooldown} bank={bank} iframeExpires={expires} tenRuns={loops} rewards={rewards} saved={saved} saveRecovery={saveRecovery} bossOnly={bossOnly} bossRequired={bossRequired} inventoryUI={inventoryUI} catalogue={catalogue} races={races} tierEffects={tierEffects} loot={loot} campaignNoRevive={campaignNoRevive} pause={paused} resume={resumed} defeat={defeat} runtimeErrors={failed}");
+        var retry=GameObject.Find("Return to town")?.GetComponent<UnityEngine.UI.Button>(); bool defeat=retry!=null;
+        var defeatTitle=GameObject.Find("OutcomeTitle")?.GetComponent<TMPro.TMP_Text>();
+        bool defeatCard=defeatTitle!=null&&defeatTitle.text==EnglishScreens.RunEnded&&retry!=null&&GameObject.Find("SavedGearSafe")!=null;
+        if(defeatCard){yield return new WaitForEndOfFrame();Capture("defeat-result.png");}
+        retry?.onClick.Invoke();
+        bool passed=moved&&walkCycle&&directionalFacing&&dodgePose&&skillPose&&attackPose&&actionPoseResets&&hitPose&&hitPoseResets&&dodged&&immune&&cast&&cooldown&&bank&&expires&&loops&&rewards&&saved&&saveRecovery&&resultCards&&bossOnly&&bossRequired&&inventoryUI&&catalogue&&races&&tierEffects&&loot&&campaignNoRevive&&paused&&resumed&&defeat&&defeatCard&&!failed;
+        Finish($"{(passed?"PASS":"FAIL")} movement={moved} walkCycle={walkCycle} directionalFacing={directionalFacing} attackPose={attackPose} skillPose={skillPose} dodgePose={dodgePose} hitPose={hitPose} hitPoseResets={hitPoseResets} actionPoseResets={actionPoseResets} 72RaceDirectionFrames={allRaceFrames} dodge={dodged} immune={immune} cooldown={cooldown} bank={bank} iframeExpires={expires} tenRuns={loops} rewards={rewards} saved={saved} saveRecovery={saveRecovery} resultCards={resultCards} bossOnly={bossOnly} bossRequired={bossRequired} inventoryUI={inventoryUI} catalogue={catalogue} races={races} tierEffects={tierEffects} loot={loot} campaignNoRevive={campaignNoRevive} pause={paused} resume={resumed} defeat={defeat} defeatCard={defeatCard} runtimeErrors={failed}");
     }
     private void Capture(string name)
     {
@@ -270,8 +291,11 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
         bool wiped=world.Raid.Defeated;
         bool effects=host||world.ReceivedEffects>0&&world.ReceivedBolts>0;
         bool revives=host?world.TestRevivesPassed:!game.Player.Alive&&GameObject.Find("Revive")==null;
+        var partyTitle=GameObject.Find("OutcomeTitle")?.GetComponent<TMPro.TMP_Text>();
+        bool partyCard=partyTitle!=null&&partyTitle.text==EnglishScreens.PartyRunEnded&&GameObject.Find("PartyDefeatDetails")!=null&&GameObject.Find("Leave raid")!=null;
+        if(partyCard)Capture("party-defeat.png");
         bool lootSaved=game.Forge.State.Coins==45&&ProfileStore.Load(game.Forge.SavePath).Coins==45;
-        Finish($"{(connected&&input&&wiped&&effects&&revives&&lootSaved&&!failed?"PASS":"FAIL")} co-op host={host} connected={connected} authoritativeInput={input} wipeBroadcast={wiped} remoteVisuals={effects} reviveRules={revives} lootSaved={lootSaved} runtimeErrors={failed}");
+        Finish($"{(connected&&input&&wiped&&effects&&revives&&partyCard&&lootSaved&&!failed?"PASS":"FAIL")} co-op host={host} connected={connected} authoritativeInput={input} wipeBroadcast={wiped} remoteVisuals={effects} reviveRules={revives} partyResult={partyCard} lootSaved={lootSaved} runtimeErrors={failed}");
     }
     private IEnumerator TestDedicatedPair(ArenaGame game,bool leader)
     {
@@ -308,13 +332,19 @@ public sealed partial class RuntimeSmokeTest : MonoBehaviour
             while(world.TestRescues<1&&Time.realtimeSinceStartupAsDouble<deadline){var button=GameObject.Find("Revive")?.GetComponent<UnityEngine.UI.Button>();if(!clicked&&button!=null){button.onClick.Invoke();clicked=true;}yield return null;}
         }
         deadline=Time.realtimeSinceStartupAsDouble+8;while(game.Forge.State.Coins!=coins+15&&Time.realtimeSinceStartupAsDouble<deadline)yield return null;
+        deadline=Time.realtimeSinceStartupAsDouble+5;while(GameObject.Find("NetworkReward")==null&&Time.realtimeSinceStartupAsDouble<deadline)yield return null;
+        var networkTitle=GameObject.Find("OutcomeTitle")?.GetComponent<TMPro.TMP_Text>();
+        var networkItem=GameObject.Find("RewardItemName")?.GetComponent<TMPro.TMP_Text>();
+        var networkCoins=GameObject.Find("RewardCoinsValue")?.GetComponent<TMPro.TMP_Text>();
+        bool networkResult=networkTitle!=null&&networkTitle.text==EnglishScreens.StageCleared&&networkItem!=null&&networkCoins!=null&&GameObject.Find("RewardItemIcon")!=null&&GameObject.Find("Next room")!=null;
+        if(networkResult)Capture("network-stage-result.png");
         deadline=Time.realtimeSinceStartupAsDouble+3;
         while(expedition.BossVisible&&Time.realtimeSinceStartupAsDouble<deadline){yield return new WaitForSecondsRealtime(.1f);expedition.Refresh();}
         bool bossHidden=!expedition.BossVisible;hudReady&=bossHidden;
         Debug.Log($"DEDICATED_BOSS_HIDE_CHECK hidden={bossHidden} stageCleared={game.Dungeon.IsCleared} replicaAlive={world.ReplicaBoss!=null&&world.ReplicaBoss.Alive}");
-        bool passed=hudReady&&game.Cooperative&&world.TestSelfRevives>=1&&world.TestRescues>=1&&game.Forge.State.Coins==coins+15&&!failed;
+        bool passed=hudReady&&game.Cooperative&&world.TestSelfRevives>=1&&world.TestRescues>=1&&game.Forge.State.Coins==coins+15&&networkResult&&!failed;
         if(leader)yield return new WaitForSecondsRealtime(1);
-        Finish($"{(passed?"PASS":"FAIL")} dedicated pair leader={leader} hud={hudReady} selfRevives={world.TestSelfRevives} teammateRevives={world.TestRescues} reward={game.Forge.State.Coins==coins+15} runtimeErrors={failed}");
+        Finish($"{(passed?"PASS":"FAIL")} dedicated pair leader={leader} hud={hudReady} selfRevives={world.TestSelfRevives} teammateRevives={world.TestRescues} reward={game.Forge.State.Coins==coins+15} rewardCard={networkResult} runtimeErrors={failed}");
     }
     private IEnumerator TestDedicated(ArenaGame game)
     {
