@@ -1,6 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 91 - 9 October 2026. Add explicit Moon/Ember skill-slot assignment.
+Revision 92 - 9 October 2026. Define reusable store packs and rewarded-ad modules.
+
+## Current iteration - revision 92: monetization foundations and rollout gates
+
+Added [MONETIZATION-OPERATIONS.md](Docs/MONETIZATION-OPERATIONS.md) with the MyHeroes-inspired D.Shop/Earn Gems surfaces, configurable deterministic gem packs, voluntary rewarded-video placement, purchase receipt verification, idempotent grant ledgers, server-verified ad completion, test mode and rollout controls. The draft proposes 5 gems for a verified ad with a three-per-UTC-day cap; these values are not shipped or enabled. Real-money prices remain platform-localized; no fake timer, crossed-out price, stock count, random loot or forced ad is planned.
+
+This is a design and dependency audit, not a live integration. The project has no Unity IAP package, LevelPlay package, store product IDs, ad credentials, receipt verifier or verified ad callback route. Unity CLI is signed out, so package installation through the Editor and client builds cannot be completed here. I have not created a client-only grant path or placed products in production. The skill/ad work remains gated on the first store product definitions and the required Unity Package Manager setup.
+
+Next: resolve Unity sign-in and install/resolve the purchase and ads packages in Package Manager, then complete the required product and ad setup checkpoints. After those gates, add server receipt verification and ad completion ledgers before enabling shop cards. Keep the full MyHeroes similarity baseline unchanged; monetization visuals need a licensed build and screenshot review.
+
+## Previous iteration - revision 91: assign skill books to visible stance slots
 
 ## Current iteration - revision 91: assign skill books to visible stance slots
 
