@@ -8,7 +8,11 @@ Keep the current MyHeroes-inspired Shop hierarchy. Use **D.Shop** for direct gem
 
 The initial store catalog should use four configurable **consumable** gem-pack entries: Starter, Small, Medium and Large. Their exact product IDs, amounts and store prices are unset until the Play Console product catalog and the player economy are approved. Prices must come from the connected store, not a hard-coded currency string. Pack rewards are deterministic gems; no gear, skills or randomized loot are bundled into the first release. Gems remain a skill-progression currency under [PROGRESSION-MODEL.md](PROGRESSION-MODEL.md).
 
-The ad surface is opt-in and separate from combat. Start with rewarded video only; do not add banners, forced interstitials or automatic ad playback. Proposed initial offer: 5 gems for a completed, server-verified view, limited to three claims per UTC day. The value and cap remain draft economy values and must be confirmed against ad-network policy and playtest data. If an ad is unavailable, the player keeps their current state and can dismiss the offer without penalty.
+The ad surface is opt-in and separate from combat. Start with rewarded video only; do not add banners, forced interstitials or automatic ad playback. Proposed initial offer: 2 gems for a completed, server-verified view, limited to three claims per UTC day (6 gems maximum daily). The value and cap remain draft economy values and must be confirmed against ad-network policy and playtest data. If an ad is unavailable, the player keeps their current state and can dismiss the offer without penalty.
+
+### Reward-to-progression check
+
+The progression model's cheapest skill level costs 5 gems, then the cost rises to 7 at skill level 11, 9 at level 21, 14 at level 25, 23 at level 50 and 43 at level 100. A 5-gem ad would therefore grant one complete early upgrade for every view. The 2-gem proposal instead represents 40% of the first upgrade, 8.7% of a level-50 upgrade and 4.7% of a level-100 upgrade. At the daily cap, a player could earn at most 6 gems: up to one early upgrade with 1 gem left, but only about one quarter of a level-50 upgrade or one seventh of a level-100 upgrade. That keeps the ad useful to a new player without making late skill levels trivial. These are arithmetic comparisons to the current progression formula, not evidence from a playtest; review actual claim completion, retention and upgrade pacing before locking the reward or cap.
 
 ## Reusable modules
 

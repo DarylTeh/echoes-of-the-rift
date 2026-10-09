@@ -1,8 +1,14 @@
 # Echoes of the Rift master plan
 
-Revision 92 - 9 October 2026. Define reusable store packs and rewarded-ad modules.
+Revision 93 - 9 October 2026. Balance draft rewarded gems against skill costs.
 
-## Current iteration - revision 92: monetization foundations and rollout gates
+## Current iteration - revision 93: rewarded-ad progression balance
+
+Cross-checked the draft ad reward against the progression model's 5/7/9/14/23/43-gem skill-upgrade costs. Revised the proposal from 5 to 2 gems per verified view with three daily claims maximum (6/day): this gives early players a useful fraction of an upgrade while falling from 40% of a level-one cost to 4.7% at level 100. This is a formula comparison, not playtest evidence; reward and cap remain draft values. See [MONETIZATION-OPERATIONS.md](Docs/MONETIZATION-OPERATIONS.md).
+
+Validation: arithmetic checked against [PROGRESSION-MODEL.md](Docs/PROGRESSION-MODEL.md). No runtime code or player economy values changed. Store and ad implementation remain blocked on Unity package resolution, product definitions and ad setup.
+
+## Previous iteration - revision 92: monetization foundations and rollout gates
 
 Added [MONETIZATION-OPERATIONS.md](Docs/MONETIZATION-OPERATIONS.md) with the MyHeroes-inspired D.Shop/Earn Gems surfaces, configurable deterministic gem packs, voluntary rewarded-video placement, purchase receipt verification, idempotent grant ledgers, server-verified ad completion, test mode and rollout controls. The draft proposes 5 gems for a verified ad with a three-per-UTC-day cap; these values are not shipped or enabled. Real-money prices remain platform-localized; no fake timer, crossed-out price, stock count, random loot or forced ad is planned.
 
