@@ -11,6 +11,9 @@ for(const name of ['loginCalendar','tokenExchange','dailyQuests','progressiveAch
 assert.throws(()=>validateEventManifest({...manifest,id:'Bad ID'}));assert.throws(()=>validateEventManifest({...manifest,endAt:start}));
 assert.throws(()=>validateEventManifest({...manifest,rewards:[{currency:'coins',amount:-1}]}));assert.throws(()=>validateEventManifest({...manifest,rewards:[{itemId:'bad item',tier:1,count:1}]}));
 const shopManifest=normalizeEventManifest(templates.eventShop('bazaar-2026',start,end));assert.doesNotThrow(()=>validateEventManifest(shopManifest));
+const campaignRoute=normalizeEventManifest({...manifest,config:{...manifest.config,destination:'campaign'}});assert.equal(campaignRoute.config.destination,'campaign');assert.doesNotThrow(()=>validateEventManifest(campaignRoute));
+assert.throws(()=>validateEventManifest({...campaignRoute,config:{...campaignRoute.config,destination:'rift_defense'}}),/Unsupported event destination/);
+assert.throws(()=>validateEventManifest({...campaignRoute,config:{...campaignRoute.config,eligibleModes:['raid']}}),/eligibleModes/);
 assert.throws(()=>validateEventManifest({...shopManifest,config:{...shopManifest.config,shopOffers:[{...shopManifest.config.shopOffers[0],price:0}]}}),/price/);
 assert.throws(()=>validateEventManifest({...shopManifest,config:{...shopManifest.config,shopOffers:[shopManifest.config.shopOffers[0],shopManifest.config.shopOffers[0]]}}),/unique/);
 const db=new DatabaseSync(':memory:'),store=createEventStore(db,()=>now);store.upsert(manifest);assert.equal(store.active().length,1);const first=store.claim(manifest.id,'player-1','day:2026-10-03');assert.equal(first.claimed,true);const replay=store.claim(manifest.id,'player-1','day:2026-10-03');assert.equal(replay.claimed,false);assert.equal(replay.rewardReceipt,first.rewardReceipt);

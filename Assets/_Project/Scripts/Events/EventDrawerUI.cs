@@ -12,6 +12,7 @@ public sealed class EventDrawerUI : MonoBehaviour
     public CoopSession Session;
     public bool IsOpen=>root!=null;
     private RectTransform root,panel,viewport,list,detail;
+    private UnityEngine.UI.Button closeButton,detailLaunchButton;
     private TMP_Text status,detailCountdown,detailEligibility,detailProgress;
     private ServerEventSnapshot detailEvent;
     private ServerEventFeedResponse feed;
@@ -29,7 +30,7 @@ public sealed class EventDrawerUI : MonoBehaviour
         panel=GameUI.Panel(root,"EventPanel",Vector2.zero,new Vector2(760,520));
         GameUI.Icon(panel,PixelArt.Icon("quest"),new Vector2(-330,220),new Vector2(34,34));
         var title=GameUI.Label(panel,"EVENTS",new Vector2(-252,220),new Vector2(420,38),28);title.color=new Color32(147,220,239,255);
-        var close=GameUI.Button(panel,"X",new Vector2(333,220),new Vector2(48,48),Close);close.name="CloseEvents";close.GetComponent<UnityEngine.UI.Image>().color=new Color32(240,106,138,255);
+        closeButton=GameUI.Button(panel,"X",new Vector2(333,220),new Vector2(48,48),Close);closeButton.name="CloseEvents";closeButton.GetComponent<UnityEngine.UI.Image>().color=new Color32(240,106,138,255);
         status=GameUI.Label(panel,"Checking the server calendar...",new Vector2(0,177),new Vector2(620,32),18);status.alignment=TextAlignmentOptions.Center;status.color=new Color32(180,187,220,255);
         viewport=GameUI.Rect("EventListViewport",panel,new Vector2(.5f,.5f),new Vector2(0,-20),new Vector2(650,350));
         var viewportImage=viewport.gameObject.AddComponent<UnityEngine.UI.Image>();viewportImage.color=new Color(1,1,1,.001f);viewportImage.raycastTarget=true;
@@ -37,7 +38,7 @@ public sealed class EventDrawerUI : MonoBehaviour
         list=GameUI.Rect("EventListContent",viewport,new Vector2(.5f,1),Vector2.zero,new Vector2(650,350));list.pivot=new Vector2(.5f,1);
         var scroll=viewport.gameObject.AddComponent<UnityEngine.UI.ScrollRect>();scroll.viewport=viewport;scroll.content=list;scroll.horizontal=false;scroll.vertical=true;scroll.movementType=UnityEngine.UI.ScrollRect.MovementType.Clamped;scroll.scrollSensitivity=34;
         var refresh=GameUI.Button(panel,"Refresh",new Vector2(0,-220),new Vector2(190,44),Refresh);refresh.name="RefreshEvents";
-        close.name="CloseEventsButton";
+        closeButton.name="CloseEventsButton";
         EventSystem.current?.SetSelectedGameObject(refresh.gameObject);
         if(Session.Game.Player!=null)Session.Game.Player.GetComponent<PlayerController>().ControlsEnabled=false;
         Refresh();
@@ -110,21 +111,28 @@ public sealed class EventDrawerUI : MonoBehaviour
     {
         if(root==null||item==null)return;
         if(detail!=null)Destroy(detail.gameObject);
+        detailLaunchButton=null;
         detailEvent=item;
-        detail=GameUI.Panel(root,"EventDetails",Vector2.zero,new Vector2(700,470));
-        GameUI.Icon(detail,PixelArt.Icon("quest"),new Vector2(-300,195),new Vector2(34,34));
-        var title=GameUI.Label(detail,ShortTitle(item,42),new Vector2(-220,195),new Vector2(430,34),25);title.color=new Color32(147,220,239,255);
-        var back=GameUI.Button(detail,"Back",new Vector2(280,195),new Vector2(120,42),CloseDetails);back.name="BackToEventList";
-        var type=GameUI.Label(detail,TypeLabel(item.type)+"  ·  SERVER-TIMED",new Vector2(0,146),new Vector2(600,26),16);type.alignment=TextAlignmentOptions.Center;type.color=new Color32(255,210,127,255);
+        detail=GameUI.Panel(root,"EventDetails",Vector2.zero,new Vector2(700,520));
+        closeButton?.gameObject.SetActive(false);
+        GameUI.Icon(detail,PixelArt.Icon("quest"),new Vector2(-300,220),new Vector2(34,34));
+        var title=GameUI.Label(detail,ShortTitle(item,42),new Vector2(-220,220),new Vector2(430,34),25);title.color=new Color32(147,220,239,255);
+        var back=GameUI.Button(detail,"Back",new Vector2(280,220),new Vector2(120,42),CloseDetails);back.name="BackToEventList";
+        var type=GameUI.Label(detail,TypeLabel(item.type)+"  ·  SERVER-TIMED",new Vector2(0,171),new Vector2(600,26),16);type.alignment=TextAlignmentOptions.Center;type.color=new Color32(255,210,127,255);
         var description=ShortDescription(item.description);
-        var body=GameUI.Label(detail,description,new Vector2(0,82),new Vector2(600,86),19);body.alignment=TextAlignmentOptions.Center;body.textWrappingMode=TextWrappingModes.Normal;
-        detailCountdown=GameUI.Label(detail,"ENDS IN  "+EventCountdown.Format(EventCountdown.Remaining(item,serverNow)),new Vector2(0,18),new Vector2(600,30),22);detailCountdown.alignment=TextAlignmentOptions.Center;detailCountdown.color=new Color32(255,210,127,255);
-        var eligibility=GameUI.Label(detail,"Eligibility: checking with server...",new Vector2(0,-42),new Vector2(600,38),16);eligibility.alignment=TextAlignmentOptions.Center;eligibility.color=new Color32(208,199,235,255);
+        var body=GameUI.Label(detail,description,new Vector2(0,107),new Vector2(600,86),19);body.alignment=TextAlignmentOptions.Center;body.textWrappingMode=TextWrappingModes.Normal;
+        detailCountdown=GameUI.Label(detail,"ENDS IN  "+EventCountdown.Format(EventCountdown.Remaining(item,serverNow)),new Vector2(0,43),new Vector2(600,30),22);detailCountdown.alignment=TextAlignmentOptions.Center;detailCountdown.color=new Color32(255,210,127,255);
+        var eligibility=GameUI.Label(detail,"Eligibility: checking with server...",new Vector2(0,-17),new Vector2(600,32),16);eligibility.alignment=TextAlignmentOptions.Center;eligibility.color=new Color32(208,199,235,255);
         detailEligibility=eligibility;
-        var progress=GameUI.Label(detail,"Checking server progress...",new Vector2(0,-108),new Vector2(600,72),16);progress.alignment=TextAlignmentOptions.Center;progress.textWrappingMode=TextWrappingModes.Normal;progress.color=new Color32(208,199,235,255);detailProgress=progress;
+        var progress=GameUI.Label(detail,"Checking server progress...",new Vector2(0,-83),new Vector2(600,68),15);progress.alignment=TextAlignmentOptions.Center;progress.textWrappingMode=TextWrappingModes.Normal;progress.color=new Color32(208,199,235,255);detailProgress=progress;
         RenderRewardPreview(item);
+        if(item.config!=null&&item.config.destination=="campaign")
+        {
+            detailLaunchButton=GameUI.Button(detail,"PLAY CAMPAIGN",new Vector2(0,-234),new Vector2(240,42),LaunchCampaign);
+            detailLaunchButton.name="LaunchEventDestination";
+        }
         StartCoroutine(LoadStatus(item));
-        EventSystem.current?.SetSelectedGameObject(GameObject.Find("BackToEventList"));
+        EventSystem.current?.SetSelectedGameObject(detailLaunchButton!=null?detailLaunchButton.gameObject:GameObject.Find("BackToEventList"));
     }
 
     private IEnumerator LoadStatus(ServerEventSnapshot item)
@@ -145,15 +153,15 @@ public sealed class EventDrawerUI : MonoBehaviour
 
     private void CloseDetails()
     {
-        if(detail==null)return;Destroy(detail.gameObject);detail=null;detailEvent=null;detailCountdown=null;detailEligibility=null;detailProgress=null;
+        if(detail==null)return;Destroy(detail.gameObject);detail=null;detailEvent=null;detailCountdown=null;detailEligibility=null;detailProgress=null;detailLaunchButton=null;closeButton?.gameObject.SetActive(true);
         EventSystem.current?.SetSelectedGameObject(GameObject.Find("CloseEventsButton"));
     }
 
     private void RenderRewardPreview(ServerEventSnapshot item)
     {
         var rewards=item?.rewards??Array.Empty<ServerEventReward>();
-        var heading=GameUI.Label(detail,rewards.Length>3?$"REWARDS  ·  +{rewards.Length-3} MORE":"REWARDS",new Vector2(0,-157),new Vector2(300,22),14);heading.alignment=TextAlignmentOptions.Center;heading.color=new Color32(255,210,127,255);
-        var preview=GameUI.Rect("EventRewardPreview",detail,new Vector2(.5f,.5f),new Vector2(0,-195),new Vector2(620,48));
+        var heading=GameUI.Label(detail,rewards.Length>3?$"REWARDS  ·  +{rewards.Length-3} MORE":"REWARDS",new Vector2(0,-132),new Vector2(300,22),14);heading.alignment=TextAlignmentOptions.Center;heading.color=new Color32(255,210,127,255);
+        var preview=GameUI.Rect("EventRewardPreview",detail,new Vector2(.5f,.5f),new Vector2(0,-171),new Vector2(620,44));
         if(rewards.Length==0)
         {
             var none=GameUI.Label(preview,"No rewards listed",Vector2.zero,new Vector2(590,32),15);none.alignment=TextAlignmentOptions.Center;none.color=new Color32(180,187,220,255);return;
@@ -200,6 +208,12 @@ public sealed class EventDrawerUI : MonoBehaviour
         if(string.IsNullOrWhiteSpace(id))return "Item";
         var words=id.Replace('_',' ').Replace('-',' ').Trim();
         return words.Length>22?words.Substring(0,19)+"...":words;
+    }
+
+    private void LaunchCampaign()
+    {
+        if(detailEvent?.config==null||detailEvent.config.destination!="campaign"||Session?.Game==null)return;
+        var game=Session.Game;Close();game.StartExpedition();
     }
 
     private static string ProgressText(string type)
@@ -259,7 +273,7 @@ public sealed class EventDrawerUI : MonoBehaviour
 
     public void Close()
     {
-        if(root==null)return;Destroy(root.gameObject);root=null;panel=null;viewport=null;list=null;detail=null;detailEvent=null;detailCountdown=null;detailEligibility=null;detailProgress=null;status=null;feed=null;loading=false;countdowns.Clear();
+        if(root==null)return;Destroy(root.gameObject);root=null;panel=null;viewport=null;list=null;detail=null;detailEvent=null;detailCountdown=null;detailEligibility=null;detailProgress=null;closeButton=null;detailLaunchButton=null;status=null;feed=null;loading=false;countdowns.Clear();
         if(Session?.Game?.Player!=null)Session.Game.Player.GetComponent<PlayerController>().ControlsEnabled=!Session.UsesDedicated||Session.Authenticated;
     }
 }

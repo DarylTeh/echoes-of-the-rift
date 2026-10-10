@@ -1,14 +1,18 @@
 # Echoes of the Rift master plan
 
-Revision 96 - 10 October 2026. Preview server-authored event rewards.
+Revision 97 - 10 October 2026. Add a validated Campaign destination for events.
 
-## Current iteration - revision 96: server-authored event reward preview
+## Current iteration - revision 97: validated event destination
 
-Event manifests already include optional `rewards` and module `config`; `/events` returns active manifests. Revision 95's Unity snapshot model had been discarding those fields. It now reads reward metadata and presents up to three exact currencies/items in event detail, using catalog art/names when available and a readable identifier fallback otherwise. Empty reward lists are explicitly shown as “No rewards listed.” Server templates currently default to empty lists, so operators must configure real rewards before previews appear. The goal-first scrollable list and single close control from revision 95 remain. This is inspired by My Heroes’ objective-first quest presentation, not a claim of exact live-event parity.
+Added an explicit optional `config.destination` route. The server currently accepts only `campaign`, and requires it to also appear in `eligibleModes`; the Unity detail displays `PLAY CAMPAIGN` only for that server-owned value and starts the existing campaign flow. Unsupported destinations are rejected, so the UI does not claim Rift Defense, event-shop, or other routing that is not integrated. Detail temporarily hides the underlying drawer X, expands for progress/rewards/CTA, and restores the X on Back. Revisions 95–96 still provide the goal-first scroll list and optional manifest reward previews.
 
-Activity destination metadata and a universal Go action remain unimplemented: `eligibleModes` means event progress can be earned in those modes, but does not specify a launch target or UI route. Smoke now checks vertical scrolling, a single close affordance, reward/config JSON deserialization and the detail preview. Full server suite passes. Unity cannot compile or capture this change: no Editor/Pipeline instance is connected and the licensing client is unreachable. No release binary changed. Revision 94 results and revision 95/96 Events UI remain pending build and visual review.
+Smoke now checks reward/destination JSON deserialization, the reward preview, vertical scrolling, one close affordance and hiding/restoring that close action across event detail navigation. Server manifest tests pass for Campaign, unsupported-mode rejection, and mismatch with eligible modes; the full server suite passes. Unity cannot compile or capture this change: no Editor/Pipeline instance is connected and the licensing client is unreachable. No release binary changed. Revisions 94–97 remain pending build and visual review.
 
-Next: restore Unity licensing and inspect revision 94/95/96 captures across desktop and touch layouts. Then design an explicit destination/launch contract for event modules and connect it only to implemented modes. Keep IAP/rewarded-ad delivery gated on provider setup and server verification. The seven major milestones remain as listed below; milestone 1 is locally accepted and six broader workstreams remain open.
+Next: restore Unity licensing and inspect revision 94–97 result and event screens across desktop and touch layouts. Then continue toward event-shop client integration or another highest-priority master-plan gap; only add more destinations when the destination mode and its progress/reward path are tested end-to-end. Keep IAP/rewarded-ad delivery gated on provider setup and server verification. The seven major milestones remain as listed below; milestone 1 is locally accepted and six broader workstreams remain open.
+
+## Previous iteration - revision 96: server-authored event reward preview
+
+The client began reading optional reward/config values already present in event manifests and showed exact listed rewards. Existing event templates still default to empty rewards. Revision 97 adds a separate constrained Campaign route.
 
 ## Previous iteration - revision 95: goal-first Events calendar
 

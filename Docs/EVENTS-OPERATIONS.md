@@ -4,6 +4,10 @@ Revision 38, 29 September 2026.
 
 The event system is server-driven. Every event is an immutable, versioned manifest with UTC `startAt` and `endAt`, a reusable `type`, a configurable `config` object, reward definitions and an explicit disabled/kill-switch state. Clients receive the server timestamp and active manifests from `POST /events`; they render countdowns and descriptions but never decide eligibility or progress from the phone or PC clock.
 
+### Activity destination contract
+
+`config.destination` is an optional, server-authored client route. The only enabled route is `campaign`, and the manifest must also list `campaign` in `config.eligibleModes`; the server rejects unsupported routes and mismatched eligibility. The Unity event detail then offers **Play Campaign**, which closes the event drawer and opens the existing campaign flow. Events without a destination remain read-only. Rift Defense, shops and other modules do not receive a Go action until their launch and progress paths are implemented and validated end-to-end.
+
 ## Patterns to reuse
 
 Clash of Critters uses rotating secondary events that can overlap, including Island Gold Rush, Fishing Contest, Treasure Hunt, Marathon Party, Marathon Star, Zobo Shooter, Cozy Farm, Zobo Buster and Carnival Rush. Its Boss Challenge resets daily, uses a best-level/damage leaderboard and can give bosses special patterns. Daily quests refresh from a randomized table without duplicate goals, while achievements progressively increase and eventually cap. [Events](https://clashofcritters.wiki.gg/wiki/Events), [Boss Challenge](https://www.clashofcritters.net/gameplay/boss-challenge), [Quests](https://clashofcritters.wiki.gg/wiki/Quests)

@@ -1,6 +1,10 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
-## Current source iteration — revision 96, 10 October 2026
+## Current source iteration — revision 97, 10 October 2026
+
+Events may use the server-validated `campaign` destination when Campaign is also eligible for progress. The detail action closes the overlay and starts the existing Campaign flow; unsupported destinations are rejected and do not show a button. The server event tests and full `npm test` suite pass. Unity compilation/layout/screenshot UAT is pending because no Editor/Pipeline instance is connected and the license client is unavailable. Release binary unchanged.
+
+## Previous source iteration — revision 96, 10 October 2026
 
 Event detail now reads optional rewards from the existing `/events` manifest and shows up to three exact currency/item rewards, resolving item names/icons through the catalog when possible. Empty templates state “No rewards listed.” Runtime smoke checks manifest reward/config parsing and reward-preview presence. The full server suite passes. Not compiled or visually reviewed because Unity has no connected Editor/Pipeline and the licensing client is unreachable. Release binary unchanged.
 

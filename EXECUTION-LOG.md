@@ -1,5 +1,11 @@
 # Execution log
 
+## Validated event Campaign destination — revision 97, 10 October 2026
+
+- Added optional `config.destination` to event routing. The server currently allows only `campaign` and requires that mode to appear in `config.eligibleModes`; event tests reject unsupported destinations and missing eligibility.
+- Unity event detail presents **PLAY CAMPAIGN** only when the server supplied that exact destination. The action closes the overlay and starts the existing campaign flow. The hidden drawer X returns on Back; detail has more vertical space for progress, rewards and the route action. No route is exposed for Rift Defense, event shops or unintegrated modes.
+- Added JSON smoke coverage for destination parsing and layout checks for the single-close detail state. `npm test` passes all server suites. Unity build/runtime/screenshot review remains blocked by unavailable Editor and Licensing Client. No release binary changed.
+
 ## Server-authored event reward preview — revision 96, 10 October 2026
 
 - Confirmed the existing `/events` route returns active, full versioned manifests. Each manifest already carries optional `rewards` and `config`; the Unity `ServerEventSnapshot` previously omitted both fields. Added typed currency/item rewards and eligible-mode metadata to the client snapshot.

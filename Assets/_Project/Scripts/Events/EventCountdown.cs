@@ -21,6 +21,7 @@ public sealed class ServerEventReward
 [Serializable]
 public sealed class ServerEventConfig
 {
+    public string destination;
     public string[] eligibleModes;
 }
 

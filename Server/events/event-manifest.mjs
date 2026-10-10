@@ -21,6 +21,10 @@ export function validateEventManifest(input){
   const start=parseUtc(input.startAt,'startAt'),end=parseUtc(input.endAt,'endAt');if(end<=start)throw new Error('endAt must be after startAt.');
   if(input.disabled!==undefined&&typeof input.disabled!=='boolean')throw new Error('disabled must be boolean.');
   if(input.config===undefined||!input.config||typeof input.config!=='object'||Array.isArray(input.config))throw new Error('config must be an object.');
+  if(input.config.destination!==undefined){
+   if(input.config.destination!=='campaign')throw new Error('Unsupported event destination. The only enabled destination is campaign.');
+   if(!Array.isArray(input.config.eligibleModes)||!input.config.eligibleModes.includes(input.config.destination))throw new Error('Event destination must also be listed in eligibleModes.');
+  }
   if(input.rewards!==undefined){
    if(!Array.isArray(input.rewards)||input.rewards.some(x=>!x||typeof x!=='object'||Array.isArray(x)))throw new Error('rewards must be an array of objects.');
    for(const reward of input.rewards)validateReward(reward,'Event reward');
