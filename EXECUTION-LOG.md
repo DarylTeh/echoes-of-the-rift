@@ -1,5 +1,11 @@
 # Execution log
 
+## Goal-first events list — revision 95, 10 October 2026
+
+- Made the first active event the visual lead with server countdown, objective snippet and one “View Event” action; other entries use compact goal-first rows. The vertical `ScrollRect` renders all active entries rather than capping at four, and the redundant bottom Close action is gone.
+- Kept detail eligibility/progress server-owned. The current event feed/status contract contains no reward-preview or destination metadata, so this UI does not invent rewards or a universal Go/Claim action.
+- Added layout smoke checks for an active vertical scroll view and exactly one close affordance. Unity build/runtime/screenshot review could not run: no connected Editor/Pipeline instance, licensing client unavailable, Unity CLI update check blocked by DNS. No release binary changed. The prior revision 94 result/recovery source remains pending the same build/UAT gate.
+
 ## Campaign outcome and reward recovery presentation — revision 94, 9 October 2026
 
 - Replaced the detached campaign reward status and lone next button with a framed result panel containing stage/campaign outcome, the actual item icon/name/rarity, gold amount, save confirmation and one primary action. Only the rarity frame animates; the item/icon and copy stay still.

@@ -1,12 +1,16 @@
 # MyHeroes: SEA UI reference audit
 
-## Strict full-screen audit — 9 October 2026 (source reviewed through revision 94; last comparable score through revision 90)
+## Strict full-screen audit — 10 October 2026 (source reviewed through revision 95; last comparable score through revision 90)
 
 This pass reviews the current Echoes build against the supplied MyHeroes: SEA/Dungeon Raid screenshots, the existing gameplay-reference notes, and the accessible wiki pages. It covers the implemented UI surfaces found in the Unity scripts and available captures. The implementation still falls well short of the requested 90% resemblance.
 
 ### Baseline
 
 **35/100 qualitative similarity** across comparable game surfaces. This is a design-review score, not an automated pixel comparison. The score uses four criteria: layout and hierarchy 35%, navigation and interaction 25%, visual design and art 30%, and coverage of major reference surfaces 10%. The largest penalty is the art system: Echoes has its own small pixel sprites and icons, but they do not have the reference's character proportions, detail density, icon language, item frames, colorful rarity treatment, or finished visual polish. Functional overlap alone does not count as visual similarity.
+
+### Revision 95 source update — Events list
+
+The first active server event now leads with its objective, time remaining and a single “View Event” CTA. Other events use compact objective snippets and live countdowns in a vertical scroll list; there is no four-event cap and the duplicate Close button is removed. Detail still uses server-owned eligibility/progress. The current event API does not provide reward-preview or destination fields, so this screen does not invent a reward or pretend it can launch a mode. Smoke now checks the ScrollRect and one close action; compilation and capture review remain blocked by Unity Editor/license access. Keep the similarity score unchanged until comparable screenshots can be reviewed.
 
 ### Revision 94 source update — results and recovery
 

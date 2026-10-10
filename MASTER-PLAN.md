@@ -1,8 +1,16 @@
 # Echoes of the Rift master plan
 
-Revision 94 - 9 October 2026. Recompose campaign outcomes around saved rewards.
+Revision 95 - 10 October 2026. Make the event calendar goal-first and scrollable.
 
-## Current iteration - revision 94: reward-first campaign outcomes
+## Current iteration - revision 95: goal-first Events calendar
+
+Rebuilt the event list around a featured first event with its objective description, server countdown and a clear “View Event” action; remaining events are readable compact rows in a touch-scrollable list rather than silently capped at four. Removed the duplicate Close control so the drawer has one X and one Refresh action. Event detail still shows server eligibility/progress. Reward previews and activity navigation are deliberately not fabricated because the current server feed has no reward or destination fields and the modules do not expose a universal launch action. This is a structural UX improvement inspired by My Heroes’ objective-first quest presentation, not a claim of exact live-event parity.
+
+Verification: added layout smoke checks for vertical scrolling and a single close affordance. Unity cannot currently compile or capture the change: no Editor/Pipeline instance is connected, the licensing client is unreachable, and the CLI update check fails DNS. No release binary changed. Revision 94 outcome screens also remain pending build and visual review.
+
+Next: restore Unity licensing and inspect revision 94/95 captures across desktop and touch layouts. Then expand the event contract with explicit server-owned reward and destination metadata before adding truthful reward previews or a universal Go action. Keep IAP/rewarded-ad delivery gated on provider setup and server verification. The seven major milestones remain as listed below; milestone 1 is locally accepted and six broader workstreams remain open.
+
+## Previous iteration - revision 94: reward-first campaign outcomes
 
 Replaced the campaign clear's status-line reward plus isolated button with a centered outcome card: stage/campaign result, the actual stage item and rarity, the actual gold amount, save confirmation and one next action. The item icon stays still while the existing tier-colored neon border moves. Defeat and party-defeat cards now keep stage reached, saved-progress meaning and their one safe exit together. Local and server reward-recovery screens explain that the grant is unconfirmed and keep a retry action in the same panel; the network retry copy describes the deduplicated run receipt. No revive, reward, save or co-op rule changed.
 
@@ -10,7 +18,7 @@ Reference direction: use the supplied My Heroes “You're received” reveal as 
 
 Validation source coverage: campaign smoke now asserts stage-clear/campaign-complete rewards, save-recovery explanation, one next action and defeat-safe copy; dedicated-pair smoke checks the server-saved reward card. It captures stage, campaign, recovery, defeat and network result screens for later review. Build and screenshot review are **not yet run**: Unity Editor/Pipeline is not connected, the license client is unreachable, and the Unity CLI update check also failed on DNS. No release binary changed. This source iteration is pending compilation and visual UAT.
 
-Next: restore the user's Unity Editor/license connection and run the campaign, dedicated-pair and four-resolution layout smoke; inspect the new captures before scoring. Then continue with the P1 goal-first Events/detail screen from the strict review. Real purchases/rewarded ads stay gated on Unity IAP/LevelPlay package resolution and store/ad configuration. The seven major milestones remain as listed below; milestone 1 is locally accepted, six broader workstreams remain open.
+Next: restore the user's Unity Editor/license connection and run campaign, dedicated-pair and four-resolution layout smoke; inspect the new captures before scoring. Real purchases/rewarded ads stay gated on Unity IAP/LevelPlay package resolution and store/ad configuration.
 
 ## Previous iteration - revision 93: rewarded-ad progression balance
 

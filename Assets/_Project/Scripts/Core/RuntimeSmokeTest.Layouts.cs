@@ -244,7 +244,14 @@ public sealed partial class RuntimeSmokeTest
         eventsButton?.onClick.Invoke();yield return null;
         if(GameObject.Find("EventDrawer")==null)layoutFailures.Add("Events drawer did not open");
         else {
+            var eventScroll=GameObject.Find("EventListViewport")?.GetComponent<UnityEngine.UI.ScrollRect>();
+            if(eventScroll==null||eventScroll.viewport==null||eventScroll.content==null||eventScroll.horizontal)layoutFailures.Add("Events list is missing its vertical touch scroll view");
+            var eventClose=GameObject.Find("EventDrawer").GetComponentsInChildren<UnityEngine.UI.Button>(true);
+            int closeActions=0;foreach(var candidate in eventClose)if(candidate!=null&&(candidate.name=="CloseEvents"||candidate.name=="CloseEventsButton"))closeActions++;
+            if(closeActions!=1)layoutFailures.Add("Events drawer has duplicate or missing close controls: "+closeActions);
             var eventHit=GameObject.Find("EventDrawer").GetComponentsInChildren<UnityEngine.UI.Button>(true);
+            int eventRows=0;foreach(var candidate in eventHit)if(candidate!=null&&candidate.name.StartsWith("EventRowButton-"))eventRows++;
+            if(eventScroll!=null&&eventRows>4&&eventScroll.content.rect.height<=eventScroll.viewport.rect.height)layoutFailures.Add("Long event list does not expose vertical overflow");
             var rowButton=System.Array.Find(eventHit,x=>x!=null&&x.name.StartsWith("EventRowButton-"));
             if(rowButton!=null){rowButton.onClick.Invoke();yield return null;if(GameObject.Find("EventDetails")==null||GameObject.Find("BackToEventList")==null)layoutFailures.Add("Event detail view did not open");else {foreach(var size in LayoutSizes){yield return SetLayoutSize(size);AuditLayout(GameObject.Find("EventDetails").transform,"event details "+size);}yield return SetLayoutSize(LayoutSizes[0]);GameObject.Find("BackToEventList").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();yield return null;if(GameObject.Find("EventDetails")!=null)layoutFailures.Add("Event detail Back did not close");}}
             foreach(var size in LayoutSizes){yield return SetLayoutSize(size);AuditLayout(GameObject.Find("EventDrawer").transform,"events "+size);} yield return SetLayoutSize(LayoutSizes[0]);

@@ -1,6 +1,10 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
-## Current source iteration — revision 94, 9 October 2026
+## Current source iteration — revision 95, 10 October 2026
+
+The Events calendar now promotes its first live objective, shows end time and objective text, scrolls through the full server list, and uses one close control. Layout smoke checks the vertical ScrollRect and rejects duplicate close actions. The server contract currently has no reward-preview or destination metadata; no reward or Go behavior is claimed. This source change has not been compiled or visually reviewed: no Unity Editor/Pipeline instance is connected and the licensing client remains unreachable. `Release/Windows` was not changed.
+
+## Previous source iteration — revision 94, 9 October 2026
 
 Campaign clear/completion now puts the actual stage reward, rarity, gold, saved status and one next action in a framed result card. Defeat and party defeat explain the stage reached and what remains saved. Local and server reward-save retry states keep the outcome beside the retry action. Runtime smoke assertions/captures cover stage result, campaign completion, save recovery, defeat and the dedicated-network reward card. This source has **not** been compiled or visually reviewed: Unity CLI cannot reach the licensing client, no Editor/Pipeline instance is connected, and the CLI update check failed on DNS. `Release/Windows` was not replaced. The result UI is pending build/UAT; no 90% My Heroes parity claim is made.
 

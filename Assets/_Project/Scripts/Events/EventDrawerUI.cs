@@ -11,7 +11,7 @@ public sealed class EventDrawerUI : MonoBehaviour
 {
     public CoopSession Session;
     public bool IsOpen=>root!=null;
-    private RectTransform root,panel,list,detail;
+    private RectTransform root,panel,viewport,list,detail;
     private TMP_Text status,detailCountdown,detailEligibility,detailProgress;
     private ServerEventSnapshot detailEvent;
     private ServerEventFeedResponse feed;
@@ -30,9 +30,14 @@ public sealed class EventDrawerUI : MonoBehaviour
         var title=GameUI.Label(panel,"EVENTS",new Vector2(-252,220),new Vector2(420,38),28);title.color=new Color32(147,220,239,255);
         var close=GameUI.Button(panel,"X",new Vector2(333,220),new Vector2(48,48),Close);close.name="CloseEvents";close.GetComponent<UnityEngine.UI.Image>().color=new Color32(240,106,138,255);
         status=GameUI.Label(panel,"Checking the server calendar...",new Vector2(0,177),new Vector2(620,32),18);status.alignment=TextAlignmentOptions.Center;status.color=new Color32(180,187,220,255);
-        list=GameUI.Rect("EventList",panel,new Vector2(.5f,.5f),new Vector2(0,-22),new Vector2(650,350));
-        var refresh=GameUI.Button(panel,"Refresh",new Vector2(-118,-220),new Vector2(190,44),Refresh);refresh.name="RefreshEvents";
-        var back=GameUI.Button(panel,"Close",new Vector2(118,-220),new Vector2(190,44),Close);back.name="CloseEventsButton";
+        viewport=GameUI.Rect("EventListViewport",panel,new Vector2(.5f,.5f),new Vector2(0,-20),new Vector2(650,350));
+        var viewportImage=viewport.gameObject.AddComponent<UnityEngine.UI.Image>();viewportImage.color=new Color(1,1,1,.001f);viewportImage.raycastTarget=true;
+        viewport.gameObject.AddComponent<UnityEngine.UI.RectMask2D>();
+        list=GameUI.Rect("EventListContent",viewport,new Vector2(.5f,1),Vector2.zero,new Vector2(650,350));list.pivot=new Vector2(.5f,1);
+        var scroll=viewport.gameObject.AddComponent<UnityEngine.UI.ScrollRect>();scroll.viewport=viewport;scroll.content=list;scroll.horizontal=false;scroll.vertical=true;scroll.movementType=UnityEngine.UI.ScrollRect.MovementType.Clamped;scroll.scrollSensitivity=34;
+        var refresh=GameUI.Button(panel,"Refresh",new Vector2(0,-220),new Vector2(190,44),Refresh);refresh.name="RefreshEvents";
+        close.name="CloseEventsButton";
+        EventSystem.current?.SetSelectedGameObject(refresh.gameObject);
         if(Session.Game.Player!=null)Session.Game.Player.GetComponent<PlayerController>().ControlsEnabled=false;
         Refresh();
     }
@@ -70,26 +75,34 @@ public sealed class EventDrawerUI : MonoBehaviour
     {
         ClearList();
         var events=feed.events??Array.Empty<ServerEventSnapshot>();
-        if(events.Length==0){status.text="No active events right now.";return;}
+        if(events.Length==0){status.text="No active events right now.";EventSystem.current?.SetSelectedGameObject(GameObject.Find("RefreshEvents"));return;}
         status.text=$"SERVER TIME  {serverNow:dd MMM HH:mm} UTC   ·   {events.Length} active";
-        float y=145;int shown=0;
-        foreach(var item in events)
+        var visible=new List<ServerEventSnapshot>(events.Length);
+        foreach(var item in events)if(item!=null)visible.Add(item);
+        if(visible.Count==0){status.text="No active events right now.";EventSystem.current?.SetSelectedGameObject(GameObject.Find("RefreshEvents"));return;}
+        float y=12;int shown=0;
+        foreach(var item in visible)
         {
-            if(item==null||shown>=4)continue;
-            var row=GameUI.Panel(list,"EventRow-"+item.id,new Vector2(0,y),new Vector2(640,72));
+            bool featured=shown==0;
+            float height=featured?112:76;
+            var row=GameUI.Panel(list,"EventRow-"+item.id,Vector2.zero,new Vector2(640,height));
+            row.anchorMin=row.anchorMax=new Vector2(.5f,1);row.pivot=new Vector2(.5f,1);row.anchoredPosition=new Vector2(0,-y);
             row.GetComponent<UnityEngine.UI.Image>().raycastTarget=false;
-            var hit=GameUI.Button(row,"",Vector2.zero,new Vector2(640,72),()=>OpenDetails(item));
+            var hit=GameUI.Button(row,"",Vector2.zero,new Vector2(640,height),()=>OpenDetails(item));
             hit.name="EventRowButton-"+item.id;
             hit.GetComponent<UnityEngine.UI.Image>().color=new Color(1,1,1,.001f);
-            var accent=GameUI.Label(row,TypeLabel(item.type),new Vector2(-272,14),new Vector2(150,22),14);accent.color=new Color32(147,220,239,255);
-            var name=GameUI.Label(row,ShortTitle(item),new Vector2(-82,14),new Vector2(330,28),20);name.alignment=TextAlignmentOptions.MidlineLeft;
-            var countdown=GameUI.Label(row,EventCountdown.Format(EventCountdown.Remaining(item,serverNow)),new Vector2(235,14),new Vector2(140,24),18);countdown.name="Countdown";countdown.alignment=TextAlignmentOptions.Center;countdown.color=new Color32(255,210,127,255);countdowns[item.id]=countdown;
-            var version=GameUI.Label(row,$"v{item.version}",new Vector2(-272,-15),new Vector2(120,18),13);version.color=new Color32(146,139,177,255);
-            var note=GameUI.Label(row,"Server-timed · rewards delivered through inbox",new Vector2(28,-15),new Vector2(380,18),13);note.color=new Color32(146,139,177,255);
-            y-=82;shown++;
+            string badge=TypeLabel(item.type);
+            var accent=GameUI.Label(row,badge,new Vector2(-260,featured?34:15),new Vector2(170,22),featured?15:13);accent.alignment=TextAlignmentOptions.MidlineLeft;accent.color=new Color32(147,220,239,255);
+            var name=GameUI.Label(row,ShortTitle(item,featured?38:32),new Vector2(-74,featured?34:15),new Vector2(330,26),featured?22:19);name.alignment=TextAlignmentOptions.MidlineLeft;
+            var countdown=GameUI.Label(row,EventCountdown.Format(EventCountdown.Remaining(item,serverNow)),new Vector2(235,featured?34:15),new Vector2(130,24),featured?18:16);countdown.name="Countdown";countdown.alignment=TextAlignmentOptions.Center;countdown.color=new Color32(255,210,127,255);countdowns[item.id]=countdown;
+            var note=GameUI.Label(row,featured?ShortDescription(item.description,92):ShortDescription(item.description,64),new Vector2(-54,featured?-5:-12),new Vector2(390,featured?34:23),featured?15:13);note.alignment=TextAlignmentOptions.MidlineLeft;note.textWrappingMode=TextWrappingModes.Normal;note.color=new Color32(208,199,220,255);
+            var action=GameUI.Label(row,featured?"VIEW EVENT  ›":"DETAILS  ›",new Vector2(240,featured?-34:-12),new Vector2(130,22),featured?15:13);action.alignment=TextAlignmentOptions.Center;action.color=new Color32(255,210,127,255);
+            y+=height+10;shown++;
         }
-        if(events.Length>shown){var more=GameUI.Label(list,$"+ {events.Length-shown} more active event(s)",new Vector2(0,y),new Vector2(620,28),16);more.alignment=TextAlignmentOptions.Center;more.color=new Color32(180,187,220,255);}
-        EventSystem.current?.SetSelectedGameObject(GameObject.Find("CloseEventsButton"));
+        list.sizeDelta=new Vector2(650,Mathf.Max(350,y+12));
+        var listScroll=viewport.GetComponent<UnityEngine.UI.ScrollRect>();if(listScroll!=null)listScroll.verticalNormalizedPosition=1;
+        var firstEvent=GameObject.Find("EventRowButton-"+visible[0].id);
+        EventSystem.current?.SetSelectedGameObject(firstEvent!=null?firstEvent:GameObject.Find("RefreshEvents"));
     }
 
     private void OpenDetails(ServerEventSnapshot item)
@@ -167,10 +180,10 @@ public sealed class EventDrawerUI : MonoBehaviour
         return value.Length<=max?value:value.Substring(0,max-3)+"...";
     }
 
-    private static string ShortDescription(string value)
+    private static string ShortDescription(string value,int max=220)
     {
-        if(string.IsNullOrWhiteSpace(value))return "This event is managed by the server calendar.";
-        value=value.Trim();return value.Length<=220?value:value.Substring(0,217)+"...";
+        if(string.IsNullOrWhiteSpace(value))return "Open event details to see its server-tracked goal and progress.";
+        value=value.Trim();return value.Length<=max?value:value.Substring(0,max-3)+"...";
     }
 
     private static string TypeLabel(string type)
@@ -191,7 +204,7 @@ public sealed class EventDrawerUI : MonoBehaviour
 
     public void Close()
     {
-        if(root==null)return;Destroy(root.gameObject);root=null;panel=null;list=null;detail=null;detailEvent=null;detailCountdown=null;detailEligibility=null;detailProgress=null;status=null;feed=null;loading=false;
+        if(root==null)return;Destroy(root.gameObject);root=null;panel=null;viewport=null;list=null;detail=null;detailEvent=null;detailCountdown=null;detailEligibility=null;detailProgress=null;status=null;feed=null;loading=false;countdowns.Clear();
         if(Session?.Game?.Player!=null)Session.Game.Player.GetComponent<PlayerController>().ControlsEnabled=!Session.UsesDedicated||Session.Authenticated;
     }
 }
