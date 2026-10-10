@@ -7,6 +7,21 @@ public sealed class ServerEventSnapshot
     public string id,title,type,description,startAt,endAt;
     public int version;
     public bool disabled;
+    public ServerEventReward[] rewards;
+    public ServerEventConfig config;
+}
+
+[Serializable]
+public sealed class ServerEventReward
+{
+    public string currency,itemId;
+    public int amount,tier,count;
+}
+
+[Serializable]
+public sealed class ServerEventConfig
+{
+    public string[] eligibleModes;
 }
 
 // Presentation-only countdown helper. The server's serverTime is the authority;

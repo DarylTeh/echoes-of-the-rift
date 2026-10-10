@@ -240,6 +240,8 @@ public sealed partial class RuntimeSmokeTest
         foreach(var size in LayoutSizes){yield return SetLayoutSize(size);AuditLayout(GameObject.Find("TownHub").transform,"town "+size);yield return NativeCapture("town-"+Screen.width+"x"+Screen.height+".png");}
         yield return SetLayoutSize(LayoutSizes[0]);
         yield return TestSettingsLayouts(game);
+        var eventRewardModel=JsonUtility.FromJson<ServerEventSnapshot>("{\"id\":\"smoke-event\",\"version\":1,\"rewards\":[{\"currency\":\"gems\",\"amount\":5}],\"config\":{\"eligibleModes\":[\"campaign\"]}}");
+        if(eventRewardModel==null||eventRewardModel.rewards==null||eventRewardModel.rewards.Length!=1||eventRewardModel.rewards[0].amount!=5||eventRewardModel.config==null||eventRewardModel.config.eligibleModes==null||eventRewardModel.config.eligibleModes.Length!=1)layoutFailures.Add("Event manifest reward or mode metadata failed to deserialize");
         var eventsButton=GameObject.Find("EventsButton")?.GetComponent<UnityEngine.UI.Button>();
         eventsButton?.onClick.Invoke();yield return null;
         if(GameObject.Find("EventDrawer")==null)layoutFailures.Add("Events drawer did not open");
@@ -253,7 +255,7 @@ public sealed partial class RuntimeSmokeTest
             int eventRows=0;foreach(var candidate in eventHit)if(candidate!=null&&candidate.name.StartsWith("EventRowButton-"))eventRows++;
             if(eventScroll!=null&&eventRows>4&&eventScroll.content.rect.height<=eventScroll.viewport.rect.height)layoutFailures.Add("Long event list does not expose vertical overflow");
             var rowButton=System.Array.Find(eventHit,x=>x!=null&&x.name.StartsWith("EventRowButton-"));
-            if(rowButton!=null){rowButton.onClick.Invoke();yield return null;if(GameObject.Find("EventDetails")==null||GameObject.Find("BackToEventList")==null)layoutFailures.Add("Event detail view did not open");else {foreach(var size in LayoutSizes){yield return SetLayoutSize(size);AuditLayout(GameObject.Find("EventDetails").transform,"event details "+size);}yield return SetLayoutSize(LayoutSizes[0]);GameObject.Find("BackToEventList").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();yield return null;if(GameObject.Find("EventDetails")!=null)layoutFailures.Add("Event detail Back did not close");}}
+            if(rowButton!=null){rowButton.onClick.Invoke();yield return null;if(GameObject.Find("EventDetails")==null||GameObject.Find("BackToEventList")==null)layoutFailures.Add("Event detail view did not open");else {if(GameObject.Find("EventRewardPreview")==null)layoutFailures.Add("Event detail is missing its reward preview");foreach(var size in LayoutSizes){yield return SetLayoutSize(size);AuditLayout(GameObject.Find("EventDetails").transform,"event details "+size);}yield return SetLayoutSize(LayoutSizes[0]);GameObject.Find("BackToEventList").GetComponent<UnityEngine.UI.Button>().onClick.Invoke();yield return null;if(GameObject.Find("EventDetails")!=null)layoutFailures.Add("Event detail Back did not close");}}
             foreach(var size in LayoutSizes){yield return SetLayoutSize(size);AuditLayout(GameObject.Find("EventDrawer").transform,"events "+size);} yield return SetLayoutSize(LayoutSizes[0]);
         }
         game.Hub.CloseDialog();

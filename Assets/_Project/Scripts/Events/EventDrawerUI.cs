@@ -16,6 +16,7 @@ public sealed class EventDrawerUI : MonoBehaviour
     private ServerEventSnapshot detailEvent;
     private ServerEventFeedResponse feed;
     private readonly Dictionary<string,TMP_Text> countdowns=new Dictionary<string,TMP_Text>();
+    private static Dictionary<string,ItemData> eventItems;
     private DateTimeOffset serverNow;
     private double receivedAt;
     private bool loading;
@@ -121,6 +122,7 @@ public sealed class EventDrawerUI : MonoBehaviour
         var eligibility=GameUI.Label(detail,"Eligibility: checking with server...",new Vector2(0,-42),new Vector2(600,38),16);eligibility.alignment=TextAlignmentOptions.Center;eligibility.color=new Color32(208,199,235,255);
         detailEligibility=eligibility;
         var progress=GameUI.Label(detail,"Checking server progress...",new Vector2(0,-108),new Vector2(600,72),16);progress.alignment=TextAlignmentOptions.Center;progress.textWrappingMode=TextWrappingModes.Normal;progress.color=new Color32(208,199,235,255);detailProgress=progress;
+        RenderRewardPreview(item);
         StartCoroutine(LoadStatus(item));
         EventSystem.current?.SetSelectedGameObject(GameObject.Find("BackToEventList"));
     }
@@ -145,6 +147,59 @@ public sealed class EventDrawerUI : MonoBehaviour
     {
         if(detail==null)return;Destroy(detail.gameObject);detail=null;detailEvent=null;detailCountdown=null;detailEligibility=null;detailProgress=null;
         EventSystem.current?.SetSelectedGameObject(GameObject.Find("CloseEventsButton"));
+    }
+
+    private void RenderRewardPreview(ServerEventSnapshot item)
+    {
+        var rewards=item?.rewards??Array.Empty<ServerEventReward>();
+        var heading=GameUI.Label(detail,rewards.Length>3?$"REWARDS  ·  +{rewards.Length-3} MORE":"REWARDS",new Vector2(0,-157),new Vector2(300,22),14);heading.alignment=TextAlignmentOptions.Center;heading.color=new Color32(255,210,127,255);
+        var preview=GameUI.Rect("EventRewardPreview",detail,new Vector2(.5f,.5f),new Vector2(0,-195),new Vector2(620,48));
+        if(rewards.Length==0)
+        {
+            var none=GameUI.Label(preview,"No rewards listed",Vector2.zero,new Vector2(590,32),15);none.alignment=TextAlignmentOptions.Center;none.color=new Color32(180,187,220,255);return;
+        }
+
+        int shown=Mathf.Min(3,rewards.Length);
+        for(int i=0;i<shown;i++)
+        {
+            var reward=rewards[i];if(reward==null)continue;
+            float x=(i-(shown-1)*.5f)*198;
+            var chip=GameUI.Panel(preview,"EventReward-"+i,new Vector2(x,0),new Vector2(shown==1?250:188,44));
+            chip.GetComponent<UnityEngine.UI.Image>().raycastTarget=false;
+            Sprite icon=null;string label;
+            if(reward.currency=="coins"||reward.currency=="gems")
+            {
+                icon=PixelArt.Icon(reward.currency=="coins"?"gold":"gem");
+                label=$"{Mathf.Max(0,reward.amount):N0} {(reward.currency=="coins"?"Gold":"Gems")}";
+            }
+            else
+            {
+                var definition=FindEventItem(reward.itemId);
+                icon=definition!=null&&definition.iconSprite!=null?definition.iconSprite:PixelArt.Icon("quest");
+                string name=definition!=null&&!string.IsNullOrWhiteSpace(definition.DisplayName)?definition.DisplayName:HumanizeId(reward.itemId);
+                label=$"{name}  T{Mathf.Clamp(reward.tier,1,5)} ×{Mathf.Max(1,reward.count)}";
+            }
+            if(icon!=null)GameUI.Icon(chip,icon,new Vector2(-chip.sizeDelta.x*.5f+27,0),new Vector2(30,30));
+            var text=GameUI.Label(chip,label,new Vector2(12,0),new Vector2(chip.sizeDelta.x-46,34),14);text.alignment=TextAlignmentOptions.MidlineLeft;text.overflowMode=TextOverflowModes.Ellipsis;text.textWrappingMode=TextWrappingModes.NoWrap;text.color=new Color32(239,234,255,255);
+        }
+    }
+
+    private static ItemData FindEventItem(string id)
+    {
+        if(string.IsNullOrWhiteSpace(id))return null;
+        if(eventItems==null)
+        {
+            eventItems=new Dictionary<string,ItemData>(StringComparer.Ordinal);
+            foreach(var item in Resources.LoadAll<ItemData>("Catalog"))if(item!=null&&!string.IsNullOrWhiteSpace(item.Id))eventItems[item.Id]=item;
+        }
+        return eventItems.TryGetValue(id,out var result)?result:null;
+    }
+
+    private static string HumanizeId(string id)
+    {
+        if(string.IsNullOrWhiteSpace(id))return "Item";
+        var words=id.Replace('_',' ').Replace('-',' ').Trim();
+        return words.Length>22?words.Substring(0,19)+"...":words;
     }
 
     private static string ProgressText(string type)

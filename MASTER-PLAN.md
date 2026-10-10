@@ -1,14 +1,18 @@
 # Echoes of the Rift master plan
 
-Revision 95 - 10 October 2026. Make the event calendar goal-first and scrollable.
+Revision 96 - 10 October 2026. Preview server-authored event rewards.
 
-## Current iteration - revision 95: goal-first Events calendar
+## Current iteration - revision 96: server-authored event reward preview
 
-Rebuilt the event list around a featured first event with its objective description, server countdown and a clear “View Event” action; remaining events are readable compact rows in a touch-scrollable list rather than silently capped at four. Removed the duplicate Close control so the drawer has one X and one Refresh action. Event detail still shows server eligibility/progress. Reward previews and activity navigation are deliberately not fabricated because the current server feed has no reward or destination fields and the modules do not expose a universal launch action. This is a structural UX improvement inspired by My Heroes’ objective-first quest presentation, not a claim of exact live-event parity.
+Event manifests already include optional `rewards` and module `config`; `/events` returns active manifests. Revision 95's Unity snapshot model had been discarding those fields. It now reads reward metadata and presents up to three exact currencies/items in event detail, using catalog art/names when available and a readable identifier fallback otherwise. Empty reward lists are explicitly shown as “No rewards listed.” Server templates currently default to empty lists, so operators must configure real rewards before previews appear. The goal-first scrollable list and single close control from revision 95 remain. This is inspired by My Heroes’ objective-first quest presentation, not a claim of exact live-event parity.
 
-Verification: added layout smoke checks for vertical scrolling and a single close affordance. Unity cannot currently compile or capture the change: no Editor/Pipeline instance is connected, the licensing client is unreachable, and the CLI update check fails DNS. No release binary changed. Revision 94 outcome screens also remain pending build and visual review.
+Activity destination metadata and a universal Go action remain unimplemented: `eligibleModes` means event progress can be earned in those modes, but does not specify a launch target or UI route. Smoke now checks vertical scrolling, a single close affordance, reward/config JSON deserialization and the detail preview. Full server suite passes. Unity cannot compile or capture this change: no Editor/Pipeline instance is connected and the licensing client is unreachable. No release binary changed. Revision 94 results and revision 95/96 Events UI remain pending build and visual review.
 
-Next: restore Unity licensing and inspect revision 94/95 captures across desktop and touch layouts. Then expand the event contract with explicit server-owned reward and destination metadata before adding truthful reward previews or a universal Go action. Keep IAP/rewarded-ad delivery gated on provider setup and server verification. The seven major milestones remain as listed below; milestone 1 is locally accepted and six broader workstreams remain open.
+Next: restore Unity licensing and inspect revision 94/95/96 captures across desktop and touch layouts. Then design an explicit destination/launch contract for event modules and connect it only to implemented modes. Keep IAP/rewarded-ad delivery gated on provider setup and server verification. The seven major milestones remain as listed below; milestone 1 is locally accepted and six broader workstreams remain open.
+
+## Previous iteration - revision 95: goal-first Events calendar
+
+Made Events goal-first, scrollable and single-close. Revision 96 corrects the earlier data assessment: server manifests already carried optional rewards; the Unity model was discarding them. The manifest still lacks a universal activity launch target.
 
 ## Previous iteration - revision 94: reward-first campaign outcomes
 

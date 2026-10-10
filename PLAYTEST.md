@@ -1,8 +1,12 @@
 # Play Echoes of the Rift - version 0.2 prototype
 
-## Current source iteration — revision 95, 10 October 2026
+## Current source iteration — revision 96, 10 October 2026
 
-The Events calendar now promotes its first live objective, shows end time and objective text, scrolls through the full server list, and uses one close control. Layout smoke checks the vertical ScrollRect and rejects duplicate close actions. The server contract currently has no reward-preview or destination metadata; no reward or Go behavior is claimed. This source change has not been compiled or visually reviewed: no Unity Editor/Pipeline instance is connected and the licensing client remains unreachable. `Release/Windows` was not changed.
+Event detail now reads optional rewards from the existing `/events` manifest and shows up to three exact currency/item rewards, resolving item names/icons through the catalog when possible. Empty templates state “No rewards listed.” Runtime smoke checks manifest reward/config parsing and reward-preview presence. The full server suite passes. Not compiled or visually reviewed because Unity has no connected Editor/Pipeline and the licensing client is unreachable. Release binary unchanged.
+
+## Previous source iteration — revision 95, 10 October 2026
+
+The Events calendar now promotes its first live objective, shows end time and objective text, scrolls through the full server list, and uses one close control. Layout smoke checks the vertical ScrollRect and rejects duplicate close actions. At that point the Unity model ignored optional rewards already provided by server manifests; revision 96 now displays them when configured. Universal destination routing is still absent. `Release/Windows` was not changed.
 
 ## Previous source iteration — revision 94, 9 October 2026
 

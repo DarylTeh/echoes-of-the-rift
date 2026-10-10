@@ -1,9 +1,15 @@
 # Execution log
 
+## Server-authored event reward preview — revision 96, 10 October 2026
+
+- Confirmed the existing `/events` route returns active, full versioned manifests. Each manifest already carries optional `rewards` and `config`; the Unity `ServerEventSnapshot` previously omitted both fields. Added typed currency/item rewards and eligible-mode metadata to the client snapshot.
+- Event detail now shows up to three exact manifest rewards, their amount/tier/count, and the matching catalog label/icon when available. A missing item catalog match falls back to a humanized server item ID; an empty manifest shows “No rewards listed.” Existing templates currently publish empty reward arrays by default.
+- Added smoke assertions for Unity JSON parsing of reward/config data and for the event detail preview. Destination routing remains unresolved; `eligibleModes` is progress eligibility, not a launch destination. Full `npm test` server suite passes. Unity compile/runtime/visual review remains blocked by unavailable Editor and Licensing Client. No release binary changed.
+
 ## Goal-first events list — revision 95, 10 October 2026
 
 - Made the first active event the visual lead with server countdown, objective snippet and one “View Event” action; other entries use compact goal-first rows. The vertical `ScrollRect` renders all active entries rather than capping at four, and the redundant bottom Close action is gone.
-- Kept detail eligibility/progress server-owned. The current event feed/status contract contains no reward-preview or destination metadata, so this UI does not invent rewards or a universal Go/Claim action.
+- Kept detail eligibility/progress server-owned. The Unity feed model did not yet expose the optional rewards already present on event manifests; revision 96 fixes that. A universal destination is still not part of the contract.
 - Added layout smoke checks for an active vertical scroll view and exactly one close affordance. Unity build/runtime/screenshot review could not run: no connected Editor/Pipeline instance, licensing client unavailable, Unity CLI update check blocked by DNS. No release binary changed. The prior revision 94 result/recovery source remains pending the same build/UAT gate.
 
 ## Campaign outcome and reward recovery presentation — revision 94, 9 October 2026
